@@ -24,16 +24,16 @@ template< PositionProvider PositionSource >
 class Mesh2D : public PositionSource {
 public:
   /// Mesh will be drawn using glDrawElements with the specified mode
-  Mesh2D(std::shared_ptr< ShaderProgram > shader, const std::vector< glm::vec2 >& vertices, const std::vector< GLuint >& indices, GLenum mode);
+  Mesh2D(PositionSource position_source, std::shared_ptr< ShaderProgram > shader, const std::vector< glm::vec2 >& vertices, const std::vector< GLuint >& indices, GLenum mode);
   /// Mesh will be drawn using glDrawArrays with the specified mode
-  Mesh2D(std::shared_ptr< ShaderProgram > shader, const std::vector< glm::vec2 >& vertices, GLenum mode);
+  Mesh2D(PositionSource position_source, std::shared_ptr< ShaderProgram > shader, const std::vector< glm::vec2 >& vertices, GLenum mode);
 
-  /// Copy and move constructors are deleted because moving the location of
-  /// opengl buffer holder may invalidate the buffer object.
+  // Copy constructors are removed as they will break OpenGL buffers.
   Mesh2D(const Mesh2D&) = delete;
   Mesh2D& operator=(const Mesh2D&) = delete;
-  Mesh2D(Mesh2D&&) = delete;
-  Mesh2D& operator=(Mesh2D&&) = delete;
+
+  Mesh2D(Mesh2D&&);
+  Mesh2D& operator=(Mesh2D&&);
 
   virtual ~Mesh2D();
 

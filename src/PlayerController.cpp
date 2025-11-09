@@ -1,3 +1,4 @@
+#include "glhelp/primitives/SimplePosition.hpp"
 #include <glm/ext.hpp>
 
 #include <glhelp/primitives/PlayerController.hpp>
@@ -6,50 +7,41 @@
 namespace glhelp {
 
 PlayerController::PlayerController(glm::vec3 position, float yaw, float pith, float roll)
-    : position(position), yaw(yaw), pitch(pith), roll(roll)
+    : SimplePosition(position, yaw, pith, roll)
 {
 }
 
-void PlayerController::look_right(float angle)
+void PlayerController::look_right(float yaw_angle)
 {
-  yaw += glm::cos(roll) * angle;
-  pitch += glm::sin(roll) * angle;
+  const glm::quat delta_yaw = glm::angleAxis(yaw_angle, UP_VECTOR);
+  rotation = rotation * delta_yaw;
 }
 
 void PlayerController::look_up(float angle)
 {
-  pitch += glm::cos(roll) * angle;
-  yaw += glm::sin(roll) * angle;
+  const glm::quat delta_pitch = glm::angleAxis(angle, RIGHT_VECTOR);
+  rotation = rotation * delta_pitch;
 }
 
 void PlayerController::roll_cc(float angle)
 {
-  roll += angle;
+  const glm::quat delta_roll = glm::angleAxis(angle, FORWARD_VECTOR);
+  rotation = rotation * delta_roll;
 }
 
 void PlayerController::move_forwards(float distance)
 {
-  const glm::quat rotation{glm::angleAxis(yaw, UP_VECTOR) * glm::angleAxis(pitch, RIGHT_VECTOR)};
-  position += FORWARD_VECTOR * rotation * distance;
+  position += (rotation * FORWARD_VECTOR) * distance;
 }
 
 void PlayerController::strafe(float distance)
 {
-  const glm::quat rotation{glm::angleAxis(yaw, UP_VECTOR) * glm::angleAxis(roll, FORWARD_VECTOR)};
-  position += RIGHT_VECTOR * rotation * distance;
+  position += (rotation * RIGHT_VECTOR) * distance;
 }
 
 void PlayerController::move_up(float distance)
 {
-  const glm::quat rotation{glm::angleAxis(pitch, RIGHT_VECTOR) * glm::angleAxis(roll, FORWARD_VECTOR)};
-  position += UP_VECTOR * rotation * distance;
-}
-
-void PlayerController::set_rotation(float new_yaw, float new_pitch, float new_roll)
-{
-  yaw = new_yaw;
-  pitch = new_pitch;
-  roll = new_roll;
+  position += (rotation * UP_VECTOR) * distance;
 }
 
 } // namespace glhelp

@@ -3,6 +3,7 @@
 #include <functional>
 
 #include <glhelp/primitives/PositionProvider.hpp>
+#include <glhelp/primitives/SimplePosition.hpp>
 
 namespace glhelp {
 
@@ -17,17 +18,22 @@ public:
   }
 
   PositionFollower(const PositionSource& position_source, glm::vec3 offset, float offset_yaw, float offset_pitch, float offset_roll)
-      : position_source(position_source), offset(offset), offset_yaw(offset_yaw), offset_pitch(offset_pitch), offset_roll(offset_roll)
+      : position_source(position_source), offset(offset), offset_rotation(glm::vec3(offset_pitch, offset_yaw, offset_roll))
   {
   }
 
-  glm::vec3 get_position() { return position_source->get_position() + offset; }
-  float get_yaw() { return position_source->get_yaw() + offset_yaw; }
-  float get_pitch() { return position_source->get_pitch() + offset_pitch; }
-  float get_roll() { return position_source->get_roll() + offset_roll; }
+  glm::vec3 get_position() const
+  {
+    return position_source->get_position() + (position_source->get_rotation() * offset);
+  }
+  glm::quat get_rotation() const
+  {
+    return position_source->get_rotation() * offset_rotation;
+  }
 
+private:
   glm::vec3 offset{};
-  float offset_yaw{}, offset_pitch{}, offset_roll{};
+  glm::quat offset_rotation{};
 
   std::reference_wrapper< PositionSource > position_source;
 };

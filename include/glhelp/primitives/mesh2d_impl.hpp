@@ -13,14 +13,16 @@
 #include <glm/fwd.hpp>
 #include <glm/geometric.hpp>
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
+#include <glhelp/primitives/PositionProvider.hpp>
 #include <glhelp/primitives/mesh2d.hpp>
 
 namespace glhelp {
 
 template< PositionProvider PositionSource >
-Mesh2D< PositionSource >::Mesh2D(std::shared_ptr< ShaderProgram > shader, const std::vector< glm::vec2 >& vertices, const std::vector< GLuint >& indices, GLenum mode)
-    : shader(shader), mode(mode), vertex_count(vertices.size()), indices_count(indices.size())
+Mesh2D< PositionSource >::Mesh2D(PositionSource position_source, std::shared_ptr< ShaderProgram > shader, const std::vector< glm::vec2 >& vertices, const std::vector< GLuint >& indices, GLenum mode)
+    : PositionSource(position_source), shader(shader), mode(mode), vertex_count(vertices.size()), indices_count(indices.size())
 {
   glGenVertexArrays(1, &vao);
   glGenBuffers(1, &vbo);
@@ -41,8 +43,8 @@ Mesh2D< PositionSource >::Mesh2D(std::shared_ptr< ShaderProgram > shader, const 
 }
 
 template< PositionProvider PositionSource >
-Mesh2D< PositionSource >::Mesh2D(std::shared_ptr< ShaderProgram > shader, const std::vector< glm::vec2 >& vertices, GLenum mode)
-    : shader(shader), mode(mode), vertex_count(vertices.size())
+Mesh2D< PositionSource >::Mesh2D(PositionSource position_source, std::shared_ptr< ShaderProgram > shader, const std::vector< glm::vec2 >& vertices, GLenum mode)
+    : PositionSource(position_source), shader(shader), mode(mode), vertex_count(vertices.size())
 {
   glGenVertexArrays(1, &vao);
   glGenBuffers(1, &vbo);
@@ -57,6 +59,44 @@ Mesh2D< PositionSource >::Mesh2D(std::shared_ptr< ShaderProgram > shader, const 
   glEnableVertexAttribArray(0);
 
   glBindVertexArray(0);
+}
+
+template< PositionProvider PositionSource >
+Mesh2D< PositionSource >::Mesh2D(Mesh2D&& other)
+    : scale(other.scale), shader(std::move(other.shader)), vao(other.vao), vbo(other.vbo), ebo(other.ebo), mode(other.mode), vertex_count(other.vertex_count), indices_count(other.indices_count)
+{
+  other.vao = 0;
+  other.vbo = 0;
+  other.ebo = 0;
+}
+
+template< PositionProvider PositionSource >
+Mesh2D< PositionSource >& Mesh2D< PositionSource >::operator=(Mesh2D&& other)
+{
+  if (this == &other)
+    return *this;
+
+  if (ebo)
+    glDeleteBuffers(1, &ebo);
+  if (vbo)
+    glDeleteBuffers(1, &vbo);
+  if (vao)
+    glDeleteVertexArrays(1, &vao);
+
+  scale = std::move(other.scale);
+  shader = std::move(other.shader);
+  vao = other.vao;
+  vbo = other.vbo;
+  ebo = other.ebo;
+  mode = other.mode;
+  vertex_count = other.vertex_count;
+  indices_count = other.indices_count;
+
+  other.vao = 0;
+  other.vbo = 0;
+  other.ebo = 0;
+
+  return *this;
 }
 
 template< PositionProvider PositionSource >
@@ -95,14 +135,15 @@ template< PositionProvider PositionSource >
 glm::mat2 Mesh2D< PositionSource >::calculate_rotation_matrix(GLfloat angle)
 {
   return glm::mat2{
-      glm::vec2{cos(angle), sin(angle)},
-      glm::vec2{-sin(angle), cos(angle)}};
+      glm::vec2{glm::cos(angle), glm::sin(angle)},
+      glm::vec2{-glm::sin(angle), glm::cos(angle)}};
 }
 
 template< PositionProvider PositionSource >
 glm::mat2 Mesh2D< PositionSource >::get_rotation_matrix()
 {
-  return calculate_rotation_matrix(this->get_roll());
+  const glm::vec3 euler_angles{glm::eulerAngles(this->get_rotation())};
+  return calculate_rotation_matrix(euler_angles.z);
 }
 
 inline bool sat_overlap(const std::vector< glm::vec2 >& a, const std::vector< glm::vec2 >& b)

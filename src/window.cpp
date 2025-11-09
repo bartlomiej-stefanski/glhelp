@@ -69,16 +69,16 @@ Window::Window(int width, int height, const std::string& name)
   glfwSetWindowSizeCallback(window, Window::resize_callback);
   glfwSetKeyCallback(window, Window::key_callback);
 
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  glfwSetCursorPosCallback(window, Window::initial_mouse_callback);
+
   glfwSwapInterval(1); // VSync
   glEnable(GL_MULTISAMPLE);
 };
 
 Window::Window(Window&& other) noexcept
-    : width(other.width), height(other.height), window(other.window), monitor(other.monitor)
+    : resize_event(std::move(other.resize_event)), key_event(std::move(other.key_event)), width(other.width), height(other.height), window(other.window), monitor(other.monitor)
 {
-  std::swap(key_callbacks, other.key_callbacks);
-  std::swap(resize_callbacks, other.resize_callbacks);
-
   other.window = nullptr;
   other.monitor = nullptr;
   other.width = 0;
@@ -116,8 +116,7 @@ void Window::resize_cb(int new_width, int new_heigth)
   height = new_heigth;
   glViewport(0, 0, new_width, new_heigth);
 
-  for (const auto& callback : resize_callbacks)
-    callback(new_width, new_heigth);
+  resize_event(new_width, new_heigth);
 }
 
 void Window::key_cb([[maybe_unused]] int key, [[maybe_unused]] int scancode, [[maybe_unused]] int action,
@@ -126,8 +125,14 @@ void Window::key_cb([[maybe_unused]] int key, [[maybe_unused]] int scancode, [[m
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
 
-  for (const auto& callback : key_callbacks[key])
-    callback(key, scancode, action, mods);
+  key_event[key](key, scancode, action, mods);
+}
+
+void Window::mouse_cb(double xpos, double ypos)
+{
+  mouse_event(xpos - last_xpos, last_ypos - ypos);
+  last_xpos = xpos;
+  last_ypos = ypos;
 }
 
 void Window::run_synchronously(std::function< void(Window&, double) > main_loop)
@@ -167,6 +172,23 @@ void Window::key_callback(GLFWwindow* window, int key, int scancode, int action,
   void* ptr{glfwGetWindowUserPointer(window)};
   if (Window* winPtr = static_cast< Window* >(ptr))
     winPtr->key_cb(key, scancode, action, mods);
+}
+
+void Window::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+  void* ptr{glfwGetWindowUserPointer(window)};
+  if (Window* winPtr = static_cast< Window* >(ptr))
+    winPtr->mouse_cb(xpos, ypos);
+}
+
+void Window::initial_mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+  void* ptr{glfwGetWindowUserPointer(window)};
+  if (Window* winPtr = static_cast< Window* >(ptr)) {
+    winPtr->last_xpos = xpos;
+    winPtr->last_ypos = ypos;
+    glfwSetCursorPosCallback(window, Window::mouse_callback);
+  }
 }
 
 } // namespace glhelp

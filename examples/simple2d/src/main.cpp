@@ -22,13 +22,6 @@ void run_program()
 #include STR(fragment.glsl)
                                                       )};
 
-  glhelp::Camera< glhelp::SimplePosition > camera(
-      window,
-      glhelp::SimplePosition(glm::vec3{0, 0, -1}, 0, 0, 0),
-      45.0f,
-      0.1,
-      100.0);
-
   std::shared_ptr< glhelp::ShaderProgram > green_shader{
       std::make_shared< glhelp::ShaderProgram >(std::move(shaders))};
 
@@ -39,10 +32,10 @@ void run_program()
       glm::vec2(-0.5f, 0.5f),
   };
 
-  glhelp::Mesh2D< glhelp::SimplePosition > square(green_shader, triangle_vertices, {0, 1, 2, 2, 3, 0}, GL_TRIANGLES);
+  glhelp::Mesh2D square(glhelp::SimplePosition{}, green_shader, triangle_vertices, {0, 1, 2, 2, 3, 0}, GL_TRIANGLES);
 
   auto main_loop = [&square, time = 0.0f](glhelp::Window& window, double frame_time) mutable {
-    square.roll = time * 90.0f;
+    square.set_rotation(0, 0, time);
     square.draw(window.aspect_ratio());
     time += frame_time;
   };
