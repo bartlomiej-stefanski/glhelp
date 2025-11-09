@@ -1,0 +1,56 @@
+{
+  "version": 5,
+  "configurePresets": [
+    {
+      "name": "build-dirs",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build",
+      "installDir": "${sourceDir}/build/install"
+    },
+    {
+      "name": "compile-commands",
+      "hidden": true,
+      "environment": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "warnings-as-errors",
+      "hidden": true,
+      "cacheVariables": {
+        "WARNINGS_AS_ERRORS": "ON"
+      }
+    },
+    {
+      "name": "clang-tidy",
+      "hidden": true,
+      "cacheVariables": {
+        "ENABLE_CLANG_TIDY": "ON"
+      }
+    },
+    {
+      "name": "include-what-you-use",
+      "hidden": true,
+      "cacheVariables": {
+        "ENABLE_IWYU": "ON"
+      }
+    },
+    {
+      "name": "develop",
+      "inherits": [
+        "build-dirs",
+        "compile-commands",
+        "warnings-as-errors",
+        "clang-tidy"
+      ],
+      "displayName": "Dev config",
+      "description": "Configuration for developing library."
+    },
+    {
+      "name": "minimal",
+      "inherits": ["build-dirs"],
+      "displayName": "Minimal config",
+      "description": "Minimal possible configuration."
+    }
+  ]
+}

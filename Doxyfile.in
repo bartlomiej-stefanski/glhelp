@@ -1,0 +1,24 @@
+# Plik: Doxyfile.in
+
+# Nazwa projektu pobrana z CMake
+PROJECT_NAME           = "@PROJECT_NAME@"
+# Wersja projektu pobrana z CMake
+PROJECT_VERSION        = "@PROJECT_VERSION@"
+
+# Gdzie Doxygen ma szukać plików źródłowych
+INPUT                  = "@CMAKE_SOURCE_DIR@/include" \
+                         "@CMAKE_SOURCE_DIR@/src" \
+                         "@CMAKE_SOURCE_DIR@/examples"
+RECURSIVE              = YES
+
+# Gdzie wygenerować dokumentację (w katalogu build)
+OUTPUT_DIRECTORY       = "@CMAKE_CURRENT_BINARY_DIR@/docs"
+
+# Generuj HTML
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+
+# Inne przydatne opcje
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+WARN_IF_UNDOCUMENTED   = NO

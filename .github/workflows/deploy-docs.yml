@@ -1,0 +1,49 @@
+name: Deploy Docs (MkDocs + Doxygen) to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen graphviz cmake pkg-config libglfw3-dev libglm-dev
+
+      - name: Install Python dependencies
+        run: |
+          pip install mkdocs mkdocs-material
+
+      - name: Configure CMake
+        run: cmake --preset=minimal
+
+      - name: Build Doxygen docs
+        run: cmake --build build --target docs
+
+      # Build MkDocs
+      #    --docs-dir: Markdown file documentation .md
+      #    --site-dir:
+      - name: Build MkDocs site
+        run: mkdocs build --site-dir build/site
+
+      - name: Copy Doxygen output to MkDocs site
+        run: cp -r build/docs/html build/site/api
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/site
+          publish_branch: gh-pages
+          force_orphan: true
