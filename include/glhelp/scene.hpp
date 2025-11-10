@@ -20,7 +20,7 @@ public:
   }
 
   template< PositionProvider CameraPositionSource >
-  void draw_objects(Camera< CameraPositionSource >& camera, float time)
+  void draw_objects(const Camera< CameraPositionSource >& camera, float time)
   {
     ShaderProgram::common_data.value().update_buffer({
         .camera_matrix = camera.get_projection_matrix() * camera.get_view_matrix(),

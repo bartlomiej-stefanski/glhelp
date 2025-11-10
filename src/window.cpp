@@ -76,32 +76,6 @@ Window::Window(int width, int height, const std::string& name)
   glEnable(GL_MULTISAMPLE);
 };
 
-Window::Window(Window&& other) noexcept
-    : resize_event(std::move(other.resize_event)), key_event(std::move(other.key_event)), width(other.width), height(other.height), window(other.window), monitor(other.monitor)
-{
-  other.window = nullptr;
-  other.monitor = nullptr;
-  other.width = 0;
-  other.height = 0;
-}
-
-auto Window::operator=(Window&& other) noexcept -> Window&
-{
-  if (this != &other) {
-    glfwDestroyWindow(window);
-    window = other.window;
-    monitor = other.monitor;
-    width = other.width;
-    height = other.height;
-
-    other.window = nullptr;
-    other.monitor = nullptr;
-    other.width = 0;
-    other.height = 0;
-  }
-  return *this;
-}
-
 Window::~Window()
 {
   if (window != nullptr)

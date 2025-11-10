@@ -1,7 +1,9 @@
 #pragma once
 
 #include <functional>
+#include <memory>
 #include <optional>
+#include <unordered_map>
 
 namespace glhelp {
 
@@ -15,50 +17,30 @@ public:
 
   Event(const Event< T >&) = delete;
   auto operator=(const Event< T >&) -> Event< T >& = delete;
-
-  Event(Event< T >&& other) noexcept
-      : delegates(std::move(other.delegates))
-  {
-  }
-
-  auto operator=(Event< T >&& other) noexcept -> Event< T >&
-  {
-    std::swap(delegates, other.delegates);
-  }
+  Event(Event< T >&& other) = delete;
+  auto operator=(Event< T >&& other) noexcept -> Event< T >& = delete;
 
   template< typename... P >
-  void operator()(P&&... params)
-  {
-    for (const auto& [key, delegate] : delegates) {
-      delegate(std::forward< P >(params)...);
-    }
-  }
+  void operator()(P&&... params);
 
   struct EventDelegate {
-    EventDelegate(std::function< T >&& delegate, std::size_t id, Event< T >& event)
-        : delegate(delegate), id(id), event(event)
-    {
-    }
+  private:
+    EventDelegate(std::function< T >&& delegate, std::size_t id, Event< T >& event);
 
+  public:
     EventDelegate(const EventDelegate&) = delete;
     auto operator=(const EventDelegate&) -> EventDelegate& = delete;
-    EventDelegate(EventDelegate&&) = delete;
-    auto operator=(EventDelegate&&) -> EventDelegate& = delete;
 
-    ~EventDelegate()
-    {
-      if (event.has_value()) {
-        event.value().get().disconnect(*this);
-      }
-    }
+    EventDelegate(EventDelegate&& other) noexcept;
+    auto operator=(EventDelegate&& other) noexcept -> EventDelegate&;
 
+    ~EventDelegate();
+
+  private:
     template< typename... P >
-    void operator()(P&&... params)
-    {
-      delegate(std::forward< P >(params)...);
-    }
+    void call(P&&... params);
 
-    void disconnect() { event.reset(); }
+    void disconnect();
 
     std::function< T > delegate;
     std::size_t id;
@@ -68,31 +50,18 @@ public:
     friend Event< T >;
   };
 
-  auto new_delegate(std::function< T >&& lambda) -> EventDelegate
-  {
-    return EventDelegate(std::move(lambda), id++, *this);
-  }
+  [[nodiscard]] auto connect(std::function< T >&& lambda) -> std::shared_ptr< EventDelegate >;
 
-  void connect(EventDelegate& delegate)
-  {
-    delegates.insert({delegate.id, delegate});
-  }
+  void disconnect(EventDelegate& event_delegate);
 
-  void disconnect(EventDelegate& event_delegate)
-  {
-    delegates.erase(event_delegate.id);
-  }
-
-  ~Event()
-  {
-    for (auto& [key, event] : delegates) {
-      event.get().disconnect();
-    }
-  }
+  ~Event();
 
 private:
   std::size_t id{};
-  std::unordered_map< std::size_t, std::reference_wrapper< EventDelegate > > delegates;
+  std::unordered_map< std::size_t, std::weak_ptr< EventDelegate > > delegates;
 };
 
 } // namespace glhelp
+
+// Include implementation.
+#include <glhelp/utils/event_impl.hpp>

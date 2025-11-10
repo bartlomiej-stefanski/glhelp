@@ -24,12 +24,12 @@ void run_program()
 #include STR(fragment.glsl)
                                                       )};
 
-  glhelp::Camera< glhelp::PlayerController > camera(
+  auto camera{std::make_shared< glhelp::Camera< glhelp::PlayerController > >(
       window,
       glhelp::PlayerController(glm::vec3{0, 0, 5}, 0, 0, 0),
       90.0F,
       0.1F,
-      100.0F);
+      100.0F)};
 
   auto default_shader{std::make_shared< glhelp::ShaderProgram >(std::move(shaders))};
 
@@ -71,12 +71,6 @@ void run_program()
       1, 2, 5,
       2, 6, 5};
 
-  auto mouse_delegate = window->mouse_event.new_delegate([&camera](float xoffset, float yoffset) {
-    camera.look_up(yoffset);
-    camera.look_right(-xoffset);
-  });
-  window->mouse_event.connect(mouse_delegate);
-
   auto cube{std::make_shared< glhelp::Mesh3D< glhelp::SimplePosition > >(
       glhelp::SimplePosition{}, default_shader, triangle_vertices, indices, GL_TRIANGLES)};
 
@@ -84,51 +78,54 @@ void run_program()
 
   main_scene.add_object(cube);
 
-  auto main_loop = [&main_scene, &camera, &cube]([[maybe_unused]] glhelp::Window& window, double time, double frame_time) {
+  auto mouse_delegate{window->mouse_event.connect([camera](float xoffset, float yoffset) {
+    camera->look_up(yoffset);
+    camera->look_right(-xoffset);
+  })};
+
+  window->run_synchronously([&main_scene, &camera, &cube]([[maybe_unused]] glhelp::Window& window, double time, double frame_time) {
     if (glfwGetKey(window.get_window(), GLFW_KEY_W) == GLFW_PRESS) {
-      camera.move_forwards(-2.0F * frame_time);
+      camera->move_forwards(-2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_S) == GLFW_PRESS) {
-      camera.move_forwards(2.0F * frame_time);
+      camera->move_forwards(2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_D) == GLFW_PRESS) {
-      camera.strafe(2.0F * frame_time);
+      camera->strafe(2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_A) == GLFW_PRESS) {
-      camera.strafe(-2.0F * frame_time);
+      camera->strafe(-2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_SPACE) == GLFW_PRESS) {
-      camera.move_up(2.0f * frame_time);
+      camera->move_up(2.0f * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-      camera.move_up(-2.0F * frame_time);
+      camera->move_up(-2.0F * frame_time);
     }
 
     if (glfwGetKey(window.get_window(), GLFW_KEY_UP) == GLFW_PRESS) {
-      camera.look_up(2.0F * frame_time);
+      camera->look_up(2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_DOWN) == GLFW_PRESS) {
-      camera.look_up(-2.0F * frame_time);
+      camera->look_up(-2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_RIGHT) == GLFW_PRESS) {
-      camera.look_right(-2.0F * frame_time);
+      camera->look_right(-2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_LEFT) == GLFW_PRESS) {
-      camera.look_right(2.0F * frame_time);
+      camera->look_right(2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_E) == GLFW_PRESS) {
-      camera.roll_cc(-2.0F * frame_time);
+      camera->roll_cc(-2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_Q) == GLFW_PRESS) {
-      camera.roll_cc(2.0F * frame_time);
+      camera->roll_cc(2.0F * frame_time);
     }
 
     cube->set_rotation(time, 0, 0);
 
-    main_scene.draw_objects(camera, time);
-  };
-
-  window->run_synchronously(main_loop);
+    main_scene.draw_objects(*camera, time);
+  });
 }
 
 auto main() -> int

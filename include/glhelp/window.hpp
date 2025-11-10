@@ -15,10 +15,10 @@ class Window {
 public:
   Window(int width, int height, const std::string& name);
 
-  Window(Window&& other) noexcept;
-  auto operator=(Window&& other) noexcept -> Window&;
   Window(Window&) = delete;
   auto operator=(Window&) -> Window& = delete;
+  Window(Window&& other) noexcept = delete;
+  auto operator=(Window&& other) noexcept -> Window& = delete;
 
   ~Window();
 
