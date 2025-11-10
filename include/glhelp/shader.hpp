@@ -106,6 +106,9 @@ private:
 /// Creates a shader object of the given type by compiling the provided source code.
 auto create_shader(GLenum type, const std::string& source) -> GLuint;
 
+/// Creates a shader object of the given type by reading the source from file and compiling the code.
+auto create_shader_from_file(GLenum type, const std::string& file_path) -> GLuint;
+
 /// Creates a shader program object by linking the provided shader objects.
 /// Provided shaders are consumed by the function (as in should not be accessed after this call).
 auto link_program(const std::vector< GLuint >&& shaders) -> GLuint;

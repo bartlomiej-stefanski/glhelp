@@ -9,6 +9,10 @@ target_include_directories(simple3d
     ${CMAKE_CURRENT_SOURCE_DIR}/shaders
 )
 
+target_compile_definitions(simple3d PRIVATE
+  SHADER_DIR_PATH="${CMAKE_CURRENT_SOURCE_DIR}/shaders/"
+)
+
 add_custom_command(
   TARGET simple3d POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory

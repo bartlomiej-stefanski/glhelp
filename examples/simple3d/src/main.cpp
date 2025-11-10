@@ -13,16 +13,17 @@
 #include <glhelp/utils/glfw_context.hpp>
 #include <glhelp/window.hpp>
 
+#ifndef SHADER_DIR_PATH
+#warning "Shader directory undefined. Please define SHADER_DIR_PATH macro."
+#endif
+
 void run_program()
 {
   std::shared_ptr< glhelp::Window > window{std::make_shared< glhelp::Window >(800, 800, "OpenGL simple 3d example")};
 
-  std::vector< GLuint > shaders{glhelp::create_shader(GL_VERTEX_SHADER,
-#include STR(vertex.glsl)
-                                                      ),
-                                glhelp::create_shader(GL_FRAGMENT_SHADER,
-#include STR(fragment.glsl)
-                                                      )};
+  std::vector< GLuint > shaders{
+      glhelp::create_shader_from_file(GL_VERTEX_SHADER, SHADER_DIR_PATH "vertex.glsl"),
+      glhelp::create_shader_from_file(GL_FRAGMENT_SHADER, SHADER_DIR_PATH "fragment.glsl")};
 
   auto camera{std::make_shared< glhelp::Camera< glhelp::PlayerController > >(
       window,

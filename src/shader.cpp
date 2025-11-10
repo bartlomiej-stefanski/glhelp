@@ -1,3 +1,4 @@
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -84,6 +85,17 @@ auto create_shader(GLenum type, const std::string& source) -> GLuint
   }
 
   return shader;
+}
+
+auto create_shader_from_file(GLenum type, const std::string& file_path) -> GLuint
+{
+  std::ifstream file_stream(file_path);
+  if (!file_stream.is_open()) {
+    throw ShaderException("Failed to open shader file: " + file_path);
+  }
+
+  std::string source((std::istreambuf_iterator< char >(file_stream)), std::istreambuf_iterator< char >());
+  return create_shader(type, source);
 }
 
 auto link_program(const std::vector< GLuint >&& shaders) -> GLuint
