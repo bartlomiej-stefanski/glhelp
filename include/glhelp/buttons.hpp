@@ -9,7 +9,7 @@
 namespace glhelp {
 
 template< GLuint... Buttons, typename Function >
-bool call_button_function(Function fun, int button_state, Window& window)
+auto call_button_function(Function fun, int button_state, Window& window) -> bool
 {
   return fun((glfwGetKey(window.get_window(), Buttons) == button_state)...);
 }

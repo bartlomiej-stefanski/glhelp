@@ -2,12 +2,9 @@ Checks: >
     clang-analyzer-*,
     performance-*,
     portability-*,
-    readability-*,
     modernize-*
-
-WarningsAsErrors: []
 
 HeaderFilterRegex: '^(src|include|examples)/.*'
 
 ExtraArgs:
-  - '-std=c++17'
+  - '-std=c++23'

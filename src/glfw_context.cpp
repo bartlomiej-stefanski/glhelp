@@ -2,7 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include <glhelp/glfw_context.hpp>
+#include <glhelp/utils/glfw_context.hpp>
 
 namespace glhelp {
 
@@ -32,7 +32,7 @@ GLFWContext::GLFWContext(GLFWContext&& other) noexcept : holds_context(other.hol
   other.holds_context = false;
 }
 
-GLFWContext& GLFWContext::operator=(GLFWContext&& other) noexcept
+auto GLFWContext::operator=(GLFWContext&& other) noexcept -> GLFWContext&
 {
   if (holds_context) {
     initialized = false;

@@ -29,6 +29,9 @@ option(ENABLE_CLANG_TIDY "Enable clang-tidy static analysis" OFF)
 if(ENABLE_CLANG_TIDY)
   find_program(CLANG_TIDY_EXECUTABLE clang-tidy QUIET)
 
+  # Enable automatic fix application with -fix flag
+  set(CLANG_TIDY_EXECUTABLE "${CLANG_TIDY_EXECUTABLE};-fix")
+
   set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY_EXECUTABLE})
   message(STATUS "clang-tidy enabled. Using: ${CLANG_TIDY_EXECUTABLE}")
 endif()

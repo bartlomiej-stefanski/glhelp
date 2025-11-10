@@ -6,7 +6,7 @@
 
 #include <glm/glm.hpp>
 
-#include <glhelp/primitives/PositionProvider.hpp>
+#include <glhelp/position/PositionProvider.hpp>
 #include <glhelp/shader.hpp>
 
 namespace glhelp {
@@ -30,17 +30,17 @@ public:
 
   // Copy constructors are removed as they will break OpenGL buffers.
   Mesh2D(const Mesh2D&) = delete;
-  Mesh2D& operator=(const Mesh2D&) = delete;
+  auto operator=(const Mesh2D&) -> Mesh2D& = delete;
 
-  Mesh2D(Mesh2D&&);
-  Mesh2D& operator=(Mesh2D&&);
+  Mesh2D(Mesh2D&&) noexcept;
+  auto operator=(Mesh2D&&) noexcept -> Mesh2D&;
 
   virtual ~Mesh2D();
 
   /// Draw the mesh using old transformation values
   void draw(GLfloat aspect_ratio);
 
-  static glm::mat2 calculate_rotation_matrix(GLfloat angle);
+  static auto calculate_rotation_matrix(GLfloat angle) -> glm::mat2;
 
   glm::vec2 scale{1.0f};
 
@@ -58,14 +58,14 @@ protected:
   GLuint vertex_count;
   GLuint indices_count{};
 
-  glm::mat2 get_rotation_matrix();
+  auto get_rotation_matrix() -> glm::mat2;
 };
 
 /// Checks whether convex-hulls of a and b overlap.
 /// Vericies are not stored in this class to save space. They can be stored in a class deriving from Mesh2D.
-bool sat_overlap(const std::vector< glm::vec2 >& a, const std::vector< glm::vec2 >& b);
+auto sat_overlap(const std::vector< glm::vec2 >& a, const std::vector< glm::vec2 >& b) -> bool;
 
 } // namespace glhelp
 
 // Include header implementation
-#include <glhelp/primitives/mesh2d_impl.hpp>
+#include <glhelp/mesh/mesh2d_impl.hpp>

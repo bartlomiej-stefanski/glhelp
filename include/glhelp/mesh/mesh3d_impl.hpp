@@ -14,14 +14,14 @@
 #include <glm/geometric.hpp>
 #include <glm/glm.hpp>
 
-#include <glhelp/primitives/PositionProvider.hpp>
-#include <glhelp/primitives/mesh3d.hpp>
+#include <glhelp/mesh/mesh3d.hpp>
+#include <glhelp/position/PositionProvider.hpp>
 
 namespace glhelp {
 
 template< PositionProvider PositionSource >
 Mesh3D< PositionSource >::Mesh3D(PositionSource position_source, std::shared_ptr< ShaderProgram > shader, const std::vector< glm::vec3 >& vertices, const std::vector< GLuint >& indices, GLenum mode)
-    : PositionSource(position_source), shader(shader), mode(mode), vertex_count(vertices.size()), indices_count(indices.size())
+    : PositionSource(position_source), shader(std::move(shader)), mode(mode), vertex_count(vertices.size()), indices_count(indices.size())
 {
   glGenVertexArrays(1, &vao);
   glGenBuffers(1, &vbo);
@@ -35,7 +35,7 @@ Mesh3D< PositionSource >::Mesh3D(PositionSource position_source, std::shared_ptr
 
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr);
   glEnableVertexAttribArray(0);
 
   glBindVertexArray(0);
@@ -43,7 +43,7 @@ Mesh3D< PositionSource >::Mesh3D(PositionSource position_source, std::shared_ptr
 
 template< PositionProvider PositionSource >
 Mesh3D< PositionSource >::Mesh3D(PositionSource position_source, std::shared_ptr< ShaderProgram > shader, const std::vector< glm::vec3 >& vertices, GLenum mode)
-    : PositionSource(position_source), shader(shader), mode(mode), vertex_count(vertices.size())
+    : PositionSource(position_source), shader(std::move(shader)), mode(mode), vertex_count(vertices.size())
 {
   glGenVertexArrays(1, &vao);
   glGenBuffers(1, &vbo);
@@ -54,15 +54,15 @@ Mesh3D< PositionSource >::Mesh3D(PositionSource position_source, std::shared_ptr
 
   glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
   glEnableVertexAttribArray(0);
 
   glBindVertexArray(0);
 }
 
 template< PositionProvider PositionSource >
-Mesh3D< PositionSource >::Mesh3D(Mesh3D&& other)
-    : scale(other.scale), shader(std::move(other.shader)), vao(other.vao), vbo(other.vbo), ebo(other.ebo), mode(other.mode), vertex_count(other.vertex_count), indices_count(other.indices_count)
+Mesh3D< PositionSource >::Mesh3D(Mesh3D&& other) noexcept
+    : shader(std::move(other.shader)), vao(other.vao), vbo(other.vbo), ebo(other.ebo), mode(other.mode), vertex_count(other.vertex_count), indices_count(other.indices_count)
 {
   other.vao = 0;
   other.vbo = 0;
@@ -70,7 +70,7 @@ Mesh3D< PositionSource >::Mesh3D(Mesh3D&& other)
 }
 
 template< PositionProvider PositionSource >
-Mesh3D< PositionSource >& Mesh3D< PositionSource >::operator=(Mesh3D&& other)
+auto Mesh3D< PositionSource >::operator=(Mesh3D&& other) noexcept -> Mesh3D< PositionSource >&
 {
   if (this == &other)
     return *this;
@@ -82,7 +82,6 @@ Mesh3D< PositionSource >& Mesh3D< PositionSource >::operator=(Mesh3D&& other)
   if (vao)
     glDeleteVertexArrays(1, &vao);
 
-  scale = std::move(other.scale);
   shader = std::move(other.shader);
   vao = other.vao;
   vbo = other.vbo;
@@ -110,19 +109,16 @@ Mesh3D< PositionSource >::~Mesh3D()
 }
 
 template< PositionProvider PositionSource >
-template< PositionProvider CameraPositionSource >
-void Mesh3D< PositionSource >::draw(const Camera< CameraPositionSource >& camera [[maybe_unused]])
+void Mesh3D< PositionSource >::draw()
 {
-  shader->use();
   glBindVertexArray(vao);
 
-  shader->set_uniform("uModelTransform", get_model_matrix(*this, glm::vec3{1.0} * 0.1f));
-  shader->set_uniform("uCameraTransform", camera.get_projection_matrix() * camera.get_view_matrix());
+  shader->set_uniform("uModelTransform", get_model_matrix(*this));
 
   uniform_setter_callback();
 
   if (ebo) {
-    glDrawElements(mode, indices_count, GL_UNSIGNED_INT, 0);
+    glDrawElements(mode, indices_count, GL_UNSIGNED_INT, nullptr);
   }
   else {
     glDrawArrays(mode, 0, vertex_count);

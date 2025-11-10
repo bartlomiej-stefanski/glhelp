@@ -1,8 +1,8 @@
-#include "glhelp/primitives/SimplePosition.hpp"
 #include <glm/ext.hpp>
 
-#include <glhelp/primitives/PlayerController.hpp>
-#include <glhelp/primitives/PositionProvider.hpp>
+#include <glhelp/position/PlayerController.hpp>
+#include <glhelp/position/PositionProvider.hpp>
+#include <glhelp/position/SimplePosition.hpp>
 
 namespace glhelp {
 

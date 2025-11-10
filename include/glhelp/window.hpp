@@ -16,14 +16,14 @@ public:
   Window(int width, int height, const std::string& name);
 
   Window(Window&& other) noexcept;
-  Window& operator=(Window&& other) noexcept;
+  auto operator=(Window&& other) noexcept -> Window&;
   Window(Window&) = delete;
-  Window& operator=(Window&) = delete;
+  auto operator=(Window&) -> Window& = delete;
 
   ~Window();
 
   /// Get current window aspect ration (width / height).
-  float aspect_ratio() const noexcept;
+  auto aspect_ratio() const noexcept -> float;
 
   /// Event that occurs each time a resize occurs.
   /// The arguments passed to the callback are (in order):
@@ -42,15 +42,15 @@ public:
 
   /// Event that occurs each time mouse is moved.
   /// The arguments passed to the callback are (in order):
-  /// - xpos: The new x position of the mouse cursor.
-  /// - ypos: The new y position of the mouse cursor.
+  /// - xoffset: normalized (to screen size) movement in horizonstal direction.
+  /// - yoffset: normalized (to screen size) movement in vertical direction.
   Event< void(float, float) > mouse_event;
 
   /// Runs the main loop synchronously.
-  void run_synchronously(std::function< void(Window&, double) > main_loop);
+  void run_synchronously(const std::function< void(Window&, double, double) >& main_loop);
 
   /// Returns the underlying GLFW window handle.
-  GLFWwindow* get_window() noexcept { return window; }
+  auto get_window() noexcept -> GLFWwindow* { return window; }
 
 private:
   /// Window dimensions in pixels.

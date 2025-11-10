@@ -7,11 +7,22 @@
 
 namespace glhelp {
 
-ShaderProgram::ShaderProgram(const std::vector< GLuint >&& shaders) { program_id = link_program(std::move(shaders)); }
+ShaderProgram::ShaderProgram(std::vector< GLuint >&& shaders)
+{
+  if (!common_data.has_value()) {
+    common_data.emplace(GL_DYNAMIC_DRAW);
+  }
+
+  program_id = link_program(std::move(shaders));
+  GLuint common_buffer{glGetUniformBlockIndex(program_id, "lCommon")};
+  if (common_buffer != GL_INVALID_INDEX) {
+    glUniformBlockBinding(program_id, common_buffer, common_data.value().get_index());
+  }
+}
 
 ShaderProgram::ShaderProgram(ShaderProgram&& other) noexcept : program_id(other.program_id) { other.program_id = 0; }
 
-ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept
+auto ShaderProgram::operator=(ShaderProgram&& other) noexcept -> ShaderProgram&
 {
   if (this != &other) {
     glDeleteProgram(program_id);
@@ -23,7 +34,7 @@ ShaderProgram& ShaderProgram::operator=(ShaderProgram&& other) noexcept
 
 ShaderProgram::~ShaderProgram() { glDeleteProgram(program_id); }
 
-GLuint ShaderProgram::get_uniform_location(const std::string& name) const
+auto ShaderProgram::get_uniform_location(const std::string& name) const -> GLuint
 {
   if (uniform_locations.find(name) != uniform_locations.end()) {
     return uniform_locations.at(name);
@@ -49,7 +60,7 @@ void ShaderProgram::use() const
   glUseProgram(program_id);
 }
 
-GLuint create_shader(GLenum type, const std::string& source)
+auto create_shader(GLenum type, const std::string& source) -> GLuint
 {
   GLuint shader{glCreateShader(type)};
   if (shader == 0) {
@@ -75,7 +86,7 @@ GLuint create_shader(GLenum type, const std::string& source)
   return shader;
 }
 
-GLuint link_program(const std::vector< GLuint >&& shaders)
+auto link_program(const std::vector< GLuint >&& shaders) -> GLuint
 {
   GLuint program{glCreateProgram()};
   if (program == 0) {

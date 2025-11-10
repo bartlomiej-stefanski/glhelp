@@ -10,12 +10,12 @@ public:
   ~GLFWContext();
 
   GLFWContext(const GLFWContext&) = delete;
-  GLFWContext& operator=(const GLFWContext&) = delete;
+  auto operator=(const GLFWContext&) -> GLFWContext& = delete;
 
   GLFWContext(GLFWContext&& other) noexcept;
-  GLFWContext& operator=(GLFWContext&& other) noexcept;
+  auto operator=(GLFWContext&& other) noexcept -> GLFWContext&;
 
-  static bool is_initialized() { return initialized; }
+  static auto is_initialized() -> bool { return initialized; }
 
 private:
   inline static bool initialized{false};

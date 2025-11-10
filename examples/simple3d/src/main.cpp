@@ -1,16 +1,16 @@
-#include <iostream>
 #include <memory>
 
 #include <glad/gl.h>
 
 #include <GLFW/glfw3.h>
 
-#include <glhelp/glfw_context.hpp>
-#include <glhelp/primitives/PlayerController.hpp>
-#include <glhelp/primitives/SimplePosition.hpp>
-#include <glhelp/primitives/camera.hpp>
-#include <glhelp/primitives/mesh3d.hpp>
+#include <glhelp/camera.hpp>
+#include <glhelp/mesh/mesh3d.hpp>
+#include <glhelp/position/PlayerController.hpp>
+#include <glhelp/position/SimplePosition.hpp>
+#include <glhelp/scene.hpp>
 #include <glhelp/shader.hpp>
+#include <glhelp/utils/glfw_context.hpp>
 #include <glhelp/window.hpp>
 
 void run_program()
@@ -26,13 +26,12 @@ void run_program()
 
   glhelp::Camera< glhelp::PlayerController > camera(
       window,
-      glhelp::PlayerController(glm::vec3{0, 0, 1}, 0, 0, 0),
-      90.0f,
-      0.1,
-      100.0);
+      glhelp::PlayerController(glm::vec3{0, 0, 5}, 0, 0, 0),
+      90.0F,
+      0.1F,
+      100.0F);
 
-  std::shared_ptr< glhelp::ShaderProgram > green_shader{
-      std::make_shared< glhelp::ShaderProgram >(std::move(shaders))};
+  auto default_shader{std::make_shared< glhelp::ShaderProgram >(std::move(shaders))};
 
   /*    7-----4
    *   /|   / |
@@ -73,61 +72,66 @@ void run_program()
       2, 6, 5};
 
   auto mouse_delegate = window->mouse_event.new_delegate([&camera](float xoffset, float yoffset) {
-    camera.look_up(yoffset / 200.0);
-    camera.look_right(-xoffset / 200.0);
+    camera.look_up(yoffset);
+    camera.look_right(-xoffset);
   });
   window->mouse_event.connect(mouse_delegate);
 
-  glhelp::Mesh3D cube(glhelp::SimplePosition{}, green_shader, triangle_vertices, indices, GL_TRIANGLES);
+  auto cube{std::make_shared< glhelp::Mesh3D< glhelp::SimplePosition > >(
+      glhelp::SimplePosition{}, default_shader, triangle_vertices, indices, GL_TRIANGLES)};
 
-  auto main_loop = [&camera, &cube, time = 0.0f]([[maybe_unused]] glhelp::Window& window, double frame_time) mutable {
+  glhelp::Scene main_scene;
+
+  main_scene.add_object(cube);
+
+  auto main_loop = [&main_scene, &camera, &cube]([[maybe_unused]] glhelp::Window& window, double time, double frame_time) {
     if (glfwGetKey(window.get_window(), GLFW_KEY_W) == GLFW_PRESS) {
-      camera.move_forwards(-2.0f * frame_time);
+      camera.move_forwards(-2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_S) == GLFW_PRESS) {
-      camera.move_forwards(2.0f * frame_time);
+      camera.move_forwards(2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_D) == GLFW_PRESS) {
-      camera.strafe(2.0f * frame_time);
+      camera.strafe(2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_A) == GLFW_PRESS) {
-      camera.strafe(-2.0f * frame_time);
+      camera.strafe(-2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_SPACE) == GLFW_PRESS) {
       camera.move_up(2.0f * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-      camera.move_up(-2.0f * frame_time);
+      camera.move_up(-2.0F * frame_time);
     }
 
     if (glfwGetKey(window.get_window(), GLFW_KEY_UP) == GLFW_PRESS) {
-      camera.look_up(2.0f * frame_time);
+      camera.look_up(2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_DOWN) == GLFW_PRESS) {
-      camera.look_up(-2.0f * frame_time);
+      camera.look_up(-2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_RIGHT) == GLFW_PRESS) {
-      camera.look_right(-2.0f * frame_time);
+      camera.look_right(-2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_LEFT) == GLFW_PRESS) {
-      camera.look_right(2.0f * frame_time);
+      camera.look_right(2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_E) == GLFW_PRESS) {
-      camera.roll_cc(-2.0f * frame_time);
+      camera.roll_cc(-2.0F * frame_time);
     }
     if (glfwGetKey(window.get_window(), GLFW_KEY_Q) == GLFW_PRESS) {
-      camera.roll_cc(2.0f * frame_time);
+      camera.roll_cc(2.0F * frame_time);
     }
 
-    cube.set_rotation(time, 0, 0);
-    cube.draw(camera);
-    time += frame_time;
+    cube->set_rotation(time, 0, 0);
+
+    main_scene.draw_objects(camera, time);
   };
 
   window->run_synchronously(main_loop);
 }
 
-int main()
+auto main() -> int
 {
   glhelp::GLFWContext context;
   run_program();

@@ -2,8 +2,8 @@
 
 #include <functional>
 
-#include <glhelp/primitives/PositionProvider.hpp>
-#include <glhelp/primitives/SimplePosition.hpp>
+#include <glhelp/position/PositionProvider.hpp>
+#include <glhelp/position/SimplePosition.hpp>
 
 namespace glhelp {
 
@@ -22,14 +22,17 @@ public:
   {
   }
 
-  glm::vec3 get_position() const
+  [[nodiscard]] auto get_position() const -> glm::vec3
   {
     return position_source->get_position() + (position_source->get_rotation() * offset);
   }
-  glm::quat get_rotation() const
+  [[nodiscard]] auto get_rotation() const -> glm::vec3
   {
     return position_source->get_rotation() * offset_rotation;
   }
+
+  // Scale has no sense for PositionFollower.
+  [[nodiscard]] auto get_scale() const -> glm::vec3 { return glm::vec3{1.0F}; }
 
 private:
   glm::vec3 offset{};

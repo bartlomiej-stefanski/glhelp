@@ -6,7 +6,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include <glhelp/glfw_context.hpp>
+#include <glhelp/utils/glfw_context.hpp>
 #include <glhelp/window.hpp>
 
 namespace glhelp {
@@ -49,7 +49,7 @@ Window::Window(int width, int height, const std::string& name)
   if (version == 0) {
     throw std::runtime_error("Failed to initialize GLAD");
   }
-  std::cerr << "Loaded OpenGL " << GLAD_VERSION_MAJOR(version) << '.' << GLAD_VERSION_MINOR(version) << std::endl;
+  std::cerr << "Loaded OpenGL " << GLAD_VERSION_MAJOR(version) << '.' << GLAD_VERSION_MINOR(version) << '\n';
 
   glfwGetWindowSize(window, &this->width, &this->height);
 
@@ -72,7 +72,7 @@ Window::Window(int width, int height, const std::string& name)
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glfwSetCursorPosCallback(window, Window::initial_mouse_callback);
 
-  glfwSwapInterval(1); // VSync
+  glfwSwapInterval(0); // VSync
   glEnable(GL_MULTISAMPLE);
 };
 
@@ -85,7 +85,7 @@ Window::Window(Window&& other) noexcept
   other.height = 0;
 }
 
-Window& Window::operator=(Window&& other) noexcept
+auto Window::operator=(Window&& other) noexcept -> Window&
 {
   if (this != &other) {
     glfwDestroyWindow(window);
@@ -108,7 +108,7 @@ Window::~Window()
     glfwDestroyWindow(window);
 }
 
-float Window::aspect_ratio() const noexcept { return (float)width / (float)height; }
+auto Window::aspect_ratio() const noexcept -> float { return (float)width / (float)height; }
 
 void Window::resize_cb(int new_width, int new_heigth)
 {
@@ -130,12 +130,12 @@ void Window::key_cb([[maybe_unused]] int key, [[maybe_unused]] int scancode, [[m
 
 void Window::mouse_cb(double xpos, double ypos)
 {
-  mouse_event(xpos - last_xpos, last_ypos - ypos);
+  mouse_event((xpos - last_xpos) / width, (last_ypos - ypos) / height);
   last_xpos = xpos;
   last_ypos = ypos;
 }
 
-void Window::run_synchronously(std::function< void(Window&, double) > main_loop)
+void Window::run_synchronously(const std::function< void(Window&, double, double) >& main_loop)
 {
   double prev_time{glfwGetTime()};
   GLenum error;
@@ -146,12 +146,16 @@ void Window::run_synchronously(std::function< void(Window&, double) > main_loop)
       throw std::runtime_error("OpenGL error before main loop: " + std::to_string(error));
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glfwPollEvents();
 
-    main_loop(*this, glfwGetTime() - prev_time);
-    prev_time = glfwGetTime();
+    const double curr_time{glfwGetTime()};
+    const double delta_frame{curr_time - prev_time};
+
+    main_loop(*this, curr_time, delta_frame);
+
+    prev_time = curr_time;
 
     glfwSwapBuffers(window);
-    glfwPollEvents();
 
     error = glGetError();
     if (error != GL_NO_ERROR)
@@ -161,8 +165,11 @@ void Window::run_synchronously(std::function< void(Window&, double) > main_loop)
 
 void Window::resize_callback(GLFWwindow* window, int new_width, int new_height)
 {
+  // Do not emit resize event immediatley after resize
+  glfwSetCursorPosCallback(window, Window::initial_mouse_callback);
+
   void* ptr{glfwGetWindowUserPointer(window)};
-  if (Window* winPtr = static_cast< Window* >(ptr)) {
+  if (auto winPtr{static_cast< Window* >(ptr)}) {
     winPtr->resize_cb(new_width, new_height);
   }
 }
@@ -170,21 +177,21 @@ void Window::resize_callback(GLFWwindow* window, int new_width, int new_height)
 void Window::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
   void* ptr{glfwGetWindowUserPointer(window)};
-  if (Window* winPtr = static_cast< Window* >(ptr))
+  if (auto winPtr{static_cast< Window* >(ptr)})
     winPtr->key_cb(key, scancode, action, mods);
 }
 
 void Window::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
   void* ptr{glfwGetWindowUserPointer(window)};
-  if (Window* winPtr = static_cast< Window* >(ptr))
+  if (auto winPtr{static_cast< Window* >(ptr)})
     winPtr->mouse_cb(xpos, ypos);
 }
 
 void Window::initial_mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
   void* ptr{glfwGetWindowUserPointer(window)};
-  if (Window* winPtr = static_cast< Window* >(ptr)) {
+  if (auto winPtr{static_cast< Window* >(ptr)}) {
     winPtr->last_xpos = xpos;
     winPtr->last_ypos = ypos;
     glfwSetCursorPosCallback(window, Window::mouse_callback);

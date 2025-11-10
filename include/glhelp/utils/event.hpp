@@ -11,19 +11,17 @@ namespace glhelp {
 template< typename T >
 class Event {
 public:
-  Event()
-  {
-  }
+  Event() = default;
 
   Event(const Event< T >&) = delete;
-  Event< T >& operator=(const Event< T >&) = delete;
+  auto operator=(const Event< T >&) -> Event< T >& = delete;
 
-  Event(Event< T >&& other)
+  Event(Event< T >&& other) noexcept
       : delegates(std::move(other.delegates))
   {
   }
 
-  Event< T >& operator=(Event< T >&& other)
+  auto operator=(Event< T >&& other) noexcept -> Event< T >&
   {
     std::swap(delegates, other.delegates);
   }
@@ -41,6 +39,11 @@ public:
         : delegate(delegate), id(id), event(event)
     {
     }
+
+    EventDelegate(const EventDelegate&) = delete;
+    auto operator=(const EventDelegate&) -> EventDelegate& = delete;
+    EventDelegate(EventDelegate&&) = delete;
+    auto operator=(EventDelegate&&) -> EventDelegate& = delete;
 
     ~EventDelegate()
     {
@@ -65,7 +68,7 @@ public:
     friend Event< T >;
   };
 
-  EventDelegate new_delegate(std::function< T >&& lambda)
+  auto new_delegate(std::function< T >&& lambda) -> EventDelegate
   {
     return EventDelegate(std::move(lambda), id++, *this);
   }

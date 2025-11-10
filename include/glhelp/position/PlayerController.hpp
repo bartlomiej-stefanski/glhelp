@@ -1,7 +1,7 @@
 #pragma once
 
-#include <glhelp/primitives/PositionProvider.hpp>
-#include <glhelp/primitives/SimplePosition.hpp>
+#include <glhelp/position/PositionProvider.hpp>
+#include <glhelp/position/SimplePosition.hpp>
 
 namespace glhelp {
 

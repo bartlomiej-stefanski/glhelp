@@ -15,14 +15,14 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include <glhelp/primitives/PositionProvider.hpp>
-#include <glhelp/primitives/mesh2d.hpp>
+#include <glhelp/mesh/mesh2d.hpp>
+#include <glhelp/position/PositionProvider.hpp>
 
 namespace glhelp {
 
 template< PositionProvider PositionSource >
 Mesh2D< PositionSource >::Mesh2D(PositionSource position_source, std::shared_ptr< ShaderProgram > shader, const std::vector< glm::vec2 >& vertices, const std::vector< GLuint >& indices, GLenum mode)
-    : PositionSource(position_source), shader(shader), mode(mode), vertex_count(vertices.size()), indices_count(indices.size())
+    : PositionSource(position_source), shader(std::move(shader)), mode(mode), vertex_count(vertices.size()), indices_count(indices.size())
 {
   glGenVertexArrays(1, &vao);
   glGenBuffers(1, &vbo);
@@ -36,7 +36,7 @@ Mesh2D< PositionSource >::Mesh2D(PositionSource position_source, std::shared_ptr
 
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), nullptr);
   glEnableVertexAttribArray(0);
 
   glBindVertexArray(0);
@@ -44,7 +44,7 @@ Mesh2D< PositionSource >::Mesh2D(PositionSource position_source, std::shared_ptr
 
 template< PositionProvider PositionSource >
 Mesh2D< PositionSource >::Mesh2D(PositionSource position_source, std::shared_ptr< ShaderProgram > shader, const std::vector< glm::vec2 >& vertices, GLenum mode)
-    : PositionSource(position_source), shader(shader), mode(mode), vertex_count(vertices.size())
+    : PositionSource(position_source), shader(std::move(shader)), mode(mode), vertex_count(vertices.size())
 {
   glGenVertexArrays(1, &vao);
   glGenBuffers(1, &vbo);
@@ -55,14 +55,14 @@ Mesh2D< PositionSource >::Mesh2D(PositionSource position_source, std::shared_ptr
 
   glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec2), vertices.data(), GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
   glEnableVertexAttribArray(0);
 
   glBindVertexArray(0);
 }
 
 template< PositionProvider PositionSource >
-Mesh2D< PositionSource >::Mesh2D(Mesh2D&& other)
+Mesh2D< PositionSource >::Mesh2D(Mesh2D&& other) noexcept
     : scale(other.scale), shader(std::move(other.shader)), vao(other.vao), vbo(other.vbo), ebo(other.ebo), mode(other.mode), vertex_count(other.vertex_count), indices_count(other.indices_count)
 {
   other.vao = 0;
@@ -71,7 +71,7 @@ Mesh2D< PositionSource >::Mesh2D(Mesh2D&& other)
 }
 
 template< PositionProvider PositionSource >
-Mesh2D< PositionSource >& Mesh2D< PositionSource >::operator=(Mesh2D&& other)
+auto Mesh2D< PositionSource >::operator=(Mesh2D&& other) noexcept -> Mesh2D< PositionSource >&
 {
   if (this == &other)
     return *this;
@@ -83,7 +83,7 @@ Mesh2D< PositionSource >& Mesh2D< PositionSource >::operator=(Mesh2D&& other)
   if (vao)
     glDeleteVertexArrays(1, &vao);
 
-  scale = std::move(other.scale);
+  scale = other.scale;
   shader = std::move(other.shader);
   vao = other.vao;
   vbo = other.vbo;
@@ -124,7 +124,7 @@ void Mesh2D< PositionSource >::draw(GLfloat aspect_ratio)
   uniform_setter_callback();
 
   if (ebo) {
-    glDrawElements(mode, indices_count, GL_UNSIGNED_INT, 0);
+    glDrawElements(mode, indices_count, GL_UNSIGNED_INT, nullptr);
   }
   else {
     glDrawArrays(mode, 0, vertex_count);
@@ -132,7 +132,7 @@ void Mesh2D< PositionSource >::draw(GLfloat aspect_ratio)
 }
 
 template< PositionProvider PositionSource >
-glm::mat2 Mesh2D< PositionSource >::calculate_rotation_matrix(GLfloat angle)
+auto Mesh2D< PositionSource >::calculate_rotation_matrix(GLfloat angle) -> glm::mat2
 {
   return glm::mat2{
       glm::vec2{glm::cos(angle), glm::sin(angle)},
@@ -140,13 +140,13 @@ glm::mat2 Mesh2D< PositionSource >::calculate_rotation_matrix(GLfloat angle)
 }
 
 template< PositionProvider PositionSource >
-glm::mat2 Mesh2D< PositionSource >::get_rotation_matrix()
+auto Mesh2D< PositionSource >::get_rotation_matrix() -> glm::mat2
 {
   const glm::vec3 euler_angles{glm::eulerAngles(this->get_rotation())};
   return calculate_rotation_matrix(euler_angles.z);
 }
 
-inline bool sat_overlap(const std::vector< glm::vec2 >& a, const std::vector< glm::vec2 >& b)
+inline auto sat_overlap(const std::vector< glm::vec2 >& a, const std::vector< glm::vec2 >& b) -> bool
 {
   auto edge_normal = [](const glm::vec2& a, const glm::vec2& b) {
     glm::vec2 edge{b - a};
