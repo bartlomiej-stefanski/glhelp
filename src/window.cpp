@@ -93,13 +93,12 @@ void Window::resize_cb(int new_width, int new_heigth)
   resize_event(new_width, new_heigth);
 }
 
-void Window::key_cb([[maybe_unused]] int key, [[maybe_unused]] int scancode, [[maybe_unused]] int action,
-                    [[maybe_unused]] int mods)
+void Window::key_cb(int key, [[maybe_unused]] int scancode, [[maybe_unused]] int action, [[maybe_unused]] int mods)
 {
   if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     glfwSetWindowShouldClose(window, true);
 
-  key_event[key](key, scancode, action, mods);
+  key_event[key](key, action, mods, last_frame_time);
 }
 
 void Window::mouse_cb(double xpos, double ypos)
@@ -123,9 +122,9 @@ void Window::run_synchronously(const std::function< void(Window&, double, double
     glfwPollEvents();
 
     const double curr_time{glfwGetTime()};
-    const double delta_frame{curr_time - prev_time};
+    last_frame_time = curr_time - prev_time;
 
-    main_loop(*this, curr_time, delta_frame);
+    main_loop(*this, curr_time, last_frame_time);
 
     prev_time = curr_time;
 

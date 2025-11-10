@@ -3,8 +3,9 @@
 #include <functional>
 #include <string>
 
-#include <GLFW/glfw3.h>
 #include <glad/gl.h>
+
+#include <GLFW/glfw3.h>
 
 #include <glhelp/shader.hpp>
 #include <glhelp/utils/event.hpp>
@@ -30,21 +31,24 @@ public:
   /// - width: The new width of the window.
   /// - height: The new height of the window.
   Event< void(int, int) > resize_event;
+  using ResizeEventDelegate = std::shared_ptr< decltype(resize_event)::EventDelegate >;
 
   /// Set of events to be generated when a given key is pressed or released.
   /// For non-async use cases polling is preferred.
   /// The arguments passed to the callback are (in order):
-  /// - key: The key that was pressed or released.
-  /// - scancode: The system-specific scancode of the key.
+  /// - key: What key caused an event.
   /// - action: The action that was performed on the key (GLFW_PRESS, GLFW_RELEASE, GLFW_REPEAT).
   /// - mods: Bitfield describing which modifier keys were held down.
-  std::unordered_map< int, Event< void(int, int, int, int) > > key_event;
+  /// - frame_time: time since last frame.
+  std::unordered_map< int, Event< void(int, int, int, float) > > key_event;
+  using KeyEventDelegate = std::shared_ptr< decltype(key_event.begin()->second)::EventDelegate >;
 
   /// Event that occurs each time mouse is moved.
   /// The arguments passed to the callback are (in order):
   /// - xoffset: normalized (to screen size) movement in horizonstal direction.
   /// - yoffset: normalized (to screen size) movement in vertical direction.
   Event< void(float, float) > mouse_event;
+  using MouseEventDelegate = std::shared_ptr< decltype(mouse_event)::EventDelegate >;
 
   /// Runs the main loop synchronously.
   void run_synchronously(const std::function< void(Window&, double, double) >& main_loop);
@@ -55,6 +59,7 @@ public:
 private:
   /// Window dimensions in pixels.
   int width, height;
+  float last_frame_time;
 
   GLFWwindow* window = nullptr;
   GLFWmonitor* monitor = nullptr;

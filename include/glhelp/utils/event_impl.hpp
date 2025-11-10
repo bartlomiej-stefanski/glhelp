@@ -5,6 +5,7 @@
 #define REC_EVENT_GUARD
 
 #include <functional>
+#include <iostream>
 #include <memory>
 #include <optional>
 #include <unordered_map>
@@ -74,6 +75,12 @@ template< typename T >
   auto new_delegate{std::make_shared< EventDelegate >(EventDelegate(std::move(lambda), id++, *this))};
   delegates[new_delegate->id] = new_delegate;
   return new_delegate;
+}
+
+template< typename T >
+void Event< T >::operator+=(std::shared_ptr< EventDelegate >& delegate)
+{
+  delegates[delegate->id] = delegate;
 }
 
 template< typename T >

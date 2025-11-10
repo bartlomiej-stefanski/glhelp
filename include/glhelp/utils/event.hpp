@@ -51,6 +51,7 @@ public:
   };
 
   [[nodiscard]] auto connect(std::function< T >&& lambda) -> std::shared_ptr< EventDelegate >;
+  void operator+=(std::shared_ptr< EventDelegate >& delegate);
 
   void disconnect(EventDelegate& event_delegate);
 
