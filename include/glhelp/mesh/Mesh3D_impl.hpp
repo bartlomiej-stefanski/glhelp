@@ -14,7 +14,7 @@
 #include <glm/geometric.hpp>
 #include <glm/glm.hpp>
 
-#include <glhelp/mesh/mesh3d.hpp>
+#include <glhelp/mesh/Mesh3D.hpp>
 #include <glhelp/position/PositionProvider.hpp>
 
 namespace glhelp {

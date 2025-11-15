@@ -38,7 +38,6 @@ concept PositionController = requires(T& a, float f) {
   { a.move_up(f) };
 };
 
-
 template< PositionProvider PositionSource >
 auto calculate_model_matrix(const PositionSource& position_source) -> glm::mat4
 {

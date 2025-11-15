@@ -6,8 +6,8 @@
 
 #include <glm/glm.hpp>
 
+#include <glhelp/Shader.hpp>
 #include <glhelp/position/PositionProvider.hpp>
-#include <glhelp/shader.hpp>
 
 namespace glhelp {
 
@@ -68,4 +68,4 @@ auto sat_overlap(const std::vector< glm::vec2 >& a, const std::vector< glm::vec2
 } // namespace glhelp
 
 // Include header implementation
-#include <glhelp/mesh/mesh2d_impl.hpp>
+#include <glhelp/mesh/Mesh2D_impl.hpp>

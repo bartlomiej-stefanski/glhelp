@@ -2,14 +2,15 @@
 
 #include <array>
 #include <cassert>
+#include <vector>
+
 #include <glad/gl.h>
 
 #include <glm/glm.hpp>
-
-#include <glhelp/mesh/mesh3d.hpp>
-#include <glhelp/position/PositionProvider.hpp>
 #include <glm/gtc/random.hpp>
-#include <vector>
+
+#include <glhelp/mesh/Mesh3D.hpp>
+#include <glhelp/position/PositionProvider.hpp>
 
 namespace glhelp {
 
@@ -54,4 +55,4 @@ protected:
 } // namespace glhelp
 
 // Include template ipmlementation
-#include <glhelp/mesh/InstancedMesh3d_impl.hpp>
+#include <glhelp/mesh/InstancedMesh3D_impl.hpp>

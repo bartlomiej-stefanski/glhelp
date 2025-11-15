@@ -7,8 +7,8 @@
 
 #include <GLFW/glfw3.h>
 
-#include <glhelp/position/PositionProvider.hpp>
 #include <glhelp/position/InteractiveController.hpp>
+#include <glhelp/position/PositionProvider.hpp>
 
 namespace glhelp {
 

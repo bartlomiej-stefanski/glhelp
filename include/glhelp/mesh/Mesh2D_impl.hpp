@@ -15,7 +15,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include <glhelp/mesh/mesh2d.hpp>
+#include <glhelp/mesh/Mesh2D.hpp>
 #include <glhelp/position/PositionProvider.hpp>
 
 namespace glhelp {

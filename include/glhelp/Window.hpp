@@ -7,8 +7,8 @@
 
 #include <GLFW/glfw3.h>
 
-#include <glhelp/shader.hpp>
-#include <glhelp/utils/event.hpp>
+#include <glhelp/Shader.hpp>
+#include <glhelp/utils/Event.hpp>
 
 namespace glhelp {
 

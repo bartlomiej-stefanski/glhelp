@@ -7,8 +7,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include <glhelp/position/PositionProvider.hpp>
-#include <glhelp/window.hpp>
+#include <glhelp/Window.hpp>
+#include <glhelp/position/Position.hpp>
 
 namespace glhelp {
 

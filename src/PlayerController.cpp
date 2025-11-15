@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <glm/ext.hpp>
 
 #include <glhelp/position/PlayerController.hpp>

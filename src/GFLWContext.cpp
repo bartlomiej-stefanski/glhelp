@@ -2,7 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include <glhelp/utils/glfw_context.hpp>
+#include <glhelp/utils/GLFWContext.hpp>
 
 namespace glhelp {
 

@@ -1,8 +1,8 @@
 #include <glm/ext.hpp>
 
 #include <glhelp/position/FPSPlayerController.hpp>
-#include <glhelp/position/PositionProvider.hpp>
 #include <glhelp/position/FPSSimplePosition.hpp>
+#include <glhelp/position/PositionProvider.hpp>
 
 namespace glhelp {
 

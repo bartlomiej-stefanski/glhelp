@@ -4,7 +4,7 @@
 
 #include <glad/gl.h>
 
-#include <glhelp/shader.hpp>
+#include <glhelp/Shader.hpp>
 
 namespace glhelp {
 

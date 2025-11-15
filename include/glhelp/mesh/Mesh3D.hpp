@@ -6,10 +6,9 @@
 
 #include <glm/glm.hpp>
 
-#include <glhelp/camera.hpp>
-#include <glhelp/mesh/renderable.hpp>
+#include <glhelp/Shader.hpp>
+#include <glhelp/mesh/Renderable.hpp>
 #include <glhelp/position/PositionProvider.hpp>
-#include <glhelp/shader.hpp>
 
 namespace glhelp {
 
@@ -66,4 +65,4 @@ protected:
 } // namespace glhelp
 
 // Include header implementation
-#include <glhelp/mesh/mesh3d_impl.hpp>
+#include <glhelp/mesh/Mesh3D_impl.hpp>

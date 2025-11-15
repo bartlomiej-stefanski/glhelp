@@ -11,7 +11,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <glhelp/utils/shader_helpers.hpp>
+#include <glhelp/utils/ShaderHelpers.hpp>
 
 namespace glhelp {
 

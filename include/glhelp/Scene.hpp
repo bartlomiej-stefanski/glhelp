@@ -3,10 +3,10 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include <glhelp/camera.hpp>
-#include <glhelp/mesh/renderable.hpp>
-#include <glhelp/position/PositionProvider.hpp>
-#include <glhelp/shader.hpp>
+#include <glhelp/Camera.hpp>
+#include <glhelp/Shader.hpp>
+#include <glhelp/mesh/Renderable.hpp>
+#include <glhelp/position/Position.hpp>
 
 namespace glhelp {
 

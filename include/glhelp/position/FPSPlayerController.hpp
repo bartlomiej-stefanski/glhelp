@@ -1,7 +1,7 @@
 #pragma once
 
-#include <glhelp/position/PositionProvider.hpp>
 #include <glhelp/position/FPSSimplePosition.hpp>
+#include <glhelp/position/PositionProvider.hpp>
 
 namespace glhelp {
 

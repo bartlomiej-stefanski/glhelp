@@ -4,18 +4,14 @@
 
 #include <GLFW/glfw3.h>
 
-#include <glhelp/camera.hpp>
-#include <glhelp/mesh/InstancedMesh3d.hpp>
-#include <glhelp/mesh/mesh3d.hpp>
-#include <glhelp/position/InteractiveController.hpp>
-#include <glhelp/position/PlayerController.hpp>
-#include <glhelp/position/FPSSimplePosition.hpp>
-#include <glhelp/position/FPSPlayerController.hpp>
-#include <glhelp/position/SimplePosition.hpp>
-#include <glhelp/scene.hpp>
-#include <glhelp/shader.hpp>
-#include <glhelp/utils/glfw_context.hpp>
-#include <glhelp/window.hpp>
+#include <glhelp/Camera.hpp>
+#include <glhelp/Scene.hpp>
+#include <glhelp/Shader.hpp>
+#include <glhelp/Window.hpp>
+#include <glhelp/mesh/InstancedMesh3D.hpp>
+#include <glhelp/mesh/Mesh3D.hpp>
+#include <glhelp/position/Position.hpp>
+#include <glhelp/utils/GLFWContext.hpp>
 
 #ifndef SHADER_DIR_PATH
 #warning "Shader directory undefined. Please define SHADER_DIR_PATH macro."
@@ -30,10 +26,9 @@ void run_program()
       glhelp::create_shader_from_file(GL_FRAGMENT_SHADER, SHADER_DIR_PATH "fragment.glsl")};
 
   auto camera{std::make_shared< glhelp::Camera< glhelp::InteractiveController< glhelp::FPSPlayerController > > >(
-    window,
-    glhelp::FPSPlayerController(glhelp::FPSSimplePosition({0, 0, 5}, 0, 0, 0), 2, 1),
-    90.0F, 0.1F, 100.0F
-  )};
+      window,
+      glhelp::FPSPlayerController(glhelp::FPSSimplePosition({0, 0, 5}, 0, 0, 0), 2, 1),
+      90.0F, 0.1F, 100.0F)};
 
   auto default_shader{std::make_shared< glhelp::ShaderProgram >(std::move(shaders))};
 

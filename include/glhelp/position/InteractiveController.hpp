@@ -1,9 +1,9 @@
 #pragma once
 
+#include <glhelp/Window.hpp>
 #include <glhelp/position/PlayerController.hpp>
 #include <glhelp/position/PositionProvider.hpp>
-#include <glhelp/utils/event.hpp>
-#include <glhelp/window.hpp>
+#include <glhelp/utils/Event.hpp>
 
 namespace glhelp {
 

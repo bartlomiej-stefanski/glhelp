@@ -3,7 +3,7 @@
 #include <cstddef>
 #include <memory>
 
-#include <glhelp/shader.hpp>
+#include <glhelp/Shader.hpp>
 
 namespace glhelp {
 

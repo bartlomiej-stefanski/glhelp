@@ -65,4 +65,4 @@ private:
 } // namespace glhelp
 
 // Include implementation.
-#include <glhelp/utils/event_impl.hpp>
+#include <glhelp/utils/Event_impl.hpp>

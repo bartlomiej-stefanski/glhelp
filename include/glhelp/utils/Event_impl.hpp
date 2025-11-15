@@ -9,7 +9,7 @@
 #include <optional>
 #include <unordered_map>
 
-#include <glhelp/utils/event.hpp>
+#include <glhelp/utils/Event.hpp>
 
 namespace glhelp {
 

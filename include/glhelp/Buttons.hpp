@@ -4,7 +4,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include <glhelp/window.hpp>
+#include <glhelp/Window.hpp>
 
 namespace glhelp {
 

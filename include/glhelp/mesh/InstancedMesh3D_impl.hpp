@@ -4,7 +4,7 @@
 #ifndef REC_INSTANCED_MESH3D_GUARD
 #define REC_INSTANCED_MESH3D_GUARD
 
-#include <glhelp/mesh/InstancedMesh3d.hpp>
+#include <glhelp/mesh/InstancedMesh3D.hpp>
 #include <glhelp/position/PositionProvider.hpp>
 
 namespace glhelp {

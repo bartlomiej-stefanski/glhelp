@@ -4,12 +4,12 @@
 
 #include <GLFW/glfw3.h>
 
-#include <glhelp/camera.hpp>
-#include <glhelp/mesh/mesh2d.hpp>
-#include <glhelp/position/SimplePosition.hpp>
-#include <glhelp/shader.hpp>
-#include <glhelp/utils/glfw_context.hpp>
-#include <glhelp/window.hpp>
+#include <glhelp/Camera.hpp>
+#include <glhelp/Shader.hpp>
+#include <glhelp/Window.hpp>
+#include <glhelp/mesh/Mesh2D.hpp>
+#include <glhelp/position/Position.hpp>
+#include <glhelp/utils/GLFWContext.hpp>
 
 #ifndef SHADER_DIR_PATH
 #warning "Shader directory undefined. Please define SHADER_DIR_PATH macro."
