@@ -18,7 +18,7 @@ void FPSPlayerController::look_right(float angle)
 
 void FPSPlayerController::look_up(float angle)
 {
-  rotation.x += angle * rotate_speed;
+  rotation.x = glm::clamp(rotation.x +  angle * rotate_speed, glm::radians(-89.0F), glm::radians(89.0F));
 }
 
 void FPSPlayerController::roll_cc(float angle)
