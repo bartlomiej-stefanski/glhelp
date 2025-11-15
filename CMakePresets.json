@@ -36,6 +36,14 @@
       }
     },
     {
+      "name": "use-clang",
+      "hidden": true,
+      "environment": {
+        "CC": "clang",
+        "CXX": "clang++"
+      }
+    },
+    {
       "name": "develop",
       "inherits": [
         "build-dirs",

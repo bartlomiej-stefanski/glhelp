@@ -3,6 +3,8 @@
 #extension GL_ARB_shading_language_420pack : require
 
 layout(location = 0) in vec3 pos;
+layout(location = 1) in vec3 offset_pos;
+layout(location = 2) in float brightness;
 
 layout (std140) uniform uCommon
 {
@@ -21,6 +23,6 @@ void main(void) {
 
   vec4 colors[] = {red, green, blue, red, green, blue, red, green};
 
-  vColor = colors[gl_VertexID];
-  gl_Position = cameraTransform * uModelTransform * vec4(pos, 1.0);
+  vColor = colors[gl_VertexID] * brightness;
+  gl_Position = cameraTransform * uModelTransform * vec4(pos + offset_pos, 1.0);
 }

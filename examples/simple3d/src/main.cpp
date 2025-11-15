@@ -5,9 +5,12 @@
 #include <GLFW/glfw3.h>
 
 #include <glhelp/camera.hpp>
+#include <glhelp/mesh/InstancedMesh3d.hpp>
 #include <glhelp/mesh/mesh3d.hpp>
 #include <glhelp/position/InteractiveController.hpp>
 #include <glhelp/position/PlayerController.hpp>
+#include <glhelp/position/FPSSimplePosition.hpp>
+#include <glhelp/position/FPSPlayerController.hpp>
 #include <glhelp/position/SimplePosition.hpp>
 #include <glhelp/scene.hpp>
 #include <glhelp/shader.hpp>
@@ -26,12 +29,11 @@ void run_program()
       glhelp::create_shader_from_file(GL_VERTEX_SHADER, SHADER_DIR_PATH "vertex.glsl"),
       glhelp::create_shader_from_file(GL_FRAGMENT_SHADER, SHADER_DIR_PATH "fragment.glsl")};
 
-  auto camera{std::make_shared< glhelp::Camera< glhelp::InteractiveController > >(
-      window,
-      glhelp::InteractiveController(glm::vec3{0, 0, 5}, 0, 0, 0),
-      90.0F,
-      0.1F,
-      100.0F)};
+  auto camera{std::make_shared< glhelp::Camera< glhelp::InteractiveController< glhelp::FPSPlayerController > > >(
+    window,
+    glhelp::FPSPlayerController(glhelp::FPSSimplePosition({0, 0, 5}, 0, 0, 0), 2, 1),
+    90.0F, 0.1F, 100.0F
+  )};
 
   auto default_shader{std::make_shared< glhelp::ShaderProgram >(std::move(shaders))};
 
@@ -73,17 +75,40 @@ void run_program()
       1, 2, 5,
       2, 6, 5};
 
-  auto cube{std::make_shared< glhelp::Mesh3D< glhelp::SimplePosition > >(
-      glhelp::SimplePosition{}, default_shader, triangle_vertices, indices, GL_TRIANGLES)};
+  constexpr auto instance_count = 4 * 4 * 4;
+  std::vector< glm::vec3 > positions;
+  positions.reserve(instance_count);
+  for (unsigned x = 0; x < 4; x++) {
+    for (unsigned y = 0; y < 4; y++) {
+      for (unsigned z = 0; z < 4; z++) {
+        positions.emplace_back(
+            static_cast< float >(x) * 4.0F,
+            static_cast< float >(y) * 4.0F,
+            static_cast< float >(z) * 4.0F);
+      }
+    }
+  }
+
+  std::vector< float > brightness{};
+  brightness.reserve(instance_count);
+  for (size_t i = 0; i < positions.size(); i++) {
+    brightness.emplace_back(glm::linearRand(0.1F, 1.0F));
+  }
+
+  glhelp::SimplePosition start_position{};
+  start_position.set_scale({0.3F, 0.3F, 0.3F});
+  auto cubes{std::make_shared< glhelp::InstancedMesh3d< glhelp::SimplePosition, glm::vec3, float > >(
+      start_position, default_shader, triangle_vertices, indices, GL_TRIANGLES,
+      std::tuple< std::vector< glm::vec3 >, std::vector< float > >{std::move(positions), std::move(brightness)})};
 
   glhelp::Scene main_scene;
 
-  main_scene.add_object(cube);
+  main_scene.add_object(cubes);
   camera->init_mouse(*window);
 
-  window->run_synchronously([&main_scene, &camera, &cube]([[maybe_unused]] glhelp::Window& window, double time, double frame_time) {
+  window->run_synchronously([&main_scene, &camera, &cubes]([[maybe_unused]] glhelp::Window& window, double time, double frame_time) {
     camera->poll_keys(window, static_cast< float >(frame_time));
-    cube->set_rotation(time, 0, 0);
+    cubes->set_rotation(time, 0, 0);
     main_scene.draw_objects(*camera, time);
   });
 }

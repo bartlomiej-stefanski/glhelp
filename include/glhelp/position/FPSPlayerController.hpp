@@ -1,14 +1,14 @@
 #pragma once
 
 #include <glhelp/position/PositionProvider.hpp>
-#include <glhelp/position/SimplePosition.hpp>
+#include <glhelp/position/FPSSimplePosition.hpp>
 
 namespace glhelp {
 
-class PlayerController : public SimplePosition {
+class FPSPlayerController : public FPSSimplePosition {
 public:
-  PlayerController() = default;
-  PlayerController(SimplePosition&& position, float move_speed = 1.0F, float rotate_speed = 1.0F);
+  FPSPlayerController() = default;
+  FPSPlayerController(FPSSimplePosition&& position, float move_speed = 1.0F, float rotate_speed = 1.0F);
 
   void look_right(float yaw_angle);
   void look_up(float pitch_angle);

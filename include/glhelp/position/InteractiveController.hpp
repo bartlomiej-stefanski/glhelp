@@ -7,9 +7,10 @@
 
 namespace glhelp {
 
-class InteractiveController : public PlayerController {
+template< PositionController Controller >
+class InteractiveController : public Controller {
 public:
-  InteractiveController(glm::vec3 position, float yaw, float pith, float roll);
+  InteractiveController(Controller&& controller);
 
   void init_mouse(Window& window);
   void poll_keys(Window& window, float frame_time);
@@ -22,3 +23,6 @@ public:
 };
 
 } // namespace glhelp
+
+// Include template implemntation
+#include <glhelp/position/InteractiveController_impl.hpp>

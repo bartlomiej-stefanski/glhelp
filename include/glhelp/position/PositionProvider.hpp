@@ -27,6 +27,18 @@ concept CachingPositionProvider = requires(const T& a) {
   { a.cache(glm::mat4{}) } -> std::convertible_to< glm::mat4 >;
 };
 
+template< typename T >
+concept PositionController = requires(T& a, float f) {
+  requires PositionProvider< T >;
+  { a.look_right(f) };
+  { a.look_up(f) };
+  { a.roll_cc(f) };
+  { a.move_forwards(f) };
+  { a.strafe(f) };
+  { a.move_up(f) };
+};
+
+
 template< PositionProvider PositionSource >
 auto calculate_model_matrix(const PositionSource& position_source) -> glm::mat4
 {
