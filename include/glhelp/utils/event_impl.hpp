@@ -5,7 +5,6 @@
 #define REC_EVENT_GUARD
 
 #include <functional>
-#include <iostream>
 #include <memory>
 #include <optional>
 #include <unordered_map>

@@ -16,7 +16,8 @@ namespace glhelp {
 /// General utility class for drawing simple 3D meshes.
 /// It will pass the following uniforms to the ShaderProgram:
 /// - uModelTransform: Scale of the mesh.
-/// - uCameraTransform: View and Projection matrices combined.
+///
+/// Other uniforms should be read from common fields provided by UniformBuffer.
 ///
 /// This class is meant to be used with a Camera class..
 /// Origin point of the mesh is assumed to be located at (0, 0)
@@ -45,6 +46,9 @@ public:
   }
 
 protected:
+  /// Number of layout parameters used by the mesh.
+  constexpr static unsigned layout_param_count{1};
+
   /// Called just before drawing the mesh.
   virtual void uniform_setter_callback() {}
 

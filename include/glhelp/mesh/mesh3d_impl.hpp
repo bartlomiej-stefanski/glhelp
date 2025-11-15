@@ -123,6 +123,8 @@ void Mesh3D< PositionSource >::draw()
   else {
     glDrawArrays(mode, 0, vertex_count);
   }
+
+  glBindVertexArray(0);
 }
 
 } // namespace glhelp
