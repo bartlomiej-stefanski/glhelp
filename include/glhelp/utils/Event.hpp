@@ -38,7 +38,7 @@ public:
 
   private:
     template< typename... P >
-    void call(P&&... params);
+    void operator()(P&&... params);
 
     void disconnect();
 

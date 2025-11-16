@@ -92,7 +92,7 @@ void InstancedMesh3d< PositionSource, InstanceData... >::create_instance_data(un
 
     for (unsigned i = 0; i < 4; i++) {
       glEnableVertexAttribArray(start_inx + i);
-      glVertexAttribPointer(start_inx + i, 4, GL_FLOAT, GL_FALSE, 0, reinterpret_cast< void* >(sizeof(float) * i * 4));
+      glVertexAttribPointer(start_inx + i, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), reinterpret_cast< void* >(sizeof(glm::vec4) * i));
       glVertexAttribDivisor(start_inx + i, 1);
     }
 

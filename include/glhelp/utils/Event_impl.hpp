@@ -51,7 +51,7 @@ Event< T >::EventDelegate::~EventDelegate()
 
 template< typename T >
 template< typename... P >
-void Event< T >::EventDelegate::call(P&&... params)
+void Event< T >::EventDelegate::operator()(P&&... params)
 {
   delegate(std::forward< P >(params)...);
 }
@@ -64,7 +64,7 @@ template< typename... P >
 void Event< T >::operator()(P&&... params)
 {
   for (const auto& [key, delegate] : delegates) {
-    delegate.lock()->call(std::forward< P >(params)...);
+    delegate.lock()->operator()(std::forward< P >(params)...);
   }
 }
 
