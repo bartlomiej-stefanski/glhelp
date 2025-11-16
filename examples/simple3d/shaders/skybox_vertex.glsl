@@ -3,7 +3,6 @@
 #extension GL_ARB_shading_language_420pack : require
 
 layout(location = 0) in vec3 pos;
-layout(location = 1) in mat4 instanceTransform;
 
 layout (std140) uniform uCommon
 {
@@ -16,7 +15,6 @@ out vec3 vPos;
 uniform mat4 uModelTransform;
 
 void main(void) {
-  vec4 object_transform = instanceTransform * vec4(pos, 1.0);
-  vPos = object_transform.xyz;
-  gl_Position = cameraTransform * uModelTransform * object_transform;
+  gl_Position = cameraTransform * uModelTransform * vec4(pos, 1.0);
+  vPos = pos.xyz;
 }

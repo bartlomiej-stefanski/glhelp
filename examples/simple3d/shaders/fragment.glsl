@@ -1,8 +1,8 @@
 #version 400
 
-in vec4 vColor;
+in vec3 vPos;
 out vec4 color;
 
 void main(void) {
-  color = vColor;
+  color = vec4(vPos * 0.8 + vec3(0.2, 0.2, 0.2), 1.0);
 }

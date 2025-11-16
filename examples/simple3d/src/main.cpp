@@ -1,3 +1,5 @@
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/fwd.hpp>
 #include <memory>
 
 #include <glad/gl.h>
@@ -13,97 +15,83 @@
 #include <glhelp/position/Position.hpp>
 #include <glhelp/utils/GLFWContext.hpp>
 
+#include "cube.hpp"
+
 #ifndef SHADER_DIR_PATH
 #warning "Shader directory undefined. Please define SHADER_DIR_PATH macro."
 #endif
 
-void run_program()
+void run_program(unsigned cube_side = 10)
 {
+  glm::vec3 obstacle_scale{glm::vec3{0.5F, 0.5F, 1.0F} / static_cast< float >(cube_side * 2)};
+
   std::shared_ptr< glhelp::Window > window{std::make_shared< glhelp::Window >(800, 800, "OpenGL simple 3d example")};
 
-  std::vector< GLuint > shaders{
+  std::vector< GLuint > obstacle_shaders{
       glhelp::create_shader_from_file(GL_VERTEX_SHADER, SHADER_DIR_PATH "vertex.glsl"),
       glhelp::create_shader_from_file(GL_FRAGMENT_SHADER, SHADER_DIR_PATH "fragment.glsl")};
+  auto obstacle_shader{std::make_shared< glhelp::ShaderProgram >(std::move(obstacle_shaders))};
+
+  std::vector< GLuint > skybox_shaders{
+      glhelp::create_shader_from_file(GL_VERTEX_SHADER, SHADER_DIR_PATH "skybox_vertex.glsl"),
+      glhelp::create_shader_from_file(GL_FRAGMENT_SHADER, SHADER_DIR_PATH "skybox_fragment.glsl")};
+  auto skybox_shader{std::make_shared< glhelp::ShaderProgram >(std::move(skybox_shaders))};
 
   auto camera{std::make_shared< glhelp::Camera< glhelp::InteractiveController< glhelp::FPSPlayerController > > >(
       window,
-      glhelp::FPSPlayerController(glhelp::FPSSimplePosition({0, 0, 5}, 0, 0, 0), 2, 1),
-      90.0F, 0.1F, 100.0F)};
+      glhelp::FPSPlayerController(glhelp::FPSSimplePosition({0, 0, 0}, 0, 0, 0), 0.1, 1),
+      90.0F, 0.001F, 100.0F)};
 
-  auto default_shader{std::make_shared< glhelp::ShaderProgram >(std::move(shaders))};
+  auto position_follower{glhelp::PositionFollower< glhelp::Camera< glhelp::InteractiveController< glhelp::FPSPlayerController > > >(
+      *camera,
+      glm::vec3{0.0},
+      0, 0, 0,
+      glm::vec3{50.0F, 50.0F, 50.0F})};
 
-  /*    7-----4
-   *   /|   / |
-   *  3----0  |
-   *  | 6--|--5
-   *  |/   | /
-   *  2----1/
-   */
-  std::vector< glm::vec3 > triangle_vertices{
-      glm::vec3(1, 1, 1),
-      glm::vec3(1, -1, 1),
-      glm::vec3(-1, -1, 1),
-      glm::vec3(-1, 1, 1),
+  auto skybox{std::make_shared< glhelp::Mesh3D< glhelp::PositionFollower< glhelp::Camera< glhelp::InteractiveController< glhelp::FPSPlayerController > > > > >(
+      position_follower,
+      skybox_shader,
+      cube_vertices,
+      cube_indices_rev,
+      GL_TRIANGLES)};
 
-      glm::vec3(1, 1, -1),
-      glm::vec3(1, -1, -1),
-      glm::vec3(-1, -1, -1),
-      glm::vec3(-1, 1, -1),
-  };
-  std::vector< uint > indices{
-      // front
-      0, 2, 1,
-      2, 0, 3,
-      // back
-      5, 6, 7,
-      5, 7, 4,
-      // right
-      0, 1, 4,
-      1, 5, 4,
-      // left
-      2, 3, 6,
-      6, 3, 7,
-      // top
-      0, 4, 7,
-      0, 7, 3,
-      // bottom
-      1, 2, 5,
-      2, 6, 5};
-
-  constexpr auto instance_count = 4 * 4 * 4;
-  std::vector< glm::vec3 > positions;
-  positions.reserve(instance_count);
-  for (unsigned x = 0; x < 4; x++) {
-    for (unsigned y = 0; y < 4; y++) {
-      for (unsigned z = 0; z < 4; z++) {
-        positions.emplace_back(
-            static_cast< float >(x) * 4.0F,
-            static_cast< float >(y) * 4.0F,
-            static_cast< float >(z) * 4.0F);
+  std::vector< glm::mat4 > positions;
+  positions.reserve(cube_side * cube_side * cube_side);
+  for (unsigned x{}; x < cube_side; x++) {
+    for (unsigned y{}; y < cube_side; y++) {
+      for (unsigned z{}; z < cube_side; z++) {
+        const glm::vec3 position{
+            static_cast< float >(x) / static_cast< float >(cube_side - 1),
+            static_cast< float >(y) / static_cast< float >(cube_side - 1),
+            static_cast< float >(z) / static_cast< float >(cube_side - 1),
+        };
+        auto position_transform{glm::translate(glm::mat4{1.0F}, position)};
+        auto scale_transform{glm::scale(glm::mat4{1.0F}, obstacle_scale)};
+        positions.emplace_back(position_transform * scale_transform);
       }
     }
   }
 
   std::vector< float > brightness{};
-  brightness.reserve(instance_count);
+  brightness.reserve(cube_side * cube_side * cube_side);
   for (size_t i = 0; i < positions.size(); i++) {
     brightness.emplace_back(glm::linearRand(0.1F, 1.0F));
   }
 
   glhelp::SimplePosition start_position{};
   start_position.set_scale({0.3F, 0.3F, 0.3F});
-  auto cubes{std::make_shared< glhelp::InstancedMesh3d< glhelp::SimplePosition, glm::vec3, float > >(
-      start_position, default_shader, triangle_vertices, indices, GL_TRIANGLES,
-      std::tuple< std::vector< glm::vec3 >, std::vector< float > >{std::move(positions), std::move(brightness)})};
+  auto cubes{std::make_shared< glhelp::InstancedMesh3d< glhelp::SimplePosition, glm::mat4 > >(
+      start_position, obstacle_shader, cube_vertices, cube_indices, GL_TRIANGLES,
+      std::tuple< std::vector< glm::mat4 > >{std::move(positions)})};
 
   glhelp::Scene main_scene;
 
+  main_scene.add_object(skybox);
   main_scene.add_object(cubes);
   camera->init_mouse(*window);
 
-  window->run_synchronously([&main_scene, &camera, &cubes]([[maybe_unused]] glhelp::Window& window, double time, double frame_time) {
+  window->run_synchronously([&main_scene, &camera]([[maybe_unused]] glhelp::Window& window, double time, double frame_time) {
     camera->poll_keys(window, static_cast< float >(frame_time));
-    cubes->set_rotation(time, 0, 0);
     main_scene.draw_objects(*camera, time);
   });
 }

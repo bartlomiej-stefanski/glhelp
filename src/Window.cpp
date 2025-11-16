@@ -124,6 +124,7 @@ void Window::run_synchronously(const std::function< void(Window&, double, double
     const double curr_time{glfwGetTime()};
     last_frame_time = curr_time - prev_time;
 
+    std::cerr << "FPS: " << 1.0 / last_frame_time << '\n';
     main_loop(*this, curr_time, last_frame_time);
 
     prev_time = curr_time;
