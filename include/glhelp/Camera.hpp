@@ -49,6 +49,13 @@ public:
     return glm::perspective(glm::radians(fov), window->aspect_ratio(), near_clip, far_clip);
   }
 
+  [[nodiscard]] auto get_ortho_matrix(float aspect_ratio, float scale) const -> glm::mat4
+  {
+    const float ortho_height = 1.0F * scale;
+    const float ortho_width = ortho_height * aspect_ratio;
+    return glm::ortho(-ortho_width, ortho_width, -ortho_height, ortho_height, near_clip, far_clip);
+  }
+
 private:
   float fov;
   float near_clip, far_clip;

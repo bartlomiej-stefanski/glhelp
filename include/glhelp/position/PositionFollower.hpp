@@ -12,23 +12,41 @@ namespace glhelp {
 template< PositionProvider PositionSource >
 class PositionFollower {
 public:
-  PositionFollower(PositionSource& position_source)
-      : position_source(position_source)
+  PositionFollower(PositionSource& position_source, bool passthrough_possition = false, bool pasthrough_rotation = false)
+      : position_source(position_source), passthrough_possition(passthrough_possition), pasthrough_rotation(pasthrough_rotation)
   {
   }
 
-  PositionFollower(PositionSource& position_source, glm::vec3 offset, float offset_yaw, float offset_pitch, float offset_roll, glm::vec3 scale)
-      : offset(offset), offset_rotation(glm::vec3(offset_pitch, offset_yaw, offset_roll)), scale(scale), position_source(position_source)
+  PositionFollower(
+      PositionSource& position_source,
+      glm::vec3 offset,
+      float yaw,
+      float pitch,
+      float roll,
+      glm::vec3 scale,
+      bool passthrough_possition = false,
+      bool pasthrough_rotation = false)
+      : offset(offset), rotation(glm::vec3(pitch, yaw, roll)), scale(scale), position_source(position_source),
+        passthrough_possition(passthrough_possition), pasthrough_rotation(pasthrough_rotation)
   {
   }
 
   [[nodiscard]] auto get_position() const -> glm::vec3
   {
-    return position_source.get().get_position() + (position_source.get().get_rotation() * offset);
+    if (passthrough_possition) {
+      return position_source.get().get_position() + offset;
+      ;
+    }
+
+    return offset;
   }
   [[nodiscard]] auto get_rotation() const -> glm::quat
   {
-    return offset_rotation;
+    if (pasthrough_rotation) {
+      return position_source.get().get_rotation();
+    }
+
+    return rotation;
   }
 
   // Scale has no sense for PositionFollower.
@@ -36,10 +54,12 @@ public:
 
 private:
   glm::vec3 offset{};
-  glm::quat offset_rotation{};
+  glm::quat rotation{};
   glm::vec3 scale{1.0, 1.0, 1.0};
 
   std::reference_wrapper< PositionSource > position_source;
+  bool passthrough_possition{};
+  bool pasthrough_rotation{};
 };
 
 } // namespace glhelp

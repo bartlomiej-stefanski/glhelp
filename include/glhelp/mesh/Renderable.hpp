@@ -10,8 +10,11 @@ namespace glhelp {
 class Renderable {
 public:
   virtual void draw() = 0;
+
   [[nodiscard]] virtual auto get_shader() const -> std::shared_ptr< ShaderProgram > = 0;
   [[nodiscard]] virtual auto get_id() const noexcept -> std::size_t = 0;
+  [[nodiscard]] virtual auto get_wireframe_override() const noexcept -> bool { return false; };
+
   virtual auto operator==(const Renderable& other) -> bool
   {
     return get_id() == other.get_id();

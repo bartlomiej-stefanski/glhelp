@@ -24,7 +24,8 @@ public:
   ~Window();
 
   /// Get current window aspect ration (width / height).
-  auto aspect_ratio() const noexcept -> float;
+  [[nodiscard]] auto aspect_ratio() const noexcept -> float;
+  [[nodiscard]] auto get_size() const noexcept -> glm::vec2;
 
   /// Event that occurs each time a resize occurs.
   /// The arguments passed to the callback are (in order):
@@ -54,7 +55,7 @@ public:
   void run_synchronously(const std::function< void(Window&, double, double) >& main_loop);
 
   /// Returns the underlying GLFW window handle.
-  auto get_window() noexcept -> GLFWwindow* { return window; }
+  [[nodiscard]] auto get_window() noexcept -> GLFWwindow* { return window; }
 
 private:
   /// Window dimensions in pixels.

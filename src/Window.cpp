@@ -83,6 +83,7 @@ Window::~Window()
 }
 
 auto Window::aspect_ratio() const noexcept -> float { return (float)width / (float)height; }
+auto Window::get_size() const noexcept -> glm::vec2 { return {width, height}; }
 
 void Window::resize_cb(int new_width, int new_heigth)
 {
@@ -124,7 +125,6 @@ void Window::run_synchronously(const std::function< void(Window&, double, double
     const double curr_time{glfwGetTime()};
     last_frame_time = curr_time - prev_time;
 
-    std::cerr << "FPS: " << 1.0 / last_frame_time << '\n';
     main_loop(*this, curr_time, last_frame_time);
 
     prev_time = curr_time;
