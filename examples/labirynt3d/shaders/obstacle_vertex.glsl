@@ -12,11 +12,25 @@ layout (std140) uniform uCommon
 };
 
 out vec3 vPos;
+out float vtime;
 
 uniform mat4 uModelTransform;
 
 void main(void) {
-  vec4 object_transform = instanceTransform * vec4(pos, 1.0);
+  float angle = time;
+  float c = cos(angle);
+  float s = sin(angle);
+
+  mat4 rotZ = mat4(
+    c, -s, 0.0, 0.0,
+    s,  c, 0.0, 0.0,
+    0.0, 0.0, 1.0, 0.0,
+    0.0, 0.0, 0.0, 1.0
+  );
+
+  vec4 object_transform = instanceTransform * rotZ * vec4(pos, 1.0);
+
+  vtime = time / 2;
   vPos = object_transform.xyz;
   gl_Position = cameraTransform * uModelTransform * object_transform;
 }

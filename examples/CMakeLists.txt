@@ -1,2 +1,2 @@
 add_subdirectory(simple2d)
-add_subdirectory(simple3d)
+add_subdirectory(labirynt3d)

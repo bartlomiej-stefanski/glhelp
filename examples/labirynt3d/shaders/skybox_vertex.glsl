@@ -11,6 +11,7 @@ layout (std140) uniform uCommon
 };
 
 out vec3 vPos;
+out float w_time;
 
 uniform mat4 uModelTransform;
 
