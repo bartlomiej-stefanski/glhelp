@@ -1,0 +1,12 @@
+<map id="/home/runner/work/glhelp/glhelp/examples/labirynt3d/src/Sphere.cpp" name="/home/runner/work/glhelp/glhelp/examples/labirynt3d/src/Sphere.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,209,60"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="18,181,122,207"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,62,33,83,14,109,11,126,17,142,29,157,43,171,40,175,25,161,12,145,6,126,9,107,29,79,55,58"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="24,108,191,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="110,60,110,94,105,94,105,60"/>
+<area shape="rect" id="Node000004" href="$Sphere_8hpp.html" title=" " alt="" coords="215,108,309,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="156,58,231,99,228,104,153,62"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="232,136,115,179,113,174,230,131"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="231,181,293,207"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="265,134,265,168,259,168,259,134"/>
+</map>

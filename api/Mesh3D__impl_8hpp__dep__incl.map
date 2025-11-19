@@ -1,0 +1,26 @@
+<map id="/home/runner/work/glhelp/glhelp/include/glhelp/mesh/Mesh3D_impl.hpp" name="/home/runner/work/glhelp/glhelp/include/glhelp/mesh/Mesh3D_impl.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="178,5,367,60"/>
+<area shape="rect" id="Node000002" href="$Mesh3D_8hpp.html" title=" " alt="" coords="178,108,367,163"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="267,74,267,108,262,108,261,74"/>
+<area shape="poly" id="edge15_Node000002_Node000001" title=" " alt="" coords="279,95,278,60,283,60,284,94"/>
+<area shape="rect" id="Node000003" href="$Skybox_8hpp.html" title=" " alt="" coords="56,313,260,368"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="263,177,246,221,223,267,186,315,182,312,218,264,241,219,258,175"/>
+<area shape="rect" id="Node000004" href="$labirynt3d_2src_2main_8cpp.html" title=" " alt="" coords="177,416,381,471"/>
+<area shape="poly" id="edge7_Node000002_Node000004" title=" " alt="" coords="276,176,281,416,276,416,271,176"/>
+<area shape="rect" id="Node000005" href="$SphereObject_8hpp.html" title=" " alt="" coords="5,211,209,265"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="219,172,152,213,149,208,216,168"/>
+<area shape="rect" id="Node000006" href="$InstancedMesh3D_8hpp.html" title=" " alt="" coords="383,211,594,265"/>
+<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="342,166,434,208,431,213,340,171"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="202,375,249,414,246,418,199,379"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="129,276,147,312,142,314,124,279"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="71,277,54,298,42,322,38,345,46,367,72,393,105,413,141,426,178,434,177,440,139,431,102,417,69,397,41,369,32,345,37,320,50,296,67,274"/>
+<area shape="poly" id="edge12_Node000006_Node000004" title=" " alt="" coords="431,275,377,315,331,367,297,417,293,414,327,364,374,311,427,271"/>
+<area shape="rect" id="Node000007" href="$Obstacles_8hpp.html" title=" " alt="" coords="387,313,591,368"/>
+<area shape="poly" id="edge9_Node000006_Node000007" title=" " alt="" coords="491,279,491,313,486,313,486,279"/>
+<area shape="rect" id="Node000009" href="$InstancedMesh3D__impl_8hpp.html" title=" " alt="" coords="615,313,861,368"/>
+<area shape="poly" id="edge13_Node000006_Node000009" title=" " alt="" coords="559,268,666,311,664,316,557,273"/>
+<area shape="poly" id="edge11_Node000007_Node000004" title=" " alt="" coords="423,376,335,418,333,414,421,371"/>
+<area shape="rect" id="Node000008" href="$Obstacles_8cpp.html" title=" " alt="" coords="405,416,609,471"/>
+<area shape="poly" id="edge10_Node000007_Node000008" title=" " alt="" coords="499,381,505,415,500,416,493,382"/>
+<area shape="poly" id="edge14_Node000009_Node000006" title=" " alt="" coords="668,311,561,268,563,263,670,306"/>
+</map>

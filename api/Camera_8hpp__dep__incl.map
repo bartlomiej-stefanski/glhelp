@@ -1,0 +1,16 @@
+<map id="/home/runner/work/glhelp/glhelp/include/glhelp/Camera.hpp" name="/home/runner/work/glhelp/glhelp/include/glhelp/Camera.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="271,5,461,60"/>
+<area shape="rect" id="Node000002" href="$SphereObject_8hpp.html" title=" " alt="" coords="56,108,260,163"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="301,68,213,110,211,106,299,63"/>
+<area shape="rect" id="Node000004" href="$labirynt3d_2src_2main_8cpp.html" title=" " alt="" coords="171,313,375,368"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="344,73,326,109,308,165,294,222,278,314,273,313,289,221,302,163,321,107,339,71"/>
+<area shape="rect" id="Node000005" href="$simple2d_2src_2main_8cpp.html" title=" " alt="" coords="335,108,533,163"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="394,70,418,106,414,109,389,73"/>
+<area shape="rect" id="Node000006" href="$Scene_8hpp.html" title=" " alt="" coords="405,211,594,265"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="475,53,515,74,533,89,548,107,557,133,553,162,540,189,524,212,520,209,535,186,547,160,552,134,544,109,530,92,512,78,472,57"/>
+<area shape="rect" id="Node000003" href="$Skybox_8hpp.html" title=" " alt="" coords="5,211,209,265"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="141,176,123,212,118,209,136,174"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="196,171,224,209,250,263,268,312,263,314,246,265,220,212,191,174"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="164,270,231,311,228,315,161,275"/>
+<area shape="poly" id="edge8_Node000006_Node000004" title=" " alt="" coords="429,273,333,316,331,311,427,268"/>
+</map>

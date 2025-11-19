@@ -1,0 +1,28 @@
+<map id="/home/runner/work/glhelp/glhelp/include/glhelp/position/Position.hpp" name="/home/runner/work/glhelp/glhelp/include/glhelp/position/Position.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="365,5,555,60"/>
+<area shape="rect" id="Node000002" href="$Obstacles_8hpp.html" title=" " alt="" coords="27,108,231,163"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="362,66,216,110,215,105,361,61"/>
+<area shape="rect" id="Node000004" href="$labirynt3d_2src_2main_8cpp.html" title=" " alt="" coords="377,416,581,471"/>
+<area shape="poly" id="edge9_Node000001_Node000004" title=" " alt="" coords="403,70,381,88,362,110,314,177,294,208,280,238,272,268,271,299,279,331,298,366,314,385,333,400,378,421,375,426,330,404,310,389,294,370,274,333,266,300,266,268,275,236,290,206,309,174,358,106,377,84,400,66"/>
+<area shape="rect" id="Node000005" href="$Skybox_8hpp.html" title=" " alt="" coords="307,313,511,368"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="430,72,385,135,365,172,349,211,344,238,349,264,363,290,381,312,377,315,359,293,344,266,338,238,344,210,360,170,381,132,426,69"/>
+<area shape="rect" id="Node000006" href="$SphereObject_8hpp.html" title=" " alt="" coords="358,211,562,265"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="463,74,463,210,457,210,457,74"/>
+<area shape="rect" id="Node000007" href="$simple2d_2src_2main_8cpp.html" title=" " alt="" coords="851,211,1050,265"/>
+<area shape="poly" id="edge10_Node000001_Node000007" title=" " alt="" coords="569,53,653,75,738,106,788,129,837,157,916,208,913,213,834,161,786,134,736,110,652,80,568,58"/>
+<area shape="rect" id="Node000008" href="$Camera_8hpp.html" title=" " alt="" coords="505,108,695,163"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="509,66,565,106,562,110,506,70"/>
+<area shape="rect" id="Node000009" href="$Scene_8hpp.html" title=" " alt="" coords="637,211,827,265"/>
+<area shape="poly" id="edge17_Node000001_Node000009" title=" " alt="" coords="569,39,607,48,644,61,679,80,709,106,724,131,733,158,737,210,732,211,728,159,720,133,705,110,676,85,642,66,605,53,568,44"/>
+<area shape="rect" id="Node000003" href="$Obstacles_8cpp.html" title=" " alt="" coords="27,211,231,265"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="132,176,132,211,127,211,127,176"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="56,172,34,190,17,212,8,239,10,250,17,264,50,305,90,339,136,366,185,389,235,406,285,419,377,434,376,439,284,424,233,411,183,394,133,371,87,343,46,308,13,267,5,252,3,238,12,209,30,186,52,168"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="438,378,463,414,459,417,433,381"/>
+<area shape="poly" id="edge8_Node000006_Node000004" title=" " alt="" coords="503,274,516,292,527,312,532,340,527,369,516,395,502,417,497,415,511,392,522,367,527,340,522,314,512,295,498,277"/>
+<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="443,279,425,314,420,312,438,276"/>
+<area shape="poly" id="edge13_Node000008_Node000004" title=" " alt="" coords="600,177,585,268,570,320,548,369,530,395,510,418,506,414,526,392,543,367,565,318,580,267,595,176"/>
+<area shape="poly" id="edge12_Node000008_Node000006" title=" " alt="" coords="554,173,498,213,495,208,551,168"/>
+<area shape="poly" id="edge14_Node000008_Node000007" title=" " alt="" coords="705,164,860,208,859,213,704,169"/>
+<area shape="poly" id="edge15_Node000008_Node000009" title=" " alt="" coords="647,169,699,208,696,213,644,173"/>
+<area shape="poly" id="edge16_Node000009_Node000004" title=" " alt="" coords="707,278,669,324,620,370,581,397,541,418,538,414,578,392,617,366,665,321,703,275"/>
+</map>

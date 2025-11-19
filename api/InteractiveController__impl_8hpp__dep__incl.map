@@ -1,0 +1,33 @@
+<map id="/home/runner/work/glhelp/glhelp/include/glhelp/position/InteractiveController_impl.hpp" name="/home/runner/work/glhelp/glhelp/include/glhelp/position/InteractiveController_impl.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="352,5,568,75"/>
+<area shape="rect" id="Node000002" href="$InteractiveController_8hpp.html" title=" " alt="" coords="339,123,581,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="454,88,455,122,450,123,449,88"/>
+<area shape="poly" id="edge2_Node000002_Node000001" title=" " alt="" coords="466,109,466,75,471,75,472,109"/>
+<area shape="rect" id="Node000003" href="$Position_8hpp.html" title=" " alt="" coords="365,225,555,280"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="463,191,463,225,457,225,457,191"/>
+<area shape="rect" id="Node000004" href="$Obstacles_8hpp.html" title=" " alt="" coords="27,328,231,383"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="362,286,216,330,215,325,361,281"/>
+<area shape="rect" id="Node000006" href="$labirynt3d_2src_2main_8cpp.html" title=" " alt="" coords="377,636,581,691"/>
+<area shape="poly" id="edge12_Node000003_Node000006" title=" " alt="" coords="403,290,381,308,362,330,314,397,294,428,280,458,272,488,271,519,279,551,298,586,314,605,333,620,378,641,375,646,330,624,310,609,294,590,274,553,266,520,266,488,275,456,290,426,309,394,358,326,377,304,400,286"/>
+<area shape="rect" id="Node000007" href="$Skybox_8hpp.html" title=" " alt="" coords="307,533,511,588"/>
+<area shape="poly" id="edge7_Node000003_Node000007" title=" " alt="" coords="430,292,385,355,365,392,349,431,344,458,349,484,363,510,381,532,377,535,359,513,344,486,338,458,344,430,360,390,381,352,426,289"/>
+<area shape="rect" id="Node000008" href="$SphereObject_8hpp.html" title=" " alt="" coords="358,431,562,485"/>
+<area shape="poly" id="edge9_Node000003_Node000008" title=" " alt="" coords="463,294,463,430,457,430,457,294"/>
+<area shape="rect" id="Node000009" href="$simple2d_2src_2main_8cpp.html" title=" " alt="" coords="851,431,1050,485"/>
+<area shape="poly" id="edge13_Node000003_Node000009" title=" " alt="" coords="569,273,653,295,738,326,788,349,837,377,916,428,913,433,834,381,786,354,736,330,652,300,568,278"/>
+<area shape="rect" id="Node000010" href="$Camera_8hpp.html" title=" " alt="" coords="505,328,695,383"/>
+<area shape="poly" id="edge14_Node000003_Node000010" title=" " alt="" coords="509,286,565,326,562,330,506,290"/>
+<area shape="rect" id="Node000011" href="$Scene_8hpp.html" title=" " alt="" coords="637,431,827,485"/>
+<area shape="poly" id="edge20_Node000003_Node000011" title=" " alt="" coords="569,259,607,268,644,281,679,300,709,326,724,351,733,378,737,430,732,431,728,379,720,353,705,330,676,305,642,286,605,273,568,264"/>
+<area shape="rect" id="Node000005" href="$Obstacles_8cpp.html" title=" " alt="" coords="27,431,231,485"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="132,396,132,431,127,431,127,396"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="56,392,34,410,17,432,8,459,10,470,17,484,50,525,90,559,136,586,185,609,235,626,285,639,377,654,376,659,284,644,233,631,183,614,133,591,87,563,46,528,13,487,5,472,3,458,12,429,30,406,52,388"/>
+<area shape="poly" id="edge8_Node000007_Node000006" title=" " alt="" coords="438,598,463,634,459,637,433,601"/>
+<area shape="poly" id="edge11_Node000008_Node000006" title=" " alt="" coords="503,494,516,512,527,532,532,560,527,589,516,615,502,637,497,635,511,612,522,587,527,560,522,534,512,515,498,497"/>
+<area shape="poly" id="edge10_Node000008_Node000007" title=" " alt="" coords="443,499,425,534,420,532,438,496"/>
+<area shape="poly" id="edge16_Node000010_Node000006" title=" " alt="" coords="600,397,585,488,570,540,548,589,530,615,510,638,506,634,526,612,543,587,565,538,580,487,595,396"/>
+<area shape="poly" id="edge15_Node000010_Node000008" title=" " alt="" coords="554,393,498,433,495,428,551,388"/>
+<area shape="poly" id="edge17_Node000010_Node000009" title=" " alt="" coords="705,384,860,428,859,433,704,389"/>
+<area shape="poly" id="edge18_Node000010_Node000011" title=" " alt="" coords="647,389,699,428,696,433,644,393"/>
+<area shape="poly" id="edge19_Node000011_Node000006" title=" " alt="" coords="707,498,669,544,620,590,581,617,541,638,538,634,578,612,617,586,665,541,703,495"/>
+</map>
