@@ -32,7 +32,6 @@ public:
     scale = new_scale;
   }
 
-protected:
   glm::vec3 position{};
   glm::vec3 rotation{};
   glm::vec3 scale{1.0, 1.0, 1.0};

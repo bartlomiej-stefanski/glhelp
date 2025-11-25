@@ -59,10 +59,12 @@ public:
   using ScrollEventDelegate = std::shared_ptr< decltype(scroll_event)::EventDelegate >;
 
   /// Runs the main loop synchronously.
-  void run_synchronously(const std::function< void(Window&, double, double) >& main_loop);
+  void run_synchronously(const std::function< bool(Window&, double, double) >& main_loop);
 
   /// Returns the underlying GLFW window handle.
   [[nodiscard]] auto get_window() noexcept -> GLFWwindow* { return window; }
+
+  [[nodiscard]] auto is_active() const -> bool { return !glfwWindowShouldClose(window); }
 
 private:
   /// Window dimensions in pixels.

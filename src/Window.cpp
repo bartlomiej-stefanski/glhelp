@@ -62,6 +62,9 @@ Window::Window(int width, int height, const std::string& name)
   glEnable(GL_DEPTH_TEST);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   glViewport(0, 0, this->width, this->height);
   glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
@@ -71,6 +74,7 @@ Window::Window(int width, int height, const std::string& name)
 
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glfwSetCursorPosCallback(window, Window::initial_mouse_callback);
+  glfwSetScrollCallback(window, Window::scroll_callback);
 
   glfwSwapInterval(0); // VSync
   glEnable(GL_MULTISAMPLE);
@@ -114,12 +118,17 @@ void Window::scroll_cb(double xoffset, double yoffset)
   scroll_event(xoffset, yoffset);
 }
 
-void Window::run_synchronously(const std::function< void(Window&, double, double) >& main_loop)
+void Window::run_synchronously(const std::function< bool(Window&, double, double) >& main_loop)
 {
+  if (glfwWindowShouldClose(window)) {
+    throw std::runtime_error("Window: 'run_synchronously' called after exit request!");
+  }
+
   double prev_time{glfwGetTime()};
   GLenum error;
+  bool should_continue{true};
 
-  while (!glfwWindowShouldClose(window)) {
+  while (!glfwWindowShouldClose(window) && should_continue) {
     error = glGetError();
     if (error != GL_NO_ERROR)
       throw std::runtime_error("OpenGL error before main loop: " + std::to_string(error));
@@ -130,7 +139,7 @@ void Window::run_synchronously(const std::function< void(Window&, double, double
     const double curr_time{glfwGetTime()};
     last_frame_time = curr_time - prev_time;
 
-    main_loop(*this, curr_time, last_frame_time);
+    should_continue = main_loop(*this, curr_time, last_frame_time);
 
     prev_time = curr_time;
 

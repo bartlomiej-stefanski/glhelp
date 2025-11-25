@@ -20,6 +20,8 @@ public:
   float movement_speed{1.0F};
   float rotation_speed{1.0F};
   float mouse_rotation_speed{1.0F};
+
+  bool disabled{false};
 };
 
 } // namespace glhelp

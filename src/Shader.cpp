@@ -13,11 +13,26 @@ ShaderProgram::ShaderProgram(std::vector< GLuint >&& shaders)
   if (!common_data.has_value()) {
     common_data.emplace(GL_DYNAMIC_DRAW);
   }
+  if (!directional_light_data.has_value()) {
+    directional_light_data.emplace(GL_DYNAMIC_DRAW);
+  }
+  if (!spot_light_data.has_value()) {
+    spot_light_data.emplace(GL_DYNAMIC_DRAW);
+  }
 
   program_id = link_program(std::move(shaders));
-  GLuint common_buffer{glGetUniformBlockIndex(program_id, "lCommon")};
+
+  GLuint common_buffer{glGetUniformBlockIndex(program_id, "uCommon")};
   if (common_buffer != GL_INVALID_INDEX) {
     glUniformBlockBinding(program_id, common_buffer, common_data.value().get_index());
+  }
+  GLuint dir_light_buffer{glGetUniformBlockIndex(program_id, "uDirectionalLights")};
+  if (dir_light_buffer != GL_INVALID_INDEX) {
+    glUniformBlockBinding(program_id, dir_light_buffer, directional_light_data.value().get_index());
+  }
+  GLuint spot_light_buffer{glGetUniformBlockIndex(program_id, "uSpotLights")};
+  if (spot_light_buffer != GL_INVALID_INDEX) {
+    glUniformBlockBinding(program_id, spot_light_buffer, spot_light_data.value().get_index());
   }
 }
 
@@ -35,19 +50,16 @@ auto ShaderProgram::operator=(ShaderProgram&& other) noexcept -> ShaderProgram&
 
 ShaderProgram::~ShaderProgram() { glDeleteProgram(program_id); }
 
+auto ShaderProgram::has_uniform(const std::string& name) const -> bool
+{
+  return uniform_location(name).has_value();
+}
+
 auto ShaderProgram::get_uniform_location(const std::string& name) const -> GLuint
 {
-  if (uniform_locations.find(name) != uniform_locations.end()) {
-    return uniform_locations.at(name);
-  }
-
-  GLint result{glGetUniformLocation(program_id, name.c_str())};
-  if (result != -1) [[likely]] {
-    uniform_locations[name] = result;
-    return result;
-  }
-
-  throw ShaderException("Uniform '" + name + "' not found");
+  return uniform_location(name).or_else(
+                                   ShaderException::raise< std::optional< GLuint > >("Uniform '" + name + "' not found"))
+      .value();
 }
 
 void ShaderProgram::use() const
@@ -59,6 +71,21 @@ void ShaderProgram::use() const
 #endif
 
   glUseProgram(program_id);
+}
+
+auto ShaderProgram::uniform_location(const std::string& name) const -> std::optional< GLuint >
+{
+  if (uniform_locations.contains(name)) {
+    return uniform_locations.at(name);
+  }
+
+  const GLint result{glGetUniformLocation(program_id, name.c_str())};
+  if (result != -1) [[likely]] {
+    uniform_locations[name] = result;
+    return result;
+  }
+
+  return std::nullopt;
 }
 
 auto create_shader(GLenum type, const std::string& source) -> GLuint

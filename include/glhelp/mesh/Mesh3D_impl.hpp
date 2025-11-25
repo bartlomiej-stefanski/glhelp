@@ -1,7 +1,6 @@
 #pragma once
 
 // 'classic' header-guard to avoid recursive definition
-#include "obj_parser/Vertex.hpp"
 #ifndef REC_MESH3D_GUARD
 #define REC_MESH3D_GUARD
 
@@ -14,6 +13,8 @@
 #include <glm/fwd.hpp>
 #include <glm/geometric.hpp>
 #include <glm/glm.hpp>
+
+#include <obj_parser/Vertex.hpp>
 
 #include <glhelp/mesh/Mesh3D.hpp>
 #include <glhelp/position/PositionProvider.hpp>
@@ -151,7 +152,14 @@ void Mesh3D< PositionSource >::draw()
 {
   glBindVertexArray(vao);
 
-  shader->set_uniform("uModelTransform", get_model_matrix(*this));
+  const auto model_matrix{get_model_matrix(*this)};
+  shader->set_uniform("uModelTransform", model_matrix);
+
+  const auto normal_transform{shader->uniform_location("uNormalTransform")};
+  if (normal_transform.has_value()) [[likely]] {
+    const auto normal_transform{glm::mat3{glm::transpose(glm::inverse(model_matrix))}};
+    shader->set_uniform("uNormalTransform", normal_transform);
+  }
 
   uniform_setter_callback();
 

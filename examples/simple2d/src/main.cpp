@@ -37,6 +37,7 @@ void run_program()
   auto main_loop = [&square](glhelp::Window& window, double time, double frame_time [[maybe_unused]]) {
     square.set_rotation(0, 0, time);
     square.draw(window.aspect_ratio());
+    return true;
   };
 
   window->run_synchronously(main_loop);

@@ -22,6 +22,9 @@ template< PositionController Controller >
 void InteractiveController< Controller >::init_mouse(Window& window)
 {
   mouse_event = window.mouse_event.connect([&](float xoffset, float yoffset) {
+    if (this->disabled)
+      return;
+
     this->look_up(yoffset * mouse_rotation_speed);
     this->look_right(-xoffset * mouse_rotation_speed);
   });
@@ -30,6 +33,15 @@ void InteractiveController< Controller >::init_mouse(Window& window)
 template< PositionController Controller >
 void InteractiveController< Controller >::poll_keys(Window& window, float frame_time)
 {
+  if (disabled)
+    return;
+
+  bool speed_multiply{glfwGetKey(window.get_window(), GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS};
+
+  if (speed_multiply) {
+    frame_time *= 2.5F;
+  }
+
   if (glfwGetKey(window.get_window(), GLFW_KEY_W) == GLFW_PRESS) {
     this->move_forwards(-2.0F * frame_time);
   }
@@ -47,6 +59,10 @@ void InteractiveController< Controller >::poll_keys(Window& window, float frame_
   }
   if (glfwGetKey(window.get_window(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
     this->move_up(-2.0F * frame_time);
+  }
+
+  if (speed_multiply) {
+    frame_time /= 5.0F;
   }
 
   if (glfwGetKey(window.get_window(), GLFW_KEY_UP) == GLFW_PRESS) {

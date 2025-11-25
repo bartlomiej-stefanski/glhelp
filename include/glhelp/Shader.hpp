@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <optional>
 #include <stdexcept>
 #include <string>
@@ -11,7 +12,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <glhelp/ligting/DirectionalLight.hpp>
+#include <glhelp/ligting/SpotLight.hpp>
 #include <glhelp/utils/ShaderHelpers.hpp>
+
+#define MAX_DIRECTIONAL_LIGHTS 4
+#define MAX_SPOT_LIGHTS 8
 
 namespace glhelp {
 
@@ -19,11 +25,20 @@ template< class T >
 concept UniformType =
     std::is_same_v< T, bool > || std::is_same_v< T, int > || std::is_same_v< T, float > || std::is_same_v< T, glm::vec2 > || std::is_same_v< T, glm::vec3 > || std::is_same_v< T, glm::vec4 > || std::is_same_v< T, glm::mat2 > || std::is_same_v< T, glm::mat3 > || std::is_same_v< T, glm::mat4 >;
 
-class ShaderException : public std::runtime_error {
-public:
+struct ShaderException : public std::runtime_error {
   ShaderException(const std::string& message) : std::runtime_error(message) {}
+
+  template< typename T >
+  static auto raise(const std::string& cause) -> std::function< T() >
+  {
+    return [&cause]() {
+      throw ShaderException(cause);
+      return T{};
+    };
+  }
 };
 
+inline GLuint global_uniform_buffer_index{};
 template< typename T >
 class UniformBuffer {
 public:
@@ -34,9 +49,12 @@ public:
     glBufferData(GL_UNIFORM_BUFFER, sizeof(T), nullptr, draw_type);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-    index = global_index++;
+    index = global_uniform_buffer_index++;
     glBindBufferRange(GL_UNIFORM_BUFFER, index, id, 0, sizeof(T));
   }
+
+  UniformBuffer(const UniformBuffer&) = delete;
+  auto operator=(const UniformBuffer&) -> UniformBuffer& = delete;
 
   ~UniformBuffer()
   {
@@ -56,7 +74,6 @@ public:
 private:
   GLuint id;
   GLuint index;
-  inline static GLuint global_index{};
 };
 
 /// RAII-style shader program object.
@@ -71,11 +88,15 @@ public:
   ShaderProgram(ShaderProgram&& other) noexcept;
   auto operator=(ShaderProgram&& other) noexcept -> ShaderProgram&;
 
-  auto id() const noexcept -> GLuint { return program_id; }
+  [[nodiscard]] auto id() const noexcept -> GLuint { return program_id; }
+
+  [[nodiscard]] auto has_uniform(const std::string& name) const -> bool;
 
   /// Get the location of a uniform variable in the shader program.
   /// @throws ShaderException if the uniform variable is not found.
-  auto get_uniform_location(const std::string& name) const -> GLuint;
+  [[nodiscard]] auto get_uniform_location(const std::string& name) const -> GLuint;
+  /// Get the location of a uniform variable in the shader if it exists.
+  [[nodiscard]] auto uniform_location(const std::string& name) const -> std::optional< GLuint >;
 
   /// Set the value of a uniform variable in the shader program.
   /// @throws ShaderException if the uniform variable is not found.
@@ -92,10 +113,37 @@ public:
 
   struct CommonData {
     glm::mat4 camera_matrix;
+    glm::vec4 camera_position;
     float time;
   };
 
+  struct DirectionalLightData {
+    // Uses `glm::vec4` for std140 alignment purposes.
+    glm::vec4 direction[MAX_DIRECTIONAL_LIGHTS];
+    glm::vec4 color[MAX_DIRECTIONAL_LIGHTS];
+    unsigned count;
+  };
+
+  struct SpotLightData {
+    // Uses `glm::vec4` for std140 alignment purposes.
+    glm::vec4 position[MAX_SPOT_LIGHTS];
+    glm::vec4 direction[MAX_SPOT_LIGHTS];
+    glm::vec4 color[MAX_SPOT_LIGHTS];
+    union {
+      glm::vec4 misceleanous[MAX_SPOT_LIGHTS];
+      struct {
+        float linear_coefficient;
+        float quadratic_coefficient;
+        float cutoff;
+        float outer_cutoff;
+      } misc[MAX_SPOT_LIGHTS];
+    };
+    GLuint count;
+  };
+
   inline static std::optional< UniformBuffer< CommonData > > common_data{};
+  inline static std::optional< UniformBuffer< DirectionalLightData > > directional_light_data{};
+  inline static std::optional< UniformBuffer< SpotLightData > > spot_light_data{};
 
 private:
   GLuint program_id;
@@ -116,7 +164,7 @@ auto link_program(const std::vector< GLuint >&& shaders) -> GLuint;
 template< UniformType T >
 void ShaderProgram::set_uniform(const std::string& name, const T& value) const
 {
-  auto location{get_uniform_location(name)};
+  const auto location{get_uniform_location(name)};
 
   if constexpr (std::is_same_v< T, bool >) {
     glUniform1i(location, value ? 1 : 0);

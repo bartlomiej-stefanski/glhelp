@@ -21,6 +21,7 @@
 #include "Obstacles.hpp"
 #include "Skybox.hpp"
 #include "SphereObject.hpp"
+#include "glhelp/position/PositionFollower.hpp"
 
 #ifndef SHADER_DIR_PATH
 #warning "Shader directory undefined. Please define SHADER_DIR_PATH macro."
@@ -54,19 +55,19 @@ void run_program(unsigned cube_side, std::mt19937& dev)
       glm::vec3{0.0},
       0, 0, 0,
       glm::vec3{50.0F, 50.0F, 50.0F},
-      true, false)};
+      glhelp::PASSTHROUGH)};
   auto player_position{glhelp::PositionFollower< FPSCamera >(
       *camera,
       glm::vec3{0.0},
       0, 0, 0,
       glm::vec3{0.01F, 0.01F, 0.01F},
-      true, false)};
+      glhelp::PASSTHROUGH)};
   auto minimap_camera_position{glhelp::PositionFollower< FPSCamera >(
       *camera,
       glm::vec3{0.0F, 10.0F, 0.0F},
       0, glm::radians(-90.0F), 0,
       glm::vec3{1.0F, 1.0F, 1.0F},
-      true, false)};
+      glhelp::PASSTHROUGH)};
 
   auto player{std::make_shared< Player >(player_shader, player_position)};
   auto finish{std::make_shared< Finish >(player_shader, glhelp::CachingSimplePosition{glm::vec3{1, 1, 1}, 0, 0, 0, glm::vec3{0.02}})};
@@ -106,10 +107,11 @@ void run_program(unsigned cube_side, std::mt19937& dev)
 
     main_scene.draw_objects(*camera, time);
     main_scene.draw_minimap(*minimap_camera, window, time, 0.2F, {0, 0}, {window.get_size().x * 0.2F, window.get_size().x * 0.2F});
+    return true;
   });
 }
 
-void print_help(const char* argv0)
+static void print_help(const char* argv0)
 {
   std::cerr << "Usage: " << argv0 << " [-n <number>] [-s <seed>]\n";
 }

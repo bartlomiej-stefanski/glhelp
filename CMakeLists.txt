@@ -13,7 +13,7 @@ find_package(glm 0.9.8 REQUIRED)
 
 add_subdirectory(external/glad)
 
-add_compile_options(-Wall -Wextra)
+add_compile_options(-Wall -Wextra -g)
 
 option(WARNINGS_AS_ERRORS "Treat compilation warnings as errors" OFF)
 if(WARNINGS_AS_ERRORS)
