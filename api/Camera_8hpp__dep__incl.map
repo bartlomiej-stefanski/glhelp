@@ -1,0 +1,19 @@
+<map id="/home/runner/work/glhelp/glhelp/include/glhelp/Camera.hpp" name="/home/runner/work/glhelp/glhelp/include/glhelp/Camera.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="339,5,529,60"/>
+<area shape="rect" id="Node000002" href="$SphereObject_8hpp.html" title=" " alt="" coords="56,108,260,163"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="350,67,231,110,229,105,349,62"/>
+<area shape="rect" id="Node000004" href="$labirynt3d_2src_2main_8cpp.html" title=" " alt="" coords="171,313,375,368"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="367,69,344,88,324,109,298,162,283,218,276,271,275,313,269,313,271,271,278,217,293,160,320,107,340,84,364,65"/>
+<area shape="rect" id="Node000005" href="$simple2d_2src_2main_8cpp.html" title=" " alt="" coords="335,108,533,163"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="437,74,437,108,431,108,431,74"/>
+<area shape="rect" id="Node000006" href="$wulkan_2src_2main_8cpp.html" title=" " alt="" coords="475,211,665,265"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="504,65,527,84,547,107,560,132,568,160,573,210,568,211,562,161,555,134,542,109,524,88,501,70"/>
+<area shape="rect" id="Node000007" href="$Scene_8hpp.html" title=" " alt="" coords="607,108,797,163"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="517,62,633,105,631,110,516,67"/>
+<area shape="rect" id="Node000003" href="$Skybox_8hpp.html" title=" " alt="" coords="5,211,209,265"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="141,176,123,212,118,209,136,174"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="195,171,223,209,249,263,267,312,262,314,245,265,218,212,190,174"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="164,270,231,311,228,315,161,275"/>
+<area shape="poly" id="edge9_Node000007_Node000004" title=" " alt="" coords="708,177,702,224,693,247,679,267,657,282,628,295,550,314,461,328,375,336,375,331,460,323,549,309,626,290,655,277,675,263,689,245,697,222,702,176"/>
+<area shape="poly" id="edge10_Node000007_Node000006" title=" " alt="" coords="658,173,606,213,603,208,655,169"/>
+</map>
