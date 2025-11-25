@@ -8,7 +8,8 @@ PROJECT_VERSION        = "@PROJECT_VERSION@"
 # Gdzie Doxygen ma szukać plików źródłowych
 INPUT                  = "@CMAKE_SOURCE_DIR@/include" \
                          "@CMAKE_SOURCE_DIR@/src" \
-                         "@CMAKE_SOURCE_DIR@/examples"
+                         "@CMAKE_SOURCE_DIR@/examples" \
+                         "@CMAKE_SOURCE_DIR@/external/obj_parser"
 RECURSIVE              = YES
 
 # Gdzie wygenerować dokumentację (w katalogu build)
