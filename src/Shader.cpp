@@ -13,11 +13,26 @@ ShaderProgram::ShaderProgram(std::vector< GLuint >&& shaders)
   if (!common_data.has_value()) {
     common_data.emplace(GL_DYNAMIC_DRAW);
   }
+  if (!directional_light_data.has_value()) {
+    directional_light_data.emplace(GL_DYNAMIC_DRAW);
+  }
+  if (!spot_light_data.has_value()) {
+    spot_light_data.emplace(GL_DYNAMIC_DRAW);
+  }
 
   program_id = link_program(std::move(shaders));
+
   GLuint common_buffer{glGetUniformBlockIndex(program_id, "lCommon")};
   if (common_buffer != GL_INVALID_INDEX) {
     glUniformBlockBinding(program_id, common_buffer, common_data.value().get_index());
+  }
+  GLuint dir_light_buffer{glGetUniformBlockIndex(program_id, "lDirectionalLights")};
+  if (dir_light_buffer != GL_INVALID_INDEX) {
+    glUniformBlockBinding(program_id, dir_light_buffer, directional_light_data.value().get_index());
+  }
+  GLuint spot_light_buffer{glGetUniformBlockIndex(program_id, "lSpotLights")};
+  if (spot_light_buffer != GL_INVALID_INDEX) {
+    glUniformBlockBinding(program_id, spot_light_buffer, spot_light_data.value().get_index());
   }
 }
 

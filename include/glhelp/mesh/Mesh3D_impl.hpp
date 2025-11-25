@@ -1,7 +1,6 @@
 #pragma once
 
 // 'classic' header-guard to avoid recursive definition
-#include "obj_parser/Vertex.hpp"
 #ifndef REC_MESH3D_GUARD
 #define REC_MESH3D_GUARD
 
@@ -14,6 +13,8 @@
 #include <glm/fwd.hpp>
 #include <glm/geometric.hpp>
 #include <glm/glm.hpp>
+
+#include <obj_parser/Vertex.hpp>
 
 #include <glhelp/mesh/Mesh3D.hpp>
 #include <glhelp/position/PositionProvider.hpp>

@@ -1,5 +1,5 @@
-#include "glhelp/position/FPSPlayerController.hpp"
 #include <exception>
+#include <glm/ext/quaternion_geometric.hpp>
 #include <iostream>
 #include <memory>
 
@@ -17,6 +17,7 @@
 #include <glhelp/Scene.hpp>
 #include <glhelp/Shader.hpp>
 #include <glhelp/Window.hpp>
+#include <glhelp/ligting/DirectionalLight.hpp>
 #include <glhelp/mesh/Mesh3D.hpp>
 #include <glhelp/position/Position.hpp>
 #include <glhelp/utils/GLFWContext.hpp>
@@ -49,7 +50,18 @@ void run_program()
 
   glhelp::Scene main_scene;
 
+  auto sun{std::make_shared< glhelp::DirectionalLight >(glhelp::DirectionalLight{
+      .direction = glm::normalize(glm::vec3{1.0f, 1.0f, 0.5f}),
+      .color = glm::vec3{1.0f, 1.0f, 0.9f},
+  })};
+  auto moon{std::make_shared< glhelp::DirectionalLight >(glhelp::DirectionalLight{
+      .direction = glm::normalize(glm::vec3{-1.0f, 1.0f, 0.5f}),
+      .color = glm::vec3{0.6, 0.6, 0.9F},
+  })};
+
   main_scene.add_object(finish);
+  main_scene.add_light(sun);
+  main_scene.add_light(moon);
   camera->init_mouse(*window);
 
   window->run_synchronously([&]([[maybe_unused]] glhelp::Window& window, double time, double frame_time) mutable {

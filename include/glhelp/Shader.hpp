@@ -11,7 +11,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <glhelp/ligting/DirectionalLight.hpp>
+#include <glhelp/ligting/SpotLight.hpp>
 #include <glhelp/utils/ShaderHelpers.hpp>
+
+#define MAX_DIRECTIONAL_LIGHTS 4
+#define MAX_SPOT_LIGHTS 8
 
 namespace glhelp {
 
@@ -24,6 +29,7 @@ public:
   ShaderException(const std::string& message) : std::runtime_error(message) {}
 };
 
+inline GLuint global_uniform_buffer_index{};
 template< typename T >
 class UniformBuffer {
 public:
@@ -34,9 +40,12 @@ public:
     glBufferData(GL_UNIFORM_BUFFER, sizeof(T), nullptr, draw_type);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-    index = global_index++;
+    index = global_uniform_buffer_index++;
     glBindBufferRange(GL_UNIFORM_BUFFER, index, id, 0, sizeof(T));
   }
+
+  UniformBuffer(const UniformBuffer&) = delete;
+  auto operator=(const UniformBuffer&) -> UniformBuffer& = delete;
 
   ~UniformBuffer()
   {
@@ -56,7 +65,6 @@ public:
 private:
   GLuint id;
   GLuint index;
-  inline static GLuint global_index{};
 };
 
 /// RAII-style shader program object.
@@ -95,7 +103,26 @@ public:
     float time;
   };
 
+  struct DirectionalLightData {
+    // Uses `glm::vec4` for std140 alignment purposes.
+    glm::vec4 direction[MAX_DIRECTIONAL_LIGHTS];
+    glm::vec4 color[MAX_DIRECTIONAL_LIGHTS];
+    unsigned count;
+  };
+
+  struct SpotLightData {
+    // Uses `glm::vec4` for std140 alignment purposes.
+    glm::vec4 position[MAX_SPOT_LIGHTS];
+    glm::vec4 direction[MAX_SPOT_LIGHTS];
+    glm::vec4 color[MAX_SPOT_LIGHTS];
+    float cutoff[MAX_SPOT_LIGHTS];
+    float outer_cutoff[MAX_SPOT_LIGHTS];
+    GLuint count;
+  };
+
   inline static std::optional< UniformBuffer< CommonData > > common_data{};
+  inline static std::optional< UniformBuffer< DirectionalLightData > > directional_light_data{};
+  inline static std::optional< UniformBuffer< SpotLightData > > spot_light_data{};
 
 private:
   GLuint program_id;
