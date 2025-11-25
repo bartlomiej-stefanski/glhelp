@@ -13,7 +13,6 @@ find_package(glm 0.9.8 REQUIRED)
 
 add_subdirectory(external/glad)
 
-
 add_compile_options(-Wall -Wextra)
 
 option(WARNINGS_AS_ERRORS "Treat compilation warnings as errors" OFF)
@@ -44,7 +43,6 @@ if(ENABLE_IWYU)
   message(STATUS "include-what-you-use enabled. Using: ${IWYU_EXECUTABLE}")
 endif()
 
-
 find_package(Doxygen OPTIONAL_COMPONENTS dot)
 if(Doxygen_FOUND)
   message(STATUS "Doxygen found, 'docs' target available.")
@@ -63,6 +61,7 @@ if(Doxygen_FOUND)
   )
 endif()
 
+add_subdirectory(external/obj_parser)
 
 file(GLOB_RECURSE GLHELP_SOURCES "src/*.cpp")
 
