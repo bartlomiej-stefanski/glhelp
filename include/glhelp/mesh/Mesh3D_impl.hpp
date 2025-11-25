@@ -1,6 +1,7 @@
 #pragma once
 
 // 'classic' header-guard to avoid recursive definition
+#include "obj_parser/Vertex.hpp"
 #ifndef REC_MESH3D_GUARD
 #define REC_MESH3D_GUARD
 
@@ -35,8 +36,9 @@ Mesh3D< PositionSource >::Mesh3D(PositionSource position_source, std::shared_ptr
 
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr);
   glEnableVertexAttribArray(0);
+  layout_param_count++;
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr);
 
   glBindVertexArray(0);
 }
@@ -54,8 +56,44 @@ Mesh3D< PositionSource >::Mesh3D(PositionSource position_source, std::shared_ptr
 
   glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), vertices.data(), GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
   glEnableVertexAttribArray(0);
+  layout_param_count++;
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+  glBindVertexArray(0);
+}
+
+template< PositionProvider PositionSource >
+template< obj_parser::VertexType Vertex >
+Mesh3D< PositionSource >::Mesh3D(PositionSource position_source, std::shared_ptr< ShaderProgram > shader, const obj_parser::Obj< Vertex >& obj)
+    : PositionSource(position_source), shader(std::move(shader)), mode(GL_TRIANGLES), vertex_count(obj.vertices.size()), indices_count(obj.indices.size())
+{
+  glGenVertexArrays(1, &vao);
+  glGenBuffers(1, &vbo);
+  glGenBuffers(1, &ebo);
+
+  glBindVertexArray(vao);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+
+  glBufferData(GL_ARRAY_BUFFER, obj.vertices.size() * sizeof(Vertex), obj.vertices.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, obj.indices.size() * sizeof(GLuint), obj.indices.data(), GL_STATIC_DRAW);
+
+  glEnableVertexAttribArray(0);
+  layout_param_count++;
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+
+  if constexpr (obj_parser::VertexWithNormal< Vertex >) {
+    glEnableVertexAttribArray(1);
+    layout_param_count++;
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+  }
+
+  if constexpr (obj_parser::VertexWithTexture< Vertex >) {
+    glEnableVertexAttribArray(2);
+    layout_param_count++;
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
+  }
 
   glBindVertexArray(0);
 }

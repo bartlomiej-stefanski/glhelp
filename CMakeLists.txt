@@ -79,6 +79,7 @@ target_link_libraries(glhelp
     glad_loader
     glfw
     glm
+    obj_parser
 )
 
 option(GLHELP_BUILD_EXAMPLES "Build the glhelp examples" ON)

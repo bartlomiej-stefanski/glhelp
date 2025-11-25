@@ -6,6 +6,8 @@
 
 #include <glm/glm.hpp>
 
+#include <obj_parser/Obj.hpp>
+
 #include <glhelp/Shader.hpp>
 #include <glhelp/mesh/Renderable.hpp>
 #include <glhelp/position/PositionProvider.hpp>
@@ -27,6 +29,9 @@ public:
   Mesh3D(PositionSource position_source, std::shared_ptr< ShaderProgram > shader, const std::vector< glm::vec3 >& vertices, const std::vector< GLuint >& indices, GLenum mode);
   /// Mesh will be drawn using glDrawArrays with the specified mode
   Mesh3D(PositionSource position_source, std::shared_ptr< ShaderProgram > shader, const std::vector< glm::vec3 >& vertices, GLenum mode);
+  /// Mesh will be loaded from `obj_parser::Obj` Object file
+  template< obj_parser::VertexType Vertex >
+  Mesh3D(PositionSource position_source, std::shared_ptr< ShaderProgram > shader, const obj_parser::Obj< Vertex >& obj);
 
   // Copy constructors are removed as they will break OpenGL buffers.
   Mesh3D(const Mesh3D&) = delete;
@@ -46,7 +51,7 @@ public:
 
 protected:
   /// Number of layout parameters used by the mesh.
-  constexpr static unsigned layout_param_count{1};
+  unsigned layout_param_count{};
 
   /// Called just before drawing the mesh.
   virtual void uniform_setter_callback() {}
