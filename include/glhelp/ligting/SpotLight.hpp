@@ -18,9 +18,12 @@ struct SpotLight {
   /// Light color. Serves as intensity modifier.
   glm::vec3 color;
 
-  /// Inner light cone cutoff angle in degrees.
+  float linear_coeff{};
+  float quadratic_coeff{};
+
+  /// Inner light cone cutoff angle in radians.
   float cutoff;
-  /// Outer light cone cutoff angle in degrees.
+  /// Outer light cone cutoff angle in radians.
   /// If set allows for smooth transition between full intensity and no intensity.
   std::optional< float > outer_cutoff;
 };
@@ -29,7 +32,11 @@ struct SpotLight {
 template< PositionProvider PositionSource >
 class MovingSpotLight : public SpotLight {
 public:
-  MovingSpotLight(PositionSource&& position_source, glm::vec3 color, float cutoff = 90.0F, std::optional< float > outer_cutoff = std::nullopt)
+  MovingSpotLight(
+      PositionSource&& position_source,
+      glm::vec3 color,
+      float cutoff = glm::pi< float >(),
+      std::optional< float > outer_cutoff = std::nullopt)
       : position_source(std::move(position_source))
   {
     this->color = color;
@@ -47,7 +54,11 @@ public:
     return position_source.get_rotation() * glm::vec3{0, 0, 1};
   }
 
-  static auto create_shared(PositionSource&& position_source, glm::vec3 color, float cutoff = 90.0F, std::optional< float > outer_cutoff = std::nullopt) -> std::shared_ptr< SpotLight >
+  static auto create_shared(
+      PositionSource&& position_source,
+      glm::vec3 color,
+      float cutoff = glm::pi< float >(),
+      std::optional< float > outer_cutoff = std::nullopt) -> std::shared_ptr< SpotLight >
   {
     return std::make_shared< MovingSpotLight< PositionSource > >(std::move(position_source), color, cutoff, outer_cutoff);
   }

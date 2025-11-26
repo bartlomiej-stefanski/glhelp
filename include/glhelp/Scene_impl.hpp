@@ -13,6 +13,7 @@ void Scene::draw_objects(const Camera< CameraPositionSource >& camera, float tim
 {
   ShaderProgram::common_data.value().update_buffer({
       .camera_matrix = camera.get_projection_matrix() * camera.get_view_matrix(),
+      .camera_position = glm::vec4(camera.get_position(), 0.0F),
       .time = time,
   });
 
@@ -31,6 +32,7 @@ void Scene::draw_minimap(const Camera< CameraPositionSource >& camera, const Win
 {
   ShaderProgram::common_data.value().update_buffer({
       .camera_matrix = camera.get_ortho_matrix(size.x / size.y, scale) * camera.get_view_matrix(),
+      .camera_position = glm::vec4(camera.get_position(), 0.0F),
       .time = time,
   });
 

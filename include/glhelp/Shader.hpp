@@ -113,6 +113,7 @@ public:
 
   struct CommonData {
     glm::mat4 camera_matrix;
+    glm::vec4 camera_position;
     float time;
   };
 
@@ -128,8 +129,15 @@ public:
     glm::vec4 position[MAX_SPOT_LIGHTS];
     glm::vec4 direction[MAX_SPOT_LIGHTS];
     glm::vec4 color[MAX_SPOT_LIGHTS];
-    float cutoff[MAX_SPOT_LIGHTS];
-    float outer_cutoff[MAX_SPOT_LIGHTS];
+    union {
+      glm::vec4 misceleanous[MAX_SPOT_LIGHTS];
+      struct {
+        float linear_coefficient;
+        float quadratic_coefficient;
+        float cutoff;
+        float outer_cutoff;
+      } misc[MAX_SPOT_LIGHTS];
+    };
     GLuint count;
   };
 

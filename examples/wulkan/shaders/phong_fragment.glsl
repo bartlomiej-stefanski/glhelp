@@ -2,21 +2,94 @@
 
 layout (std140) uniform uDirectionalLights
 {
-  vec4 Direction[4];
-  vec4 Color[4];
-  int Count;
+  vec4 dlDirection[4];
+  vec4 dlColor[4];
+  int dlCount;
+};
+
+layout (std140) uniform uSpotLights
+{
+  vec4 slPosition[8];
+  vec4 slDirection[8];
+  vec4 slColor[8];
+  vec4 misceleanous[8]; // x = linear coefficient, y = quadratic coefficient, z = inner cutoff, w = outer cutoff
+  int slCount;
 };
 
 in vec3 normal;
+in vec3 cameraPos;
+in vec3 fragPos;
+
 out vec4 color;
 
+
+float calculateDirLight(vec3 Normal, vec3 direction, vec3 viewDir, float diffuse, float specular)
+{
+  float light = 0.0;
+
+  // Diffusef
+  float NdotL = max(dot(Normal, -direction), 0.0);
+  light += NdotL * diffuse;
+
+  // Specular
+  vec3 reflectDir = reflect(direction, Normal);
+  float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+  light += spec * specular;
+
+  return light;
+}
+
+float calculateSpotLight(vec3 Normal, vec3 direction, vec3 position, vec3 fragPos, vec3 viewDir, vec4 misceleanous)
+{
+  float light = 0.0;
+
+  float distance = length(position - fragPos);
+  float attenuation = clamp(1.0 / (1.0 + misceleanous.x * distance + misceleanous.y * (distance * distance)), 0.0, 1.0);
+  vec3 rayDirection = normalize(fragPos - position);
+
+
+  /* Calculate intensity of cutoff, where:
+    * - theta: angle between light direction and ray direction
+    * - slope: rate of change from full intensity to no intensity */
+  float inner_cutoff = cos(misceleanous.z);
+  float outer_cutoff = cos(misceleanous.w);
+
+  float theta = dot(rayDirection, -direction);
+  float slope = inner_cutoff - outer_cutoff + 0.00001; // Avoid division by zero
+
+  float intensity = clamp((theta - outer_cutoff) / slope, 0.0, 1.0);
+
+  // Diffuse
+  float NdotL = max(dot(Normal, -rayDirection), 0.0);
+  light += NdotL * attenuation * intensity;
+
+  // Specular
+  vec3 reflectDir = reflect(rayDirection, Normal);
+  float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+  light += spec * attenuation * intensity;
+
+  return light;
+}
+
 void main(void) {
-  vec4 white = vec4(1.0, 1.0, 1.0, 1.0);
+  vec3 Normal = normalize(normal);
+  vec3 viewDir = normalize(cameraPos - fragPos);
 
-  color = white * 0.1; // Ambient light
+  vec4 white = vec4(0.8, 0.8, 0.8, 1.0);
 
-  for (int i = 0; i < Count; i++) {
-    float NdotL = max(dot(normal, -Direction[i].xyz), 0.0);
-    color += white * Color[i] * NdotL;
+  color = vec4(vec3(1.0) * 0.01, 1.0); // Ambient light
+
+  // Calculate directional light effec
+  for (int i = 0; i < dlCount; i++) {
+    color += calculateDirLight(Normal, dlDirection[i].xyz, viewDir, 1.0, 1.0) * dlColor[i];
   }
+
+  // Calculate spot light effects
+  for (int i = 0; i < slCount; i++) {
+    color += calculateSpotLight(Normal, slDirection[i].xyz, slPosition[i].xyz, fragPos, viewDir, misceleanous[i]) * slColor[i];
+  }
+
+  color *= white;
+
+  color.rgb = pow(color.rgb, vec3(1.0 / 2.2)); // SRGB to linear
 }
