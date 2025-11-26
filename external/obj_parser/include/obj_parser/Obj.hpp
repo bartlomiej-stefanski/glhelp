@@ -16,14 +16,12 @@
 namespace obj_parser
 {
 
-class ObjParseException : std::exception
+struct ObjParseException : std::exception
 {
-private:
   ObjParseException(const std::string& cause, unsigned line_number);
 
-public:
   template< typename T >
-  static std::function< T() > raise(const std::string& cause, unsigned line_number)
+  static auto raise(const std::string& cause, unsigned line_number) -> std::function< T() >
   {
     return [cause, line_number]() {
       throw ObjParseException(cause, line_number);
@@ -31,7 +29,7 @@ public:
     };
   }
 
-  const char* what() const noexcept override;
+  [[nodiscard]] auto what() const noexcept -> const char* override;
 
 private:
   std::string message;

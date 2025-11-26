@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <optional>
 #include <stdexcept>
 #include <string>
@@ -24,9 +25,17 @@ template< class T >
 concept UniformType =
     std::is_same_v< T, bool > || std::is_same_v< T, int > || std::is_same_v< T, float > || std::is_same_v< T, glm::vec2 > || std::is_same_v< T, glm::vec3 > || std::is_same_v< T, glm::vec4 > || std::is_same_v< T, glm::mat2 > || std::is_same_v< T, glm::mat3 > || std::is_same_v< T, glm::mat4 >;
 
-class ShaderException : public std::runtime_error {
-public:
+struct ShaderException : public std::runtime_error {
   ShaderException(const std::string& message) : std::runtime_error(message) {}
+
+  template< typename T >
+  static auto raise(const std::string& cause) -> std::function< T() >
+  {
+    return [&cause]() {
+      throw ShaderException(cause);
+      return T{};
+    };
+  }
 };
 
 inline GLuint global_uniform_buffer_index{};
@@ -79,11 +88,15 @@ public:
   ShaderProgram(ShaderProgram&& other) noexcept;
   auto operator=(ShaderProgram&& other) noexcept -> ShaderProgram&;
 
-  auto id() const noexcept -> GLuint { return program_id; }
+  [[nodiscard]] auto id() const noexcept -> GLuint { return program_id; }
+
+  [[nodiscard]] auto has_uniform(const std::string& name) const -> bool;
 
   /// Get the location of a uniform variable in the shader program.
   /// @throws ShaderException if the uniform variable is not found.
-  auto get_uniform_location(const std::string& name) const -> GLuint;
+  [[nodiscard]] auto get_uniform_location(const std::string& name) const -> GLuint;
+  /// Get the location of a uniform variable in the shader if it exists.
+  [[nodiscard]] auto uniform_location(const std::string& name) const -> std::optional< GLuint >;
 
   /// Set the value of a uniform variable in the shader program.
   /// @throws ShaderException if the uniform variable is not found.
@@ -143,7 +156,7 @@ auto link_program(const std::vector< GLuint >&& shaders) -> GLuint;
 template< UniformType T >
 void ShaderProgram::set_uniform(const std::string& name, const T& value) const
 {
-  auto location{get_uniform_location(name)};
+  const auto location{get_uniform_location(name)};
 
   if constexpr (std::is_same_v< T, bool >) {
     glUniform1i(location, value ? 1 : 0);

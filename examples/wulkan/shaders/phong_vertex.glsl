@@ -12,10 +12,11 @@ layout (std140) uniform uCommon
 };
 
 uniform mat4 uModelTransform;
+uniform mat3 uNormalTransform;
 
 out vec3 normal;
 
 void main(void) {
-  normal = norm;
+  normal = normalize(uNormalTransform * norm);
   gl_Position = cameraTransform * uModelTransform * vec4(pos, 1.0);
 }
