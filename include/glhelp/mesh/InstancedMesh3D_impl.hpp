@@ -49,6 +49,25 @@ InstancedMesh3d< PositionSource, InstanceData... >::InstancedMesh3d(
 }
 
 template< PositionProvider PositionSource, InstancableType... InstanceData >
+template< obj_parser::VertexType Vertex >
+InstancedMesh3d< PositionSource, InstanceData... >::InstancedMesh3d(
+    PositionSource position_source,
+    std::shared_ptr< ShaderProgram > shader,
+    const obj_parser::Obj< Vertex >& obj_data,
+    const std::tuple< std::vector< InstanceData >... >& instance_data)
+    : Mesh3D< PositionSource >(position_source, std::move(shader), obj_data),
+      instance_count(static_cast< unsigned >(std::get< 0 >(instance_data).size()))
+{
+  // TODO: Figure out how to combine this with Mesh3D constructor where we already bind VAO.
+  glBindVertexArray(this->vao);
+
+  unsigned vbo_inx{}, start_inx{this->local_param_count};
+  (create_instance_data(vbo_inx++, start_inx, std::get< std::vector< InstanceData > >(instance_data)), ...);
+
+  glBindVertexArray(0);
+}
+
+template< PositionProvider PositionSource, InstancableType... InstanceData >
 InstancedMesh3d< PositionSource, InstanceData... >::~InstancedMesh3d()
 {
   for (const auto& vbo : instance_vbo) {
