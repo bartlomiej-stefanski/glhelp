@@ -7,6 +7,11 @@ void Scene::add_object(const std::shared_ptr< Renderable >& renderable)
   object_collection[renderable->get_shader()].insert(renderable);
 }
 
+void Scene::add_transparent_object(const std::shared_ptr< Renderable >& renderable)
+{
+  transparent_object_collection[renderable->get_shader()].insert(renderable);
+}
+
 void Scene::add_light(std::shared_ptr< DirectionalLight > light)
 {
   if (directional_lights.size() >= MAX_DIRECTIONAL_LIGHTS) {

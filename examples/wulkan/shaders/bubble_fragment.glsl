@@ -23,23 +23,34 @@ in vec3 fragPos;
 out vec4 color;
 
 
-vec4 calculateDirLight(vec3 Normal, vec3 direction, vec3 viewDir, float diffuse, float specular, vec4 diffuseColor)
+vec4 calculateDirLight(vec3 Normal, vec3 direction, vec3 viewDir, float diffuse, float specular, vec4 diffuseColor, vec4 matColor)
 {
   vec4 light = vec4(0.0);
 
   // Diffusef
   float NdotL = max(dot(Normal, -direction), 0.0);
-  light += diffuseColor * NdotL * diffuse;
+  light += matColor * diffuseColor * NdotL * diffuse;
 
   // Specular
   vec3 reflectDir = reflect(direction, Normal);
-  float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+
+  float spec = step(0.995, max(dot(viewDir, reflectDir), 0.0));
   light += vec4(1.0) * spec * specular;
 
   return light;
 }
 
-vec4 calculateSpotLight(vec3 Normal, vec3 direction, vec3 position, vec3 fragPos, vec3 viewDir, vec4 misceleanous, vec4 diffuseColor)
+vec4 calculateSpotLight(
+  vec3 Normal,
+  vec3 direction,
+  vec3 position,
+  vec3 fragPos,
+  vec3 viewDir,
+  vec4 misceleanous,
+  float diffuse,
+  float specular,
+  vec4 diffuseColor,
+  vec4 matColor)
 {
   vec4 light = vec4(0.0);
 
@@ -61,12 +72,12 @@ vec4 calculateSpotLight(vec3 Normal, vec3 direction, vec3 position, vec3 fragPos
 
   // Diffuse
   float NdotL = max(dot(Normal, -rayDirection), 0.0);
-  light += diffuseColor * NdotL * attenuation * intensity;
+  light += matColor * diffuseColor * NdotL * attenuation * intensity * diffuse;
 
   // Specular
   vec3 reflectDir = reflect(rayDirection, Normal);
-  float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-  light += vec4(1.0) * spec * attenuation * intensity;
+  float spec = step(0.995, max(dot(viewDir, reflectDir), 0.0));
+  light += vec4(1.0) * spec * attenuation * intensity * specular;
 
   return light;
 }
@@ -75,21 +86,30 @@ void main(void) {
   vec3 Normal = normalize(normal);
   vec3 viewDir = normalize(cameraPos - fragPos);
 
-  vec4 white = vec4(0.8, 0.8, 0.8, 1.0);
+  float diffuse = 0.2;
+  float ambient = 0.3;
+  float specular = 10.0;
+  vec4 matColor = vec4(normalize(fragPos.xyz), 0.3);
 
-  color = vec4(vec3(1.0) * 0.01, 1.0); // Ambient light
+  if (dot(Normal, viewDir) < 0) {
+    Normal = -Normal;
+    matColor = vec4(0.0);
+    diffuse = 0.0;
+    ambient = 0.0;
+  }
+
+  color = vec4(0.0);
 
   // Calculate directional light effec
   for (int i = 0; i < dlCount; i++) {
-    color += calculateDirLight(Normal, dlDirection[i].xyz, viewDir, 1.0, 1.0, dlColor[i]);
+    color += calculateDirLight(Normal, dlDirection[i].xyz, viewDir, diffuse, specular, dlColor[i], matColor);
   }
 
   // Calculate spot light effects
   for (int i = 0; i < slCount; i++) {
-    color += calculateSpotLight(Normal, slDirection[i].xyz, slPosition[i].xyz, fragPos, viewDir, misceleanous[i], slColor[i]);
+    color += calculateSpotLight(Normal, slDirection[i].xyz, slPosition[i].xyz, fragPos, viewDir, misceleanous[i], diffuse, specular, slColor[i], matColor);
   }
 
-  color *= white;
-
+  color += matColor * ambient;
   color.rgb = pow(color.rgb, vec3(1.0 / 2.2)); // SRGB to linear
 }

@@ -17,6 +17,7 @@ public:
   Scene() = default;
 
   void add_object(const std::shared_ptr< Renderable >& renderable);
+  void add_transparent_object(const std::shared_ptr< Renderable >& renderable);
   void add_light(std::shared_ptr< DirectionalLight > light);
   void add_light(std::shared_ptr< SpotLight > light);
 
@@ -30,6 +31,7 @@ private:
   void update_light_buffer() const;
 
   std::unordered_map< std::shared_ptr< ShaderProgram >, std::unordered_set< std::shared_ptr< Renderable > > > object_collection;
+  std::unordered_map< std::shared_ptr< ShaderProgram >, std::unordered_set< std::shared_ptr< Renderable > > > transparent_object_collection;
   std::unordered_set< std::shared_ptr< DirectionalLight > > directional_lights;
   std::unordered_set< std::shared_ptr< SpotLight > > spot_lights;
 };

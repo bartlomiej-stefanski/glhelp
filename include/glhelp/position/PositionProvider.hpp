@@ -15,7 +15,7 @@ constexpr inline static glm::vec3 FORWARD_VECTOR{0, 0, 1};
 
 template< typename T >
 concept PositionProvider = requires(const T& a) {
-  { a.get_position() } -> std::convertible_to< glm::vec3 >;
+  { a.get_position() } -> std::same_as< glm::vec3 >;
   { a.get_rotation() } -> std::convertible_to< glm::quat >;
   { a.get_scale() } -> std::convertible_to< glm::vec3 >;
 };

@@ -25,6 +25,20 @@ void Scene::draw_objects(const Camera< CameraPositionSource >& camera, float tim
       object_ref->draw();
     }
   }
+
+  glDisable(GL_CULL_FACE);
+  glDepthMask(GL_FALSE);
+
+  // Draw back-faces of transparent object
+  for (auto& [shader, objects] : transparent_object_collection) {
+    shader->use();
+    for (auto& object_ref : objects) {
+      object_ref->draw();
+    }
+  }
+
+  glDepthMask(GL_TRUE);
+  glEnable(GL_CULL_FACE);
 }
 
 template< PositionProvider CameraPositionSource >

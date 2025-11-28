@@ -62,6 +62,9 @@ Window::Window(int width, int height, const std::string& name)
   glEnable(GL_DEPTH_TEST);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   glViewport(0, 0, this->width, this->height);
   glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 

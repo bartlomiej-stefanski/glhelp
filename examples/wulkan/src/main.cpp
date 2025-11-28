@@ -1,4 +1,3 @@
-#include "glhelp/position/PositionFollower.hpp"
 #include <exception>
 #include <glm/ext/quaternion_geometric.hpp>
 #include <iostream>
@@ -40,6 +39,10 @@ void run_program()
       glhelp::create_shader_from_file(GL_VERTEX_SHADER, SHADER_DIR_PATH "phong_vertex.glsl"),
       glhelp::create_shader_from_file(GL_FRAGMENT_SHADER, SHADER_DIR_PATH "phong_fragment.glsl")})};
 
+  auto bubble_shader{std::make_shared< glhelp::ShaderProgram >(std::vector{
+      glhelp::create_shader_from_file(GL_VERTEX_SHADER, SHADER_DIR_PATH "bubble_vertex.glsl"),
+      glhelp::create_shader_from_file(GL_FRAGMENT_SHADER, SHADER_DIR_PATH "bubble_fragment.glsl")})};
+
   using CameraPosition = glhelp::InteractiveController< glhelp::FPSPlayerController >;
   auto camera{std::make_shared< glhelp::Camera< CameraPosition > >(
       window,
@@ -49,11 +52,11 @@ void run_program()
   auto suzane_obj{obj_parser::Obj< obj_parser::VertexNormals >::parse_from_file(OBJ_DIR_PATH "suzane.obj")};
   auto icosphere_obj{obj_parser::Obj< obj_parser::VertexNormals >::parse_from_file(OBJ_DIR_PATH "icosphere.obj")};
 
-  auto suzane{std::make_shared< glhelp::Mesh3D< glhelp::SimplePosition > >(
-      glhelp::SimplePosition{glm::vec3{0.2f, 0, 0}, 0, 0, 0, glm::vec3{0.1}}, phong_shader, suzane_obj)};
 
   auto icosphere{std::make_shared< glhelp::Mesh3D< glhelp::SimplePosition > >(
-      glhelp::SimplePosition{glm::vec3{-0.2f, 0, 0}, 0, 0, 0, glm::vec3{0.1}}, phong_shader, icosphere_obj)};
+      glhelp::SimplePosition{glm::vec3{-0.2f, 0, 0}, 0, 0, 0, glm::vec3{0.1}}, bubble_shader, icosphere_obj)};
+  auto suzane{std::make_shared< glhelp::Mesh3D< glhelp::SimplePosition > >(
+      glhelp::SimplePosition{glm::vec3{0.2f, 0, 0}, 0, 0, 0, glm::vec3{0.1}}, bubble_shader, suzane_obj)};
 
   glhelp::Scene main_scene;
 
@@ -72,8 +75,8 @@ void run_program()
       glm::radians(15.0F),
       glm::radians(30.0F))};
 
-  main_scene.add_object(suzane);
-  main_scene.add_object(icosphere);
+  main_scene.add_transparent_object(icosphere);
+  main_scene.add_transparent_object(suzane);
 
   main_scene.add_light(sun);
   main_scene.add_light(moon);
