@@ -16,9 +16,12 @@ layout (std140) uniform uSpotLights
   int slCount;
 };
 
+
 in vec3 normal;
 in vec3 cameraPos;
 in vec3 fragPos;
+
+in vec4 instance_color;
 
 out vec4 color;
 
@@ -87,9 +90,10 @@ void main(void) {
   vec3 viewDir = normalize(cameraPos - fragPos);
 
   float diffuse = 0.2;
-  float ambient = 0.3;
+  float ambient = 0.1;
   float specular = 10.0;
-  vec4 matColor = vec4(normalize(fragPos.xyz), 0.3);
+
+  vec4 matColor = instance_color;
 
   if (dot(Normal, viewDir) < 0) {
     Normal = -Normal;

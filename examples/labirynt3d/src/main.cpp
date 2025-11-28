@@ -109,7 +109,7 @@ void run_program(unsigned cube_side, std::mt19937& dev)
   });
 }
 
-void print_help(const char* argv0)
+static void print_help(const char* argv0)
 {
   std::cerr << "Usage: " << argv0 << " [-n <number>] [-s <seed>]\n";
 }

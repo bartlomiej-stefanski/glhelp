@@ -10,29 +10,30 @@
 #include <glhelp/mesh/InstancedMesh3D.hpp>
 #include <glhelp/position/Position.hpp>
 
-struct BubbleInfo {
-  glm::vec3 position;
-  union {
-    glm::vec4 misceleanous;
-    struct {
-      float hsl_color;
-      float time;
-      float max_heigth;
-      float start_height;
-    };
+using BubbleInfo_vec4 = glm::vec4;
+union BubbleInfo {
+  BubbleInfo_vec4 packed;
+  struct {
+    float hsl_color;
+    float time;
+    float max_heigth;
+    float start_height;
   };
 };
 
-auto get_bubble_positions(unsigned n, glm::vec3 obstacle_scale, std::mt19937& dev) -> std::vector< glm::mat4 >;
+auto get_bubble_info(unsigned n, std::mt19937& rng) -> std::vector< BubbleInfo_vec4 >;
+auto get_bubble_positions(unsigned n, std::mt19937& rng) -> std::vector< glm::vec3 >;
 
-class Boubbles : public glhelp::InstancedMesh3d< glhelp::SimplePosition, glm::mat4 > {
+class Bubbles : public glhelp::InstancedMesh3d< glhelp::SimplePosition, glm::vec3, BubbleInfo_vec4 > {
 public:
-  Boubbles(
-    std::shared_ptr< glhelp::ShaderProgram > shader,
-    glhelp::SimplePosition position,
-    const obj_parser::Obj< obj_parser::VertexNormals >& sphere,
-    std::vector< glm::mat4 > rombus_positions);
+  Bubbles(
+      std::shared_ptr< glhelp::ShaderProgram > shader,
+      glhelp::SimplePosition position,
+      const obj_parser::Obj< obj_parser::VertexNormals >& sphere,
+      std::vector< glm::vec3 > bubble_positions,
+      std::vector< BubbleInfo_vec4 > bubble_info);
 
 private:
-  std::vector< glm::mat4 > bubble_positions;
+  std::vector< glm::vec3 > bubble_positions;
+  std::vector< BubbleInfo > bubble_info;
 };

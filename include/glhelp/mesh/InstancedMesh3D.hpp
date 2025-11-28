@@ -18,7 +18,7 @@ namespace glhelp {
 
 // TODO: Add more possible types
 template< typename T >
-concept InstancableType = std::is_same_v< T, float > || std::is_same_v< T, glm::vec3 > || std::is_same_v< T, glm::mat4 >;
+concept InstancableType = std::is_same_v< T, float > || std::is_same_v< T, glm::vec3 > || std::is_same_v< T, glm::vec4 > || std::is_same_v< T, glm::mat4 >;
 
 /// Allows for creation of instanced 3D meshes.
 /// Each instance can have its own set of data provided as instance attributes.
@@ -43,10 +43,10 @@ public:
 
   template< obj_parser::VertexType Vertex >
   InstancedMesh3d(
-    PositionSource position_source,
-    std::shared_ptr< ShaderProgram > shader,
-    const obj_parser::Obj< Vertex >& sphere,
-    const std::tuple< std::vector< InstanceData >... >& instance_data);
+      PositionSource position_source,
+      std::shared_ptr< ShaderProgram > shader,
+      const obj_parser::Obj< Vertex >& sphere,
+      const std::tuple< std::vector< InstanceData >... >& instance_data);
 
   ~InstancedMesh3d() override;
 

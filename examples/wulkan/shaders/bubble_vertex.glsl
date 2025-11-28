@@ -5,6 +5,11 @@
 layout(location = 0) in vec3 pos;
 layout(location = 1) in vec3 norm;
 
+layout(location = 2) in vec3 instancePosition;
+
+// {hsl color, time_offset, max_heigth, start_heigth}
+layout(location = 3) in vec4 instanceMisceleanous;
+
 layout (std140) uniform uCommon
 {
   mat4 cameraTransform;
@@ -18,12 +23,45 @@ uniform mat3 uNormalTransform;
 out vec3 normal;
 out vec3 cameraPos;
 out vec3 fragPos;
+out vec4 instance_color;
+
+// Tutorial do zamiany hue do RGB: https://www.baeldung.com/cs/convert-color-hsl-rgb
+vec3 hue2rgb(float h, float c, float x) {
+  if(h < 1.0) return vec3(c, x, 0.0);
+  else if(h < 2.0) return vec3(x, c, 0.0);
+  else if(h < 3.0) return vec3(0.0, c, x);
+  else if(h < 4.0) return vec3(0.0, x, c);
+  else if(h < 5.0) return vec3(x, 0.0, x);
+  else return vec3(c, 0.0, x);
+}
+
+vec3 hsl2rgb(vec3 hsl) {
+  float h = hsl.x;
+  float s = hsl.y;
+  float l = hsl.z;
+
+  float r, g, b;
+
+  float c =  (1.0 - abs(2.0 * l - 1.0)) * s;
+  float hp = h / 60.0f;
+  float x = c * (1.0 - abs(mod(hp, 2.0) - 1.0));
+
+  float m = l - c / 2.0;
+  return hue2rgb(hp, c, x) + vec3(m, m, m);
+}
 
 void main(void) {
   normal = uNormalTransform * norm;
   cameraPos = cameraPosition.xyz;
 
-  vec4 world_position = uModelTransform * vec4(pos, 1.0);
+  instance_color = vec4(hue2rgb(instanceMisceleanous[0], 1.0, 1.0), 0.3);
+
+  float vertical_transition = (instanceMisceleanous[2] - instanceMisceleanous[3]) / 2;
+
+  vec3 movedInstancePosition = pos + instancePosition;
+  movedInstancePosition.y += 10 * (sin(time + instanceMisceleanous[1]) + 1 + instanceMisceleanous[3]) * vertical_transition;
+
+  vec4 world_position = uModelTransform * vec4(pos + movedInstancePosition, 1.0);
   fragPos = vec3(world_position);
   gl_Position = cameraTransform * world_position;
 }

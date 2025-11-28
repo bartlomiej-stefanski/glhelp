@@ -23,6 +23,8 @@
 #include <glhelp/position/Position.hpp>
 #include <glhelp/utils/GLFWContext.hpp>
 
+#include "Bubbles.hpp"
+
 #ifndef SHADER_DIR_PATH
 #error "Shader directory undefined. Please define SHADER_DIR_PATH macro."
 #endif
@@ -31,7 +33,7 @@
 #error "Shader directory undefined. Please define OBJ_DIR_PATH macro."
 #endif
 
-void run_program()
+void run_program(std::mt19937& rng, int n)
 {
   std::shared_ptr< glhelp::Window > window{std::make_shared< glhelp::Window >(800, 800, "OpenGL simple 3d example")};
 
@@ -52,11 +54,15 @@ void run_program()
   auto suzane_obj{obj_parser::Obj< obj_parser::VertexNormals >::parse_from_file(OBJ_DIR_PATH "suzane.obj")};
   auto icosphere_obj{obj_parser::Obj< obj_parser::VertexNormals >::parse_from_file(OBJ_DIR_PATH "icosphere.obj")};
 
-
-  auto icosphere{std::make_shared< glhelp::Mesh3D< glhelp::SimplePosition > >(
-      glhelp::SimplePosition{glm::vec3{-0.2f, 0, 0}, 0, 0, 0, glm::vec3{0.1}}, bubble_shader, icosphere_obj)};
   auto suzane{std::make_shared< glhelp::Mesh3D< glhelp::SimplePosition > >(
-      glhelp::SimplePosition{glm::vec3{0.2f, 0, 0}, 0, 0, 0, glm::vec3{0.1}}, bubble_shader, suzane_obj)};
+      glhelp::SimplePosition{glm::vec3{0.2f, 0, 0}, 0, 0, 0, glm::vec3{0.1}}, phong_shader, suzane_obj)};
+
+  auto bubbles{std::make_shared< Bubbles >(
+      bubble_shader,
+      glhelp::SimplePosition(glm::vec3{0.0F, 0.0F, 0.0F}, 0, 0, 0, glm::vec3{0.06F}),
+      icosphere_obj,
+      get_bubble_positions(n, rng),
+      get_bubble_info(n, rng))};
 
   glhelp::Scene main_scene;
 
@@ -71,12 +77,13 @@ void run_program()
 
   auto flashlight{glhelp::MovingSpotLight< glhelp::PositionFollower< CameraPosition > >::create_shared(
       glhelp::PositionFollower< CameraPosition >(*camera, true, true),
-      glm::vec3{0.0F, 0.8F, 0.0F},
+      glm::vec3{1.0F, 1.0F, 0.6F},
       glm::radians(15.0F),
       glm::radians(30.0F))};
 
-  main_scene.add_transparent_object(icosphere);
-  main_scene.add_transparent_object(suzane);
+  main_scene.add_object(suzane);
+
+  main_scene.add_transparent_object(bubbles);
 
   main_scene.add_light(sun);
   main_scene.add_light(moon);
@@ -87,16 +94,45 @@ void run_program()
   window->run_synchronously([&]([[maybe_unused]] glhelp::Window& window, double time, double frame_time) mutable {
     camera->poll_keys(window, static_cast< float >(frame_time));
     suzane->set_rotation(time / 10, 0, 0);
-    icosphere->set_rotation(0, time / 10, 0);
+
     main_scene.draw_objects(*camera, time);
   });
 }
 
-auto main() -> int
+static void print_help(const char* argv0)
 {
+  std::cerr << "Usage: " << argv0 << " [-n <number>] [-s <seed>]\n";
+}
+
+auto main(int argc, char* argv[]) -> int
+{
+  unsigned n = 10;
+  int seed = 5; // Uczciwy rzut kością!
+
+  // 'paskudny-parser'
+  for (int i = 1; i < argc; ++i) {
+    if (argv[i] == std::string("-n") && i + 1 < argc) {
+      n = std::stoi(argv[++i]);
+    }
+    else if (argv[i] == std::string("-s") && i + 1 < argc) {
+      seed = std::stoi(argv[++i]);
+    }
+    else if (argv[i] == std::string("-h")) {
+      print_help(argv[0]);
+      return 0;
+    }
+    else {
+      std::cerr << "Unknown option: " << argv[i] << '\n';
+      print_help(argv[0]);
+      return 1;
+    }
+  }
+
+  std::mt19937 rng(seed);
+
   try {
     glhelp::GLFWContext context;
-    run_program();
+    run_program(rng, n);
   }
   catch (std::exception& e) {
     std::cerr << "Program crashed!:\n"
