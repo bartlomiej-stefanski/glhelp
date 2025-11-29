@@ -54,7 +54,7 @@ Window::Window(int width, int height, const std::string& name)
   glfwGetWindowSize(window, &this->width, &this->height);
 
   // Setup Face culling
-  glEnable(GL_CULL_FACE);
+  // glEnable(GL_CULL_FACE);
   glFrontFace(GL_CCW); // Calculate normals counter-clockwise
   glCullFace(GL_BACK); // Cull back faces
 

@@ -71,6 +71,9 @@ struct Obj
 {
 public:
   Obj() = default;
+  Obj(std::vector< Vertex > vertices, std::vector< unsigned > indices)
+    : indices(std::move(indices)), vertices(std::move(vertices))
+  {}
 
   static auto parse_from_file(std::istream& in_stream) -> Obj;
   static auto parse_from_file(const std::string& file_name) -> Obj;

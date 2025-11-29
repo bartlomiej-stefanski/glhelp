@@ -97,30 +97,51 @@ void InstancedMesh3d< PositionSource, InstanceData... >::create_instance_data(un
 
     glGenBuffers(1, &instance_vbo[vbo_inx]);
     glBindBuffer(GL_ARRAY_BUFFER, instance_vbo[vbo_inx]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(T) * instance_data.size(), instance_data.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(T) * instance_data.size(), instance_data.data(), GL_DYNAMIC_DRAW);
     glVertexAttribPointer(start_inx, sizeof(T) / sizeof(float), GL_FLOAT, GL_FALSE, 0, nullptr);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glVertexAttribDivisor(start_inx, 1);
     start_inx++;
   }
-  else if constexpr (std::is_same_v< T, glm::mat4 >) {
+  else if constexpr (std::is_same_v< T, glm::mat4 > || std::is_same_v< T, glm::mat3 >) {
+    constexpr auto matrix_size{sizeof(T) / sizeof(T{}[0])};
+
     glGenBuffers(1, &instance_vbo[vbo_inx]);
     glBindBuffer(GL_ARRAY_BUFFER, instance_vbo[vbo_inx]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * instance_data.size(), instance_data.data(), GL_STATIC_DRAW);
 
-    for (unsigned i = 0; i < 4; i++) {
+    for (unsigned i{}; i < matrix_size; i++) {
       glEnableVertexAttribArray(start_inx + i);
-      glVertexAttribPointer(start_inx + i, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(glm::vec4), reinterpret_cast< void* >(sizeof(glm::vec4) * i));
+      glVertexAttribPointer(start_inx + i, matrix_size, GL_FLOAT, GL_FALSE, matrix_size * sizeof(T{}[0]), reinterpret_cast< void* >(sizeof(T{}[0]) * i));
       glVertexAttribDivisor(start_inx + i, 1);
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    start_inx += 4;
+    start_inx += matrix_size;
   }
   else {
     static_assert(false, "Unsupported instance data type");
   }
+}
+
+template< PositionProvider PositionSource, InstancableType... InstanceData >
+template< InstancableType T >
+void InstancedMesh3d< PositionSource, InstanceData... >::update_instance_data(unsigned vbo_inx, const std::vector< T >& instance_data)
+{
+  glBindBuffer(GL_ARRAY_BUFFER, instance_vbo[vbo_inx]);
+  glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(T) * instance_data.size(), instance_data.data());
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+template< PositionProvider PositionSource, InstancableType... InstanceData >
+void InstancedMesh3d< PositionSource, InstanceData... >::update_buffers(const std::tuple< std::vector< InstanceData >... >& instance_data)
+{
+  unsigned vbo_inx{0};
+
+  glBindVertexArray(this->vao);
+  (update_instance_data(vbo_inx++, std::get< std::vector< InstanceData > >(instance_data)), ...);
+  glBindVertexArray(0);
 }
 
 template< PositionProvider PositionSource, InstancableType... InstanceData >

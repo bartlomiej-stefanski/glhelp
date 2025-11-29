@@ -5,10 +5,10 @@
 layout(location = 0) in vec3 pos;
 layout(location = 1) in vec3 norm;
 
-layout(location = 2) in vec3 instancePosition;
-
-// {hsl color, time_offset, max_heigth, start_heigth}
-layout(location = 3) in vec4 instanceMisceleanous;
+/* {{position.xyz},
+ *  {hsl_color, time_offset, ...},
+ *  {max_heigth, start_heigth, ...}}*/
+layout(location = 2) in mat3 instance_data;
 
 layout (std140) uniform uCommon
 {
@@ -54,12 +54,18 @@ void main(void) {
   normal = uNormalTransform * norm;
   cameraPos = cameraPosition.xyz;
 
-  instance_color = vec4(hue2rgb(instanceMisceleanous[0], 1.0, 1.0), 0.3);
+  float max_heigth = instance_data[2].x;
+  float start_heigth = instance_data[2].y;
+  float time_offset = instance_data[1].y;
 
-  float vertical_transition = (instanceMisceleanous[2] - instanceMisceleanous[3]) / 2;
 
-  vec3 movedInstancePosition = pos + instancePosition;
-  movedInstancePosition.y += 10 * (sin(time + instanceMisceleanous[1]) + 1 + instanceMisceleanous[3]) * vertical_transition;
+  instance_color = vec4(hue2rgb(instance_data[1].x, 1.0, 1.0), 0.3);
+
+  float vertical_transition = (max_heigth - start_heigth) / 2;
+
+
+  vec3 movedInstancePosition = pos + instance_data[0];
+  movedInstancePosition.y += 10 * (sin(time + time_offset) + 1 + start_heigth) * vertical_transition;
 
   vec4 world_position = uModelTransform * vec4(pos + movedInstancePosition, 1.0);
   fragPos = vec3(world_position);

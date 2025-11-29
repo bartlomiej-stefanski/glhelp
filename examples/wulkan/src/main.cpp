@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <exception>
 #include <glm/ext/quaternion_geometric.hpp>
 #include <iostream>
@@ -24,6 +25,10 @@
 #include <glhelp/utils/GLFWContext.hpp>
 
 #include "Bubbles.hpp"
+#include "Cube.hpp"
+#include "Plane.hpp"
+#include "glhelp/position/CachingSimplePosition.hpp"
+#include "glhelp/position/SimplePosition.hpp"
 
 #ifndef SHADER_DIR_PATH
 #error "Shader directory undefined. Please define SHADER_DIR_PATH macro."
@@ -37,6 +42,7 @@ void run_program(std::mt19937& rng, int n)
 {
   std::shared_ptr< glhelp::Window > window{std::make_shared< glhelp::Window >(800, 800, "OpenGL simple 3d example")};
 
+  // Shader Instantiation
   auto phong_shader{std::make_shared< glhelp::ShaderProgram >(std::vector{
       glhelp::create_shader_from_file(GL_VERTEX_SHADER, SHADER_DIR_PATH "phong_vertex.glsl"),
       glhelp::create_shader_from_file(GL_FRAGMENT_SHADER, SHADER_DIR_PATH "phong_fragment.glsl")})};
@@ -45,34 +51,73 @@ void run_program(std::mt19937& rng, int n)
       glhelp::create_shader_from_file(GL_VERTEX_SHADER, SHADER_DIR_PATH "bubble_vertex.glsl"),
       glhelp::create_shader_from_file(GL_FRAGMENT_SHADER, SHADER_DIR_PATH "bubble_fragment.glsl")})};
 
+  auto skybox_shader{std::make_shared< glhelp::ShaderProgram >(std::vector{
+      glhelp::create_shader_from_file(GL_VERTEX_SHADER, SHADER_DIR_PATH "skybox_vertex.glsl"),
+      glhelp::create_shader_from_file(GL_FRAGMENT_SHADER, SHADER_DIR_PATH "skybox_fragment.glsl")})};
+
+  auto mountain_shader{std::make_shared< glhelp::ShaderProgram >(std::vector{
+      glhelp::create_shader_from_file(GL_VERTEX_SHADER, SHADER_DIR_PATH "mountain_vertex.glsl"),
+      glhelp::create_shader_from_file(GL_FRAGMENT_SHADER, SHADER_DIR_PATH "mountain_fragment.glsl")})};
+
+  auto landing_shader{std::make_shared< glhelp::ShaderProgram >(std::vector{
+      glhelp::create_shader_from_file(GL_VERTEX_SHADER, SHADER_DIR_PATH "landing_vertex.glsl"),
+      glhelp::create_shader_from_file(GL_FRAGMENT_SHADER, SHADER_DIR_PATH "landing_fragment.glsl")})};
+  auto landing_zone_shader{std::make_shared< glhelp::ShaderProgram >(std::vector{
+      glhelp::create_shader_from_file(GL_VERTEX_SHADER, SHADER_DIR_PATH "landing_vertex.glsl"),
+      glhelp::create_shader_from_file(GL_FRAGMENT_SHADER, SHADER_DIR_PATH "landing_zone_fragment.glsl")})};
+
+  const glm::vec3 start_point{-450.0F, get_mountain_heigth(-450.0F, -450.0F), -450.0F};
+  const glm::vec3 player_start{start_point + glm::vec3{0, 2.0F, 0}};
+
+  // Object creation
   using CameraPosition = glhelp::InteractiveController< glhelp::FPSPlayerController >;
   auto camera{std::make_shared< glhelp::Camera< CameraPosition > >(
       window,
-      glhelp::FPSPlayerController(glhelp::FPSSimplePosition({-0.03F, -0.03F, -0.03F}, glm::pi< float >(), 0, 0), 0.3, 1),
-      90.0F, 0.001F, 100.0F)};
+      glhelp::FPSPlayerController(glhelp::FPSSimplePosition(player_start, glm::pi< float >(), 0, 0), 5.0, 1),
+      90.0F, 0.05F, 1000.0F)};
 
-  auto suzane_obj{obj_parser::Obj< obj_parser::VertexNormals >::parse_from_file(OBJ_DIR_PATH "suzane.obj")};
   auto icosphere_obj{obj_parser::Obj< obj_parser::VertexNormals >::parse_from_file(OBJ_DIR_PATH "icosphere.obj")};
-
-  auto suzane{std::make_shared< glhelp::Mesh3D< glhelp::SimplePosition > >(
-      glhelp::SimplePosition{glm::vec3{0.2f, 0, 0}, 0, 0, 0, glm::vec3{0.1}}, phong_shader, suzane_obj)};
+  auto helicopter_landing_obj{obj_parser::Obj< obj_parser::VertexNormals >::parse_from_file(OBJ_DIR_PATH "helicopter_landing.obj")};
+  auto helicopter_zone_obj{obj_parser::Obj< obj_parser::VertexNormals >::parse_from_file(OBJ_DIR_PATH "helicopter_zone.obj")};
 
   auto bubbles{std::make_shared< Bubbles >(
       bubble_shader,
-      glhelp::SimplePosition(glm::vec3{0.0F, 0.0F, 0.0F}, 0, 0, 0, glm::vec3{0.06F}),
+      glhelp::SimplePosition(glm::vec3{0.0F, 0.0F, 0.0F}, 0, 0, 0, glm::vec3{1.0F}),
       icosphere_obj,
-      get_bubble_positions(n, rng),
-      get_bubble_info(n, rng))};
+      get_bubble_data(n, rng))};
 
-  glhelp::Scene main_scene;
+  auto mountain{std::make_shared< Plane >(
+      glhelp::SimplePosition{},
+      mountain_shader,
+      1000)};
+
+  using StaticMesh = glhelp::Mesh3D< glhelp::CachingSimplePosition >;
+  auto landing_zone{std::make_shared< StaticMesh >(
+      glhelp::CachingSimplePosition(start_point, 0, 0, 0, {1.0F, 1.0F, 1.0F}),
+      landing_zone_shader,
+      helicopter_zone_obj)};
+  auto landing{std::make_shared< StaticMesh >(
+      glhelp::CachingSimplePosition(start_point, 0, 0, 0, {1.0F, 1.0F, 1.0F}),
+      landing_shader,
+      helicopter_landing_obj)};
+
+  auto skybox_position{glhelp::PositionFollower< CameraPosition >(
+      *camera,
+      glm::vec3{0.0},
+      0, 0, 0,
+      glm::vec3{1.0F, 1.0F, 1.0F} * 490.0F,
+      true, false)};
+  using Skybox = glhelp::Mesh3D< glhelp::PositionFollower< CameraPosition > >;
+  auto skybox{std::make_shared< Skybox >(
+      skybox_position,
+      skybox_shader,
+      cube_vertices,
+      cube_indices_rev,
+      GL_TRIANGLES)};
 
   auto sun{std::make_shared< glhelp::DirectionalLight >(glhelp::DirectionalLight{
-      .direction = glm::normalize(glm::vec3{-1.0f, -1.0f, -0.5f}),
-      .color = glm::vec3{1.0f, 1.0f, 0.2f},
-  })};
-  auto moon{std::make_shared< glhelp::DirectionalLight >(glhelp::DirectionalLight{
-      .direction = glm::normalize(glm::vec3{1.0f, -1.0f, -0.5f}),
-      .color = glm::vec3{0.2, 0.2, 0.9F},
+      .direction = glm::normalize(glm::vec3{-1.0f, -1.0f, -0.7f}),
+      .color = glm::vec3{1.0f, 1.0f, 1.0f},
   })};
 
   auto flashlight{glhelp::MovingSpotLight< glhelp::PositionFollower< CameraPosition > >::create_shared(
@@ -81,19 +126,24 @@ void run_program(std::mt19937& rng, int n)
       glm::radians(15.0F),
       glm::radians(30.0F))};
 
-  main_scene.add_object(suzane);
+  glhelp::Scene main_scene;
+
+  main_scene.add_object(skybox);
+  main_scene.add_object(mountain);
+  main_scene.add_object(landing_zone);
+  main_scene.add_object(landing);
 
   main_scene.add_transparent_object(bubbles);
 
   main_scene.add_light(sun);
-  main_scene.add_light(moon);
-  main_scene.add_light(flashlight);
+  // main_scene.add_light(flashlight);
 
   camera->init_mouse(*window);
 
   window->run_synchronously([&]([[maybe_unused]] glhelp::Window& window, double time, double frame_time) mutable {
     camera->poll_keys(window, static_cast< float >(frame_time));
-    suzane->set_rotation(time / 10, 0, 0);
+
+    bubbles->update_order(camera->get_position());
 
     main_scene.draw_objects(*camera, time);
   });
@@ -106,11 +156,11 @@ static void print_help(const char* argv0)
 
 auto main(int argc, char* argv[]) -> int
 {
-  unsigned n = 10;
-  int seed = 5; // Uczciwy rzut kością!
+  unsigned n{50};
+  int seed{5}; // Uczciwy rzut kością!
 
   // 'paskudny-parser'
-  for (int i = 1; i < argc; ++i) {
+  for (int i{1}; i < argc; ++i) {
     if (argv[i] == std::string("-n") && i + 1 < argc) {
       n = std::stoi(argv[++i]);
     }

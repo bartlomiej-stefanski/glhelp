@@ -7,15 +7,15 @@ layout(location = 0) in vec3 pos;
 layout (std140) uniform uCommon
 {
   mat4 cameraTransform;
+  vec4 cameraPosition;
   float time;
 };
 
 out vec3 vPos;
-out float w_time;
 
 uniform mat4 uModelTransform;
 
 void main(void) {
+  vPos = (uModelTransform * vec4(pos, 1.0)).xyz;
   gl_Position = cameraTransform * uModelTransform * vec4(pos, 1.0);
-  vPos = pos.xyz;
 }

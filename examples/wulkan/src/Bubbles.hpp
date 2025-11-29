@@ -1,6 +1,5 @@
 #pragma once
 
-#include "obj_parser/Vertex.hpp"
 #include <random>
 
 #include <glm/glm.hpp>
@@ -10,30 +9,50 @@
 #include <glhelp/mesh/InstancedMesh3D.hpp>
 #include <glhelp/position/Position.hpp>
 
-using BubbleInfo_vec4 = glm::vec4;
-union BubbleInfo {
-  BubbleInfo_vec4 packed;
-  struct {
-    float hsl_color;
-    float time;
-    float max_heigth;
-    float start_height;
+using BubbleData_mat3 = glm::mat3;
+
+struct BubbleInfo {
+  union {
+    glm::vec3 _padding1;
+    struct {
+      float hsl_color;
+      float time_offset;
+      float _fpadd1;
+    };
+  };
+  union {
+    glm::vec3 _padding2;
+    struct {
+      float max_heigth;
+      float start_height;
+      float _fpadd2;
+    };
   };
 };
 
-auto get_bubble_info(unsigned n, std::mt19937& rng) -> std::vector< BubbleInfo_vec4 >;
+union BubbleData {
+  BubbleData_mat3 packed;
+  struct Data {
+    glm::vec3 position;
+    BubbleInfo info;
+  } data;
+};
+
+auto get_bubble_info(unsigned n, std::mt19937& rng) -> std::vector< BubbleInfo >;
 auto get_bubble_positions(unsigned n, std::mt19937& rng) -> std::vector< glm::vec3 >;
 
-class Bubbles : public glhelp::InstancedMesh3d< glhelp::SimplePosition, glm::vec3, BubbleInfo_vec4 > {
+auto get_bubble_data(unsigned n, std::mt19937& rng) -> std::vector< BubbleData >;
+
+class Bubbles : public glhelp::InstancedMesh3d< glhelp::SimplePosition, BubbleData_mat3 > {
 public:
   Bubbles(
       std::shared_ptr< glhelp::ShaderProgram > shader,
       glhelp::SimplePosition position,
       const obj_parser::Obj< obj_parser::VertexNormals >& sphere,
-      std::vector< glm::vec3 > bubble_positions,
-      std::vector< BubbleInfo_vec4 > bubble_info);
+      std::vector< BubbleData > bubble_data);
+
+  void update_order(glm::vec3 player_position);
 
 private:
-  std::vector< glm::vec3 > bubble_positions;
-  std::vector< BubbleInfo > bubble_info;
+  std::vector< BubbleData > bubble_data;
 };
