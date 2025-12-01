@@ -13,7 +13,7 @@ find_package(glm 0.9.8 REQUIRED)
 
 add_subdirectory(external/glad)
 
-add_compile_options(-Wall -Wextra -g)
+add_compile_options(-Wall -Wextra -O3)
 
 option(WARNINGS_AS_ERRORS "Treat compilation warnings as errors" OFF)
 if(WARNINGS_AS_ERRORS)
@@ -78,7 +78,7 @@ target_link_libraries(glhelp
   PUBLIC
     glad_loader
     glfw
-    glm
+    glm::glm
     obj_parser
 )
 

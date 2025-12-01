@@ -8,7 +8,7 @@ add_library(obj_parser STATIC ${OBJ_LOADER_SOURCES})
 
 target_link_libraries(obj_parser
   PUBLIC
-    glm
+    glm::glm
 )
 
 target_include_directories(obj_parser
