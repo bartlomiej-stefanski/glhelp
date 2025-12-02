@@ -121,7 +121,7 @@ void InstancedMesh3d< PositionSource, InstanceData... >::create_instance_data(un
     start_inx += matrix_size;
   }
   else {
-    static_assert(false, "Unsupported instance data type");
+    static_assert(false, "Unsupported instance data type (old compilers may throw errors here even for valid code)");
   }
 }
 
