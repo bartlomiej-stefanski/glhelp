@@ -128,7 +128,7 @@ void Obj< Vertex >::parse_line(std::stringstream& line, ParseState& parse_state)
     }
     case VERTEX_NORMAL: {
       if constexpr (!VertexWithNormal< Vertex >) {
-        parse_state.warnings.insert("Encountered Vertex-Normal data when parsing into object without such data\n");
+        parse_state.warnings.insert("Encountered Vertex-Normal data when parsing into object without such data.\n");
       }
       else {
         glm::vec3 normal{};
@@ -139,7 +139,7 @@ void Obj< Vertex >::parse_line(std::stringstream& line, ParseState& parse_state)
     }
     case VERTEX_TEXTURE: {
       if constexpr (!VertexWithTexture< Vertex >) {
-        parse_state.warnings.insert("Encountered Vertex-Texture data when parsing into object without such data\n");
+        parse_state.warnings.insert("Encountered Vertex-Texture data when parsing into object without such data.\n");
       }
       else {
         glm::vec3 texture{};
