@@ -109,6 +109,11 @@ void Window::mouse_cb(double xpos, double ypos)
   last_ypos = ypos;
 }
 
+void Window::scroll_cb(double xoffset, double yoffset)
+{
+  scroll_event(xoffset, yoffset);
+}
+
 void Window::run_synchronously(const std::function< void(Window&, double, double) >& main_loop)
 {
   double prev_time{glfwGetTime()};
@@ -170,6 +175,13 @@ void Window::initial_mouse_callback(GLFWwindow* window, double xpos, double ypos
     winPtr->last_ypos = ypos;
     glfwSetCursorPosCallback(window, Window::mouse_callback);
   }
+}
+
+void Window::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+  void* ptr{glfwGetWindowUserPointer(window)};
+  if (auto winPtr{static_cast< Window* >(ptr)})
+    winPtr->scroll_event((float)xoffset, (float)yoffset);
 }
 
 } // namespace glhelp

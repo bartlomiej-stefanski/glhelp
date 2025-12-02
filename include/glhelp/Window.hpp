@@ -51,6 +51,13 @@ public:
   Event< void(float, float) > mouse_event;
   using MouseEventDelegate = std::shared_ptr< decltype(mouse_event)::EventDelegate >;
 
+  /// Event that occurs each time mouse wheel is scrolled.
+  /// The arguments passed to the callback are (in order):
+  /// - xoffset: scroll in horizontal direction.
+  /// - yoffset: scroll in vertical direction.
+  Event< void(float, float) > scroll_event;
+  using ScrollEventDelegate = std::shared_ptr< decltype(scroll_event)::EventDelegate >;
+
   /// Runs the main loop synchronously.
   void run_synchronously(const std::function< void(Window&, double, double) >& main_loop);
 
@@ -68,11 +75,13 @@ private:
   void resize_cb(int width, int height);
   void key_cb(int key, int scancode, int action, int mods);
   void mouse_cb(double xpos, double ypos);
+  void scroll_cb(double xoffset, double yoffset);
   float last_xpos{}, last_ypos{};
 
   static void resize_callback(GLFWwindow* window, int new_width, int new_height);
   static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
   static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+  static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
   static void initial_mouse_callback(GLFWwindow* window, double xpos, double ypos);
 };
 
