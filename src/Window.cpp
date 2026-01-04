@@ -32,7 +32,7 @@ static void GLAPIENTRY MessageCallback(GLenum source [[maybe_unused]],
 
 namespace glhelp {
 
-Window::Window(int width, int height, const std::string& name, bool write_fps)
+Window::Window(int width, int height, const std::string& name, bool write_fps, GLuint cursor_mode)
     : write_fps(write_fps)
 {
   if (!GLFWContext::is_initialized()) {
@@ -55,8 +55,8 @@ Window::Window(int width, int height, const std::string& name, bool write_fps)
   glfwWindowHint(GLFW_SAMPLES, 4);
   glfwWindowHint(GLFW_AUTO_ICONIFY, GL_FALSE);
 
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   // Craete glfw window
@@ -94,8 +94,9 @@ Window::Window(int width, int height, const std::string& name, bool write_fps)
   glfwSetWindowSizeCallback(window, Window::resize_callback);
   glfwSetKeyCallback(window, Window::key_callback);
 
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  glfwSetInputMode(window, GLFW_CURSOR, cursor_mode);
   glfwSetCursorPosCallback(window, Window::initial_mouse_callback);
+  glfwSetMouseButtonCallback(window, Window::initial_mouse_button_callback);
   glfwSetScrollCallback(window, Window::scroll_callback);
 
   glfwSwapInterval(0); // VSync
@@ -144,6 +145,11 @@ void Window::mouse_cb(double xpos, double ypos)
 void Window::scroll_cb(double xoffset, double yoffset)
 {
   scroll_event(xoffset, yoffset);
+}
+
+void Window::mouse_button_cb(int button, int action, int mods [[maybe_unused]])
+{
+  mouse_button_event(button, action);
 }
 
 void Window::run_synchronously(const std::function< bool(Window&, double, double) >& main_loop)
@@ -251,6 +257,14 @@ void Window::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
   void* ptr{glfwGetWindowUserPointer(window)};
   if (auto winPtr{static_cast< Window* >(ptr)})
     winPtr->scroll_event((float)xoffset, (float)yoffset);
+}
+
+void Window::initial_mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+  void* ptr{glfwGetWindowUserPointer(window)};
+  if (auto winPtr{static_cast< Window* >(ptr)}) {
+    winPtr->mouse_button_cb(button, action, mods);
+  }
 }
 
 } // namespace glhelp

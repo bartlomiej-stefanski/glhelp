@@ -14,7 +14,7 @@ namespace glhelp {
 
 class Window {
 public:
-  Window(int width, int height, const std::string& name, bool write_fps = false);
+  Window(int width, int height, const std::string& name, bool write_fps = false, GLuint cursor_mode = GLFW_CURSOR_DISABLED);
 
   Window(Window&) = delete;
   auto operator=(Window&) -> Window& = delete;
@@ -58,6 +58,13 @@ public:
   Event< void(float, float) > scroll_event;
   using ScrollEventDelegate = std::shared_ptr< decltype(scroll_event)::EventDelegate >;
 
+  /// Event that occurs each time mouse button is pressed/released.
+  /// The arguments passed to the callback are (in order):
+  /// - button: GLFW_MOUSE_BUTTON_* constant.
+  /// - action: GLFW_PRESS or GLFW_RELEASE.
+  Event< void(int, int) > mouse_button_event;
+  using MouseButtonEventDelegate = std::shared_ptr< decltype(mouse_button_event)::EventDelegate >;
+
   /// Runs the main loop synchronously.
   void run_synchronously(const std::function< bool(Window&, double, double) >& main_loop);
 
@@ -81,13 +88,15 @@ private:
   void key_cb(int key, int scancode, int action, int mods);
   void mouse_cb(double xpos, double ypos);
   void scroll_cb(double xoffset, double yoffset);
+  void mouse_button_cb(int button, int action, int mods);
   float last_xpos{}, last_ypos{};
 
   static void resize_callback(GLFWwindow* window, int new_width, int new_height);
   static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
   static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-  static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
   static void initial_mouse_callback(GLFWwindow* window, double xpos, double ypos);
+  static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+  static void initial_mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 };
 
 } // namespace glhelp
