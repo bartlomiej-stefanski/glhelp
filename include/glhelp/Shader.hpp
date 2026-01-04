@@ -12,6 +12,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <glhelp/Texture.hpp>
 #include <glhelp/ligting/DirectionalLight.hpp>
 #include <glhelp/ligting/SpotLight.hpp>
 #include <glhelp/utils/ShaderHelpers.hpp>
@@ -23,7 +24,7 @@ namespace glhelp {
 
 template< class T >
 concept UniformType =
-    std::is_same_v< T, bool > || std::is_same_v< T, int > || std::is_same_v< T, float > || std::is_same_v< T, glm::vec2 > || std::is_same_v< T, glm::vec3 > || std::is_same_v< T, glm::vec4 > || std::is_same_v< T, glm::mat2 > || std::is_same_v< T, glm::mat3 > || std::is_same_v< T, glm::mat4 >;
+    std::is_same_v< T, bool > || std::is_same_v< T, int > || std::is_same_v< T, float > || std::is_same_v< T, glm::vec2 > || std::is_same_v< T, glm::vec3 > || std::is_same_v< T, glm::vec4 > || std::is_same_v< T, glm::mat2 > || std::is_same_v< T, glm::mat3 > || std::is_same_v< T, glm::mat4 > || IsTexture< T >::value;
 
 struct ShaderException : public std::runtime_error {
   ShaderException(const std::string& message) : std::runtime_error(message) {}
@@ -192,6 +193,9 @@ void ShaderProgram::set_uniform(const std::string& name, const T& value) const
   }
   else if constexpr (std::is_same_v< T, glm::mat4 >) {
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+  }
+  else if constexpr (IsTexture< T >::value) {
+    glUniform1i(location, value.get_last_texture_unit());
   }
   else {
     static_assert(std::is_same_v< T, bool >, "Unsupported uniform type");
