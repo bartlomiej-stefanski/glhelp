@@ -21,7 +21,7 @@ InteractiveController< Controller >::InteractiveController(Controller&& controll
 template< PositionController Controller >
 void InteractiveController< Controller >::init_mouse(Window& window)
 {
-  mouse_event = window.mouse_event.connect([&](float xoffset, float yoffset) {
+  mouse_event = window.mouse_event.connect([this](float xoffset, float yoffset) {
     if (this->disabled)
       return;
 

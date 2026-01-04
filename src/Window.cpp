@@ -102,6 +102,8 @@ Window::Window(int width, int height, const std::string& name, bool write_fps, G
   glfwSwapInterval(0); // VSync
   glEnable(GL_MULTISAMPLE);
 
+  glGenQueries(1, &primitiveQuery);
+
 #ifdef DEBUG_GLHELP
   glEnable(GL_DEBUG_OUTPUT);
   glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -174,11 +176,29 @@ void Window::run_synchronously(const std::function< bool(Window&, double, double
       debug_print_fps(last_frame_time);
     }
 
-    should_continue = main_loop(*this, curr_time, last_frame_time);
+    if (!query_started) {
+      query_started = true;
+      glBeginQuery(GL_PRIMITIVES_GENERATED, primitiveQuery);
+      should_continue = main_loop(*this, curr_time, last_frame_time);
+      glEndQuery(GL_PRIMITIVES_GENERATED);
+    }
+    else {
+      should_continue = main_loop(*this, curr_time, last_frame_time);
+    }
 
     prev_time = curr_time;
 
     glfwSwapBuffers(window);
+
+    if (query_started) {
+      // Never wait for the triangles-drawn query.
+      GLuint triangles_drawn_available{0};
+      glGetQueryObjectuiv(primitiveQuery, GL_QUERY_RESULT_AVAILABLE, &triangles_drawn_available);
+      if (triangles_drawn_available && query_started) {
+        glGetQueryObjectuiv(primitiveQuery, GL_QUERY_RESULT, &triangles_drawn);
+        query_started = false;
+      }
+    }
 
     CHECK_GL("After main loop");
   }
@@ -206,15 +226,18 @@ void Window::debug_print_fps(float frame_time)
     frame_count = 0;
     time_passed = 0.0F;
     longest_frame = 0.000000001F;
-  }
+    std::cout << ANSI_ESCAPE ANSI_CLEAR_LINE
+              << std::fixed << std::setprecision(2)
+              << "\t\tAVERAGE_FPS: " << past_frame_count
+              << "\t\tWORST_FPS: " << past_worst_fps
+              << "\t\tTRIANGELS_DRAWN: " << triangles_drawn;
 
-  const float fps{1.0F / frame_time};
-  std::cout << ANSI_ESCAPE ANSI_CLEAR_LINE
-            << std::fixed << std::setprecision(2)
-            << "FPS: " << fps
-            << "\t\tAVERAGE_FPS: " << past_frame_count
-            << "\t\tWORST_FPS: " << past_worst_fps
-            << std::flush;
+    if (fps_callback.has_value()) {
+      std::cout << "\t\t" << fps_callback.value()();
+    }
+
+    std::cout << std::flush;
+  }
 }
 
 void Window::resize_callback(GLFWwindow* window, int new_width, int new_height)

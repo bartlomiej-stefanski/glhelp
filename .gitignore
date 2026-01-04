@@ -1,3 +1,7 @@
 .cache
 .gdb_history
+
 build
+
+*.hgt
+*.zip

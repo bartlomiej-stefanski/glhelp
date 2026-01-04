@@ -74,12 +74,19 @@ public:
   [[nodiscard]] auto is_active() const -> bool { return !glfwWindowShouldClose(window); }
 
   bool write_fps{};
+  /// Function will be called on each FPS print.
+  /// It should return text to be displayed *without* any newlines.
+  std::optional< std::function< std::string() > > fps_callback;
   void debug_print_fps(float frame_time);
 
 private:
   /// Window dimensions in pixels.
   int width, height;
   float last_frame_time;
+
+  GLuint primitiveQuery;
+  bool query_started{false};
+  GLuint triangles_drawn;
 
   GLFWwindow* window = nullptr;
   GLFWmonitor* monitor = nullptr;

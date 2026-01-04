@@ -43,7 +43,7 @@ inline GLuint global_uniform_buffer_index{};
 template< typename T >
 class UniformBuffer {
 public:
-  UniformBuffer(int draw_type)
+  UniformBuffer(GLint draw_type)
   {
     glGenBuffers(1, &id);
     glBindBuffer(GL_UNIFORM_BUFFER, id);

@@ -56,7 +56,7 @@ public:
     return glm::ortho(-ortho_width, ortho_width, -ortho_height, ortho_height, near_clip, far_clip);
   }
 
-private:
+protected:
   float fov;
   float near_clip, far_clip;
 
