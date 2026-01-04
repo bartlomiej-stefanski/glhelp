@@ -44,6 +44,13 @@
       }
     },
     {
+      "name": "optimize",
+      "hidden": true,
+      "cacheVariables": {
+        "OPTIMIZE": "ON"
+      }
+    },
+    {
       "name": "develop",
       "inherits": [
         "build-dirs",
@@ -56,7 +63,7 @@
     },
     {
       "name": "minimal",
-      "inherits": ["build-dirs"],
+      "inherits": ["build-dirs", "optimize"],
       "displayName": "Minimal config",
       "description": "Minimal possible configuration."
     }

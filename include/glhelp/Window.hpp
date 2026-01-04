@@ -14,7 +14,7 @@ namespace glhelp {
 
 class Window {
 public:
-  Window(int width, int height, const std::string& name);
+  Window(int width, int height, const std::string& name, bool write_fps = false);
 
   Window(Window&) = delete;
   auto operator=(Window&) -> Window& = delete;
@@ -65,6 +65,9 @@ public:
   [[nodiscard]] auto get_window() noexcept -> GLFWwindow* { return window; }
 
   [[nodiscard]] auto is_active() const -> bool { return !glfwWindowShouldClose(window); }
+
+  bool write_fps{};
+  void debug_print_fps(float frame_time);
 
 private:
   /// Window dimensions in pixels.

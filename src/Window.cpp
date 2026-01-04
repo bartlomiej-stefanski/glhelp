@@ -1,4 +1,6 @@
+#include <iomanip>
 #include <iostream>
+#include <print>
 #include <stdexcept>
 #include <string>
 
@@ -6,12 +8,32 @@
 
 #include <GLFW/glfw3.h>
 
+#include <glhelp/Error.hpp>
 #include <glhelp/Window.hpp>
 #include <glhelp/utils/GLFWContext.hpp>
 
+#ifdef DEBUG_GLHELP
+static void GLAPIENTRY MessageCallback(GLenum source [[maybe_unused]],
+                                       GLenum type,
+                                       GLuint id [[maybe_unused]],
+                                       GLenum severity,
+                                       GLsizei length [[maybe_unused]],
+                                       const GLchar* message,
+                                       const void* userParam [[maybe_unused]])
+{
+  if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+    return;
+
+  std::println(stderr, "GL CALLBACK: {} type = 0x{:x}, severity = 0x{:x}, message = {}",
+               (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : ""),
+               type, severity, message);
+}
+#endif
+
 namespace glhelp {
 
-Window::Window(int width, int height, const std::string& name)
+Window::Window(int width, int height, const std::string& name, bool write_fps)
+    : write_fps(write_fps)
 {
   if (!GLFWContext::is_initialized()) {
     throw std::runtime_error("Cannot create a window without GLFW context initialized");
@@ -78,6 +100,12 @@ Window::Window(int width, int height, const std::string& name)
 
   glfwSwapInterval(0); // VSync
   glEnable(GL_MULTISAMPLE);
+
+#ifdef DEBUG_GLHELP
+  glEnable(GL_DEBUG_OUTPUT);
+  glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+  glDebugMessageCallback(MessageCallback, nullptr);
+#endif
 };
 
 Window::~Window()
@@ -125,13 +153,10 @@ void Window::run_synchronously(const std::function< bool(Window&, double, double
   }
 
   double prev_time{glfwGetTime()};
-  GLenum error;
   bool should_continue{true};
 
   while (!glfwWindowShouldClose(window) && should_continue) {
-    error = glGetError();
-    if (error != GL_NO_ERROR)
-      throw std::runtime_error("OpenGL error before main loop: " + std::to_string(error));
+    CHECK_GL("Before main loop");
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glfwPollEvents();
@@ -139,16 +164,51 @@ void Window::run_synchronously(const std::function< bool(Window&, double, double
     const double curr_time{glfwGetTime()};
     last_frame_time = curr_time - prev_time;
 
+    if (write_fps) {
+      debug_print_fps(last_frame_time);
+    }
+
     should_continue = main_loop(*this, curr_time, last_frame_time);
 
     prev_time = curr_time;
 
     glfwSwapBuffers(window);
 
-    error = glGetError();
-    if (error != GL_NO_ERROR)
-      throw std::runtime_error("OpenGL error after main loop: " + std::to_string(error));
+    CHECK_GL("After main loop");
   }
+}
+
+#define ANSI_ESCAPE "\r"
+#define ANSI_CLEAR_LINE "\033[2K"
+
+void Window::debug_print_fps(float frame_time)
+{
+  static unsigned past_frame_count{0};
+  static float past_worst_fps{1.0F};
+
+  static float time_passed{0.0F};
+  static unsigned frame_count{0};
+  static float longest_frame{0.000000001F};
+
+  frame_count++;
+  time_passed += frame_time;
+  longest_frame = std::max(longest_frame, frame_time);
+
+  if (time_passed > 1.0F) {
+    past_frame_count = frame_count;
+    past_worst_fps = 1.0F / longest_frame;
+    frame_count = 0;
+    time_passed = 0.0F;
+    longest_frame = 0.000000001F;
+  }
+
+  const float fps{1.0F / frame_time};
+  std::cout << ANSI_ESCAPE ANSI_CLEAR_LINE
+            << std::fixed << std::setprecision(2)
+            << "FPS: " << fps
+            << "\t\tAVERAGE_FPS: " << past_frame_count
+            << "\t\tWORST_FPS: " << past_worst_fps
+            << std::flush;
 }
 
 void Window::resize_callback(GLFWwindow* window, int new_width, int new_height)
