@@ -1,0 +1,7 @@
+<map id="/home/runner/work/glhelp/glhelp/examples/labirynt3d/src/Cube.hpp" name="/home/runner/work/glhelp/glhelp/examples/labirynt3d/src/Cube.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,209,60"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="23,108,85,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,61,71,98,66,95,89,59"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="110,108,214,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="126,59,149,95,145,98,122,62"/>
+</map>

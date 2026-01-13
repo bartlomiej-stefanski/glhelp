@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$structglhelp_1_1SpotLight.html" title="Abstract representation of a spotlight." alt="" coords="5,13,136,38"/>
+<area shape="rect" id="Node000001" href="$classglhelp_1_1MovingSpotLight.html" title="Representation of a spotlight with a dynamic position and direction." alt="" coords="184,5,363,45"/>
+<area shape="poly" id="edge5_Node000000_Node000001" title=" " alt="" coords="150,23,184,23,184,28,150,28"/>
+</map>

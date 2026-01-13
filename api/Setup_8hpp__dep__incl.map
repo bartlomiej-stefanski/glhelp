@@ -1,0 +1,28 @@
+<map id="/home/runner/work/glhelp/glhelp/examples/mapa/src/Setup.hpp" name="/home/runner/work/glhelp/glhelp/examples/mapa/src/Setup.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="316,5,515,60"/>
+<area shape="rect" id="Node000002" href="$GlobeCamera_8cpp.html" title=" " alt="" coords="5,211,204,265"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="302,48,241,58,181,72,131,89,114,99,101,110,90,133,88,159,91,186,97,210,92,211,85,187,82,159,85,131,97,106,110,94,129,84,179,66,240,53,302,43"/>
+<area shape="rect" id="Node000003" href="$GlobeCamera_8hpp.html" title=" " alt="" coords="112,108,311,163"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="351,68,266,110,263,106,349,63"/>
+<area shape="rect" id="Node000004" href="$mapa_2src_2main_8cpp.html" title=" " alt="" coords="248,313,447,368"/>
+<area shape="poly" id="edge16_Node000001_Node000004" title=" " alt="" coords="404,74,384,138,366,211,352,313,347,313,361,210,379,136,399,72"/>
+<area shape="rect" id="Node000005" href="$MapTile3d_8cpp.html" title=" " alt="" coords="841,313,1040,368"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="529,46,675,69,836,104,912,125,979,150,1032,178,1052,193,1067,209,1075,224,1077,238,1067,267,1043,295,1013,315,1010,311,1040,291,1062,264,1072,237,1070,225,1063,212,1048,197,1029,182,976,155,910,131,835,109,674,74,528,51"/>
+<area shape="rect" id="Node000006" href="$TerrainMap_8cpp.html" title=" " alt="" coords="855,211,1053,265"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="502,62,620,106,888,208,887,213,618,110,500,67"/>
+<area shape="rect" id="Node000007" href="$TerrainMap_8hpp.html" title=" " alt="" coords="409,108,608,163"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="451,69,486,106,482,110,447,72"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="175,174,134,213,131,209,172,170"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="239,172,332,311,327,314,234,175"/>
+<area shape="poly" id="edge15_Node000007_Node000004" title=" " alt="" coords="445,172,420,191,399,212,383,237,370,264,355,314,350,312,365,262,378,234,395,209,417,187,442,168"/>
+<area shape="poly" id="edge14_Node000007_Node000006" title=" " alt="" coords="622,159,843,208,855,211,854,216,841,213,621,164"/>
+<area shape="rect" id="Node000008" href="$MapTile_8hpp.html" title=" " alt="" coords="409,211,608,265"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="511,176,511,211,506,211,506,176"/>
+<area shape="rect" id="Node000010" href="$MapTile3d_8hpp.html" title=" " alt="" coords="632,211,831,265"/>
+<area shape="poly" id="edge11_Node000007_Node000010" title=" " alt="" coords="580,166,674,208,672,213,578,171"/>
+<area shape="poly" id="edge10_Node000008_Node000004" title=" " alt="" coords="457,275,391,315,388,311,454,270"/>
+<area shape="rect" id="Node000009" href="$MapTile_8cpp.html" title=" " alt="" coords="471,313,669,368"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="534,276,556,312,552,315,530,279"/>
+<area shape="poly" id="edge13_Node000010_Node000004" title=" " alt="" coords="619,271,448,316,446,311,618,266"/>
+<area shape="poly" id="edge12_Node000010_Node000005" title=" " alt="" coords="799,269,887,311,885,316,797,274"/>
+</map>

@@ -1,0 +1,30 @@
+<map id="/home/runner/work/glhelp/glhelp/examples/mapa/hgt/include/hgt/Hgt.hpp" name="/home/runner/work/glhelp/glhelp/examples/mapa/hgt/include/hgt/Hgt.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="593,5,793,60"/>
+<area shape="rect" id="Node000002" href="$Hgt_8cpp.html" title=" " alt="" coords="5,108,205,163"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="580,52,408,77,216,111,206,113,205,108,216,105,408,72,580,46"/>
+<area shape="rect" id="Node000003" href="$MapCamera_8hpp.html" title=" " alt="" coords="229,108,427,163"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="586,66,424,111,422,105,585,61"/>
+<area shape="rect" id="Node000005" href="$mapa_2src_2main_8cpp.html" title=" " alt="" coords="390,313,589,368"/>
+<area shape="poly" id="edge17_Node000001_Node000005" title=" " alt="" coords="636,70,599,96,562,129,528,168,504,212,496,238,492,265,490,313,485,313,486,264,491,236,499,210,524,164,558,125,596,92,633,65"/>
+<area shape="rect" id="Node000006" href="$MapTile3d_8cpp.html" title=" " alt="" coords="983,313,1182,368"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="808,34,909,48,964,60,1020,77,1075,100,1126,129,1172,165,1210,209,1218,224,1220,238,1210,267,1187,295,1156,315,1153,311,1183,291,1206,264,1215,237,1213,225,1206,212,1168,169,1123,133,1072,105,1019,82,963,65,908,53,807,40"/>
+<area shape="rect" id="Node000007" href="$MapTile3d_8hpp.html" title=" " alt="" coords="774,211,973,265"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="757,65,783,84,807,106,827,132,843,159,867,210,862,212,839,162,823,135,803,110,780,88,754,69"/>
+<area shape="rect" id="Node000008" href="$TerrainMap_8cpp.html" title=" " alt="" coords="997,211,1195,265"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="759,64,843,106,1046,208,1043,213,840,110,757,69"/>
+<area shape="rect" id="Node000009" href="$TerrainMap_8hpp.html" title=" " alt="" coords="594,108,793,163"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="696,74,696,108,691,108,691,74"/>
+<area shape="rect" id="Node000004" href="$MapCamera_8cpp.html" title=" " alt="" coords="178,211,377,265"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="311,176,293,212,288,209,306,174"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="360,172,390,209,471,311,467,315,386,212,356,175"/>
+<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="761,271,590,316,588,311,760,266"/>
+<area shape="poly" id="edge7_Node000007_Node000006" title=" " alt="" coords="941,269,1029,311,1027,316,939,274"/>
+<area shape="poly" id="edge16_Node000009_Node000005" title=" " alt="" coords="600,171,569,189,542,212,525,236,512,263,496,314,491,312,507,261,520,234,538,209,566,185,598,166"/>
+<area shape="poly" id="edge14_Node000009_Node000007" title=" " alt="" coords="754,167,827,208,825,213,751,172"/>
+<area shape="poly" id="edge15_Node000009_Node000008" title=" " alt="" coords="806,162,997,209,996,215,805,167"/>
+<area shape="rect" id="Node000010" href="$MapTile_8hpp.html" title=" " alt="" coords="551,211,750,265"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="679,176,664,212,659,210,674,174"/>
+<area shape="poly" id="edge13_Node000010_Node000005" title=" " alt="" coords="599,275,533,315,530,311,596,270"/>
+<area shape="rect" id="Node000011" href="$MapTile_8cpp.html" title=" " alt="" coords="613,313,811,368"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="676,276,698,312,694,315,672,279"/>
+</map>
