@@ -74,6 +74,7 @@ add_library(glhelp ${GLHELP_SOURCES})
 target_include_directories(glhelp
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/stb>
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
