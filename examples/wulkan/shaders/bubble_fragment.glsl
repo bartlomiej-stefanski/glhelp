@@ -16,7 +16,6 @@ layout (std140) uniform uSpotLights
   int slCount;
 };
 
-
 in vec3 normal;
 in vec3 cameraPos;
 in vec3 fragPos;
@@ -24,7 +23,6 @@ in vec3 fragPos;
 in vec4 instance_color;
 
 out vec4 color;
-
 
 vec4 calculateDirLight(vec3 Normal, vec3 direction, vec3 viewDir, float diffuse, float specular, vec4 diffuseColor, vec4 matColor, float fresnel)
 {

@@ -1,8 +1,6 @@
 #pragma once
 
-#include "glhelp/Window.hpp"
 #include <exception>
-#include <filesystem>
 #include <functional>
 #include <istream>
 #include <optional>
@@ -13,11 +11,14 @@
 
 #include <glm/glm.hpp>
 
+#include <glhelp/Basic.hpp>
+#include <glhelp/MtlShader.hpp>
+#include <glhelp/Shader.hpp>
 #include <glhelp/Vertex.hpp>
+#include <glhelp/Window.hpp>
+#include <glhelp/mesh/Renderable.hpp>
 
 namespace glhelp {
-
-namespace fs = std::filesystem;
 
 struct ObjParseException : std::exception {
   ObjParseException(const std::string& cause, unsigned line_number);
@@ -124,6 +125,32 @@ public:
 
 private:
   static auto create_vertex(const ParseState& parse_state, const ParseState::VertexData& vertex_data) -> Vertex;
+};
+
+class MeshObject : Renderable {
+public:
+  MeshObject(Obj< VertexTextured >&& obj);
+  ~MeshObject() = default;
+
+  void draw() override;
+
+  [[nodiscard]] auto get_shader() const -> std::shared_ptr< ShaderProgram > override;
+  [[nodiscard]] auto get_id() const noexcept -> std::size_t override;
+  [[nodiscard]] auto get_wireframe_override() const noexcept -> bool override { return false; }
+
+private:
+  unsigned vao{}, vbo{}, ebo;
+
+  GLenum mode;
+
+  struct MaterialGroupData {
+    std::size_t indices_start;
+    std::size_t indices_count;
+    std::optional< Material > material;
+  };
+
+  unsigned layout_param_count{0};
+  std::vector< MaterialGroupData > material_groups;
 };
 
 } // namespace glhelp
