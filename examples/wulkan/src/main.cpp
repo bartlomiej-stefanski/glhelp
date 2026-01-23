@@ -10,13 +10,12 @@
 #include <glm/geometric.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-#include <obj_parser/Obj.hpp>
-#include <obj_parser/Vertex.hpp>
-
 #include <glhelp/Buttons.hpp>
 #include <glhelp/Camera.hpp>
+#include <glhelp/Obj.hpp>
 #include <glhelp/Scene.hpp>
 #include <glhelp/Shader.hpp>
+#include <glhelp/Vertex.hpp>
 #include <glhelp/Window.hpp>
 #include <glhelp/ligting/DirectionalLight.hpp>
 #include <glhelp/ligting/SpotLight.hpp>
@@ -82,16 +81,16 @@ void run_program(std::mt19937& rng, int n, bool reduce_geometry)
   const glm::vec3 player_start{start_point + glm::vec3{0, 2.0F, 0}};
 
   // Object creation
-  auto icosphere_obj{obj_parser::Obj< obj_parser::VertexNormals >::parse_from_file(reduce_geometry
-                                                                                       ? OBJ_DIR_PATH "simple_icosphere.obj"
-                                                                                       : OBJ_DIR_PATH "icosphere.obj")};
-  auto helicopter_landing_obj{obj_parser::Obj< obj_parser::VertexNormals >::parse_from_file(OBJ_DIR_PATH "helicopter_landing.obj")};
-  auto helicopter_zone_obj{obj_parser::Obj< obj_parser::VertexNormals >::parse_from_file(OBJ_DIR_PATH "helicopter_zone.obj")};
+  auto icosphere_obj{glhelp::Obj< glhelp::VertexNormals >::parse_from_file(reduce_geometry
+                                                                               ? OBJ_DIR_PATH "simple_icosphere.obj"
+                                                                               : OBJ_DIR_PATH "icosphere.obj")};
+  auto helicopter_landing_obj{glhelp::Obj< glhelp::VertexNormals >::parse_from_file(OBJ_DIR_PATH "helicopter_landing.obj")};
+  auto helicopter_zone_obj{glhelp::Obj< glhelp::VertexNormals >::parse_from_file(OBJ_DIR_PATH "helicopter_zone.obj")};
 
-  auto cube_obj{obj_parser::Obj< obj_parser::SimpleVertex >::parse_from_file(OBJ_DIR_PATH "cube.obj")};
+  auto cube_obj{glhelp::Obj< glhelp::SimpleVertex >::parse_from_file(OBJ_DIR_PATH "cube.obj")};
 
-  auto drone_obj{obj_parser::Obj< obj_parser::VertexNormals >::parse_from_file(OBJ_DIR_PATH "dron.obj")};
-  auto rotor_obj{obj_parser::Obj< obj_parser::VertexNormals >::parse_from_file(OBJ_DIR_PATH "rotor.obj")};
+  auto drone_obj{glhelp::Obj< glhelp::VertexNormals >::parse_from_file(OBJ_DIR_PATH "dron.obj")};
+  auto rotor_obj{glhelp::Obj< glhelp::VertexNormals >::parse_from_file(OBJ_DIR_PATH "rotor.obj")};
 
   while (window->is_active()) {
     auto drone{std::make_shared< Drone >(

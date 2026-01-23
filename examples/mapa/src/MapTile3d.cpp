@@ -35,7 +35,7 @@ static auto get_global_positions(unsigned layer) -> std::vector< glm::vec3 >
 
 MapTile3d::MapTile3d(
     std::shared_ptr< TerrainMap > terrain_map,
-    const obj_parser::Obj< obj_parser::SimpleVertex >& plane,
+    const glhelp::Obj< glhelp::SimpleVertex >& plane,
     std::shared_ptr< glhelp::ShaderProgram > shader_program,
     u8 texture_layer,
     float tile_scale)
@@ -71,7 +71,7 @@ static auto get_positions(i16 edge_count) -> std::vector< glm::vec3 >
 
 MapTile3d::MapTile3d(
     std::shared_ptr< TerrainMap > terrain_map,
-    const obj_parser::Obj< obj_parser::SimpleVertex >& plane,
+    const glhelp::Obj< glhelp::SimpleVertex >& plane,
     std::shared_ptr< glhelp::ShaderProgram > shader_program,
     u8 texture_layer,
     float tile_scale,

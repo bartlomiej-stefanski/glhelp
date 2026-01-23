@@ -2,22 +2,18 @@
 
 #include <glm/glm.hpp>
 
-namespace obj_parser
-{
+namespace glhelp {
 
-struct SimpleVertex
-{
+struct SimpleVertex {
   glm::vec3 position;
 };
 
-struct VertexNormals
-{
+struct VertexNormals {
   glm::vec3 position;
   glm::vec3 normal;
 };
 
-struct VertexTextured
-{
+struct VertexTextured {
   glm::vec3 position;
   glm::vec3 normal;
   glm::vec2 tex_coords;
@@ -29,14 +25,14 @@ concept VertexType = requires(const T& vt) {
   { vt.position } -> std::convertible_to< glm::vec3 >;
 };
 
-template<typename T>
+template< typename T >
 concept VertexWithNormal = requires(const T& vn) {
   { vn.normal } -> std::convertible_to< glm::vec3 >;
 };
 
-template<typename T>
+template< typename T >
 concept VertexWithTexture = requires(const T& vt) {
   { vt.tex_coords } -> std::convertible_to< glm::vec2 >;
 };
 
-}
+} // namespace glhelp

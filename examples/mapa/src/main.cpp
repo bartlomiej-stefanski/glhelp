@@ -15,13 +15,12 @@
 #include <glhelp/Buttons.hpp>
 #include <glhelp/Camera.hpp>
 #include <glhelp/Error.hpp>
+#include <glhelp/Obj.hpp>
 #include <glhelp/Scene.hpp>
 #include <glhelp/Shader.hpp>
 #include <glhelp/Window.hpp>
 #include <glhelp/position/Position.hpp>
 #include <glhelp/utils/GLFWContext.hpp>
-
-#include <obj_parser/Obj.hpp>
 
 #include <hgt/Hgt.hpp>
 
@@ -80,11 +79,11 @@ void run_program(const ProgramSetup& setup)
   auto window{std::make_shared< glhelp::Window >(800, 800, "glhelp::map", setup.print_fps, GLFW_CURSOR_NORMAL)};
 
   // Mercator projection is not linear, 'ugly' fix is to just have vertices on the same positions. That way we get no mismatches.
-  auto plane_obj{obj_parser::Obj< obj_parser::SimpleVertex >::parse_from_file(OBJ_DIR_PATH "plane.obj")};
-  auto plane1_obj{obj_parser::Obj< obj_parser::SimpleVertex >::parse_from_file(OBJ_DIR_PATH "plane1.obj")};
-  auto plane2_obj{obj_parser::Obj< obj_parser::SimpleVertex >::parse_from_file(OBJ_DIR_PATH "plane2.obj")};
-  auto plane3_obj{obj_parser::Obj< obj_parser::SimpleVertex >::parse_from_file(OBJ_DIR_PATH "plane3.obj")};
-  auto plane4_obj{obj_parser::Obj< obj_parser::SimpleVertex >::parse_from_file(OBJ_DIR_PATH "plane4.obj")};
+  auto plane_obj{glhelp::Obj< glhelp::SimpleVertex >::parse_from_file(OBJ_DIR_PATH "plane.obj")};
+  auto plane1_obj{glhelp::Obj< glhelp::SimpleVertex >::parse_from_file(OBJ_DIR_PATH "plane1.obj")};
+  auto plane2_obj{glhelp::Obj< glhelp::SimpleVertex >::parse_from_file(OBJ_DIR_PATH "plane2.obj")};
+  auto plane3_obj{glhelp::Obj< glhelp::SimpleVertex >::parse_from_file(OBJ_DIR_PATH "plane3.obj")};
+  auto plane4_obj{glhelp::Obj< glhelp::SimpleVertex >::parse_from_file(OBJ_DIR_PATH "plane4.obj")};
 
   auto terrain_map{std::make_shared< TerrainMap >(setup.hgt_path, setup.thread_count, setup.map_area)};
 

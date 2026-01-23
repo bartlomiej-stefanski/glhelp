@@ -4,11 +4,10 @@
 
 #include <glad/gl.h>
 
+#include <glhelp/Obj.hpp>
 #include <glhelp/Shader.hpp>
 #include <glhelp/mesh/InstancedMesh3D.hpp>
 #include <glhelp/position/Position.hpp>
-
-#include <obj_parser/Obj.hpp>
 
 #include "TerrainMap.hpp"
 
@@ -17,7 +16,7 @@ class MapTile : public glhelp::InstancedMesh3d< glhelp::CachingSimplePosition, g
 public:
   MapTile(
       std::shared_ptr< TerrainMap > terrain_map,
-      const obj_parser::Obj< obj_parser::SimpleVertex >& plane,
+      const glhelp::Obj< glhelp::SimpleVertex >& plane,
       std::shared_ptr< glhelp::ShaderProgram > shader_program,
       u8 layer);
 

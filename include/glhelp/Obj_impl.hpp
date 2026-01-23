@@ -4,26 +4,24 @@
 #ifndef REC_OBJ_GUARD
 #define REC_OBJ_GUARD
 
-#include <unordered_map>
 #include <fstream>
 #include <iostream>
-#include <string>
 #include <sstream>
+#include <string>
+#include <unordered_map>
 
-#include <obj_parser/Vertex.hpp>
-#include <obj_parser/Obj.hpp>
+#include <glhelp/Obj.hpp>
+#include <glhelp/Vertex.hpp>
 
 template<>
-struct std::hash< obj_parser::ParseState::VertexData >
-{
-  auto operator()(const obj_parser::ParseState::VertexData& vertex) const noexcept -> std::size_t
+struct std::hash< glhelp::ParseState::VertexData > {
+  auto operator()(const glhelp::ParseState::VertexData& vertex) const noexcept -> std::size_t
   {
     return vertex.vertex * vertex.normal.value_or(2) * vertex.texture.value_or(17);
   }
 };
 
-namespace obj_parser
-{
+namespace glhelp {
 
 enum LineType : std::uint8_t {
   VERTEX,
@@ -91,7 +89,7 @@ auto Obj< Vertex >::parse_from_file(std::istream& in_stream) -> Obj< Vertex >
 
   Obj< Vertex > obj;
   std::unordered_map< ParseState::VertexData, std::size_t > deduplicator;
-  for (const auto& vertex: parse_state.vertices) {
+  for (const auto& vertex : parse_state.vertices) {
     if (!deduplicator.contains(vertex)) {
       obj.vertices.emplace_back(Obj< Vertex >::create_vertex(parse_state, vertex));
       deduplicator[vertex] = obj.vertices.size() - 1;
@@ -116,59 +114,59 @@ void Obj< Vertex >::parse_line(std::stringstream& line, ParseState& parse_state)
   line >> prefix;
 
   const auto line_type{get_line_type(prefix).or_else(
-    ObjParseException::raise< std::optional< LineType > >("unknown prefix", parse_state.current_line)
-  ).value()};
+                                                ObjParseException::raise< std::optional< LineType > >("unknown prefix", parse_state.current_line))
+                           .value()};
 
   switch (line_type) {
-    case VERTEX: {
-      glm::vec3 position{};
-      line >> position.x >> position.y >> position.z;
-      parse_state.positions.emplace_back(position);
-      break;
+  case VERTEX: {
+    glm::vec3 position{};
+    line >> position.x >> position.y >> position.z;
+    parse_state.positions.emplace_back(position);
+    break;
+  }
+  case VERTEX_NORMAL: {
+    if constexpr (!VertexWithNormal< Vertex >) {
+      parse_state.warnings.insert("Encountered Vertex-Normal data when parsing into object without such data.\n");
     }
-    case VERTEX_NORMAL: {
-      if constexpr (!VertexWithNormal< Vertex >) {
-        parse_state.warnings.insert("Encountered Vertex-Normal data when parsing into object without such data.\n");
-      }
-      else {
-        glm::vec3 normal{};
-        line >> normal.x >> normal.y >> normal.z;
-        parse_state.normals.emplace_back(normal);
-      }
-      break;
+    else {
+      glm::vec3 normal{};
+      line >> normal.x >> normal.y >> normal.z;
+      parse_state.normals.emplace_back(normal);
     }
-    case VERTEX_TEXTURE: {
-      if constexpr (!VertexWithTexture< Vertex >) {
-        parse_state.warnings.insert("Encountered Vertex-Texture data when parsing into object without such data.\n");
-      }
-      else {
-        glm::vec3 texture{};
-        line >> texture.x >> texture.y >> texture.z;
-        parse_state.tex_coords.emplace_back(texture);
-      }
-      break;
+    break;
+  }
+  case VERTEX_TEXTURE: {
+    if constexpr (!VertexWithTexture< Vertex >) {
+      parse_state.warnings.insert("Encountered Vertex-Texture data when parsing into object without such data.\n");
     }
-    case FACE: {
-      auto face_vertices{parse_faces(line)};
-      parse_state.vertices.emplace_back(face_vertices[0]);
-      parse_state.vertices.emplace_back(face_vertices[1]);
-      parse_state.vertices.emplace_back(face_vertices[2]);
-      break;
+    else {
+      glm::vec3 texture{};
+      line >> texture.x >> texture.y >> texture.z;
+      parse_state.tex_coords.emplace_back(texture);
     }
-    case OBJECT_NAME: {
-      std::string name{};
-      line >> name;
-      parse_state.obj_name = std::move(name);
-      break;
-    }
-    case GROUP_NAME:
-    case COMMENT:
-    case SMOOTH_SHADING:
-      // TODO: Handle these cases.
-      break;
+    break;
+  }
+  case FACE: {
+    auto face_vertices{parse_faces(line)};
+    parse_state.vertices.emplace_back(face_vertices[0]);
+    parse_state.vertices.emplace_back(face_vertices[1]);
+    parse_state.vertices.emplace_back(face_vertices[2]);
+    break;
+  }
+  case OBJECT_NAME: {
+    std::string name{};
+    line >> name;
+    parse_state.obj_name = std::move(name);
+    break;
+  }
+  case GROUP_NAME:
+  case COMMENT:
+  case SMOOTH_SHADING:
+    // TODO: Handle these cases.
+    break;
   }
 }
 
-}
+} // namespace glhelp
 
 #endif

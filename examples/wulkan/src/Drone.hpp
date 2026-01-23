@@ -3,16 +3,16 @@
 #include <functional>
 #include <glm/glm.hpp>
 
-#include <obj_parser/Vertex.hpp>
+#include <glhelp/Vertex.hpp>
 
 #include <glhelp/Scene.hpp>
 #include <glhelp/Shader.hpp>
 #include <glhelp/mesh/InstancedMesh3D.hpp>
 #include <glhelp/mesh/Mesh3D.hpp>
 #include <glhelp/position/Position.hpp>
+#include <glhelp/position/PositionFollower.hpp>
 
 #include "HealthBar.hpp"
-#include "glhelp/position/PositionFollower.hpp"
 
 using DronePosition = glhelp::InteractiveController< glhelp::FPSPlayerController >;
 
@@ -21,11 +21,11 @@ public:
   Drone(
       DronePosition position_source,
       std::shared_ptr< glhelp::ShaderProgram > shader,
-      const obj_parser::Obj< obj_parser::VertexNormals >& obj,
+      const glhelp::Obj< glhelp::VertexNormals >& obj,
       std::shared_ptr< glhelp::ShaderProgram > rotor_shader,
-      const obj_parser::Obj< obj_parser::VertexNormals >& rotor_obj,
+      const glhelp::Obj< glhelp::VertexNormals >& rotor_obj,
       std::shared_ptr< glhelp::ShaderProgram > health_bar_shader,
-      const obj_parser::Obj< obj_parser::SimpleVertex >& health_bar_obj)
+      const glhelp::Obj< glhelp::SimpleVertex >& health_bar_obj)
       : glhelp::Mesh3D< DronePosition >(std::move(position_source), std::move(shader), obj)
   {
     glm::vec3 offset{-2.89783F, 0.0F, -2.68395F};

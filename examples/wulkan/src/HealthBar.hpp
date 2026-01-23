@@ -2,8 +2,7 @@
 
 #include <memory>
 
-#include <obj_parser/Obj.hpp>
-
+#include <glhelp/Obj.hpp>
 #include <glhelp/Shader.hpp>
 #include <glhelp/mesh/Mesh3D.hpp>
 #include <glhelp/position/Position.hpp>
@@ -12,7 +11,7 @@ using DroneFollowPosition = glhelp::PositionFollower< glhelp::InteractiveControl
 
 class HealthBar : public glhelp::Mesh3D< DroneFollowPosition > {
 public:
-  HealthBar(DroneFollowPosition position, std::shared_ptr< glhelp::ShaderProgram > shader, const obj_parser::Obj< obj_parser::SimpleVertex >& bar)
+  HealthBar(DroneFollowPosition position, std::shared_ptr< glhelp::ShaderProgram > shader, const glhelp::Obj< glhelp::SimpleVertex >& bar)
       : glhelp::Mesh3D< DroneFollowPosition >(
             position,
             std::move(shader),

@@ -4,10 +4,9 @@
 
 #include <glad/gl.h>
 
+#include <glhelp/Obj.hpp>
 #include <glhelp/mesh/InstancedMesh3D.hpp>
 #include <glhelp/position/Position.hpp>
-
-#include <obj_parser/Obj.hpp>
 
 #include <hgt/Hgt.hpp>
 
@@ -18,14 +17,14 @@ class MapTile3d : public glhelp::InstancedMesh3d< glhelp::CachingSimplePosition,
 public:
   MapTile3d(
       std::shared_ptr< TerrainMap > terrain_map,
-      const obj_parser::Obj< obj_parser::SimpleVertex >& plane,
+      const glhelp::Obj< glhelp::SimpleVertex >& plane,
       std::shared_ptr< glhelp::ShaderProgram > shader_program,
       u8 texture_layer,
       float tile_scale);
 
   MapTile3d(
       std::shared_ptr< TerrainMap > terrain_map,
-      const obj_parser::Obj< obj_parser::SimpleVertex >& plane,
+      const glhelp::Obj< glhelp::SimpleVertex >& plane,
       std::shared_ptr< glhelp::ShaderProgram > shader_program,
       u8 texture_layer,
       float tile_scale,

@@ -14,8 +14,7 @@
 #include <glm/geometric.hpp>
 #include <glm/glm.hpp>
 
-#include <obj_parser/Vertex.hpp>
-
+#include <glhelp/Vertex.hpp>
 #include <glhelp/mesh/Mesh3D.hpp>
 #include <glhelp/position/PositionProvider.hpp>
 
@@ -65,8 +64,8 @@ Mesh3D< PositionSource >::Mesh3D(PositionSource position_source, std::shared_ptr
 }
 
 template< PositionProvider PositionSource >
-template< obj_parser::VertexType Vertex >
-Mesh3D< PositionSource >::Mesh3D(PositionSource position_source, std::shared_ptr< ShaderProgram > shader, const obj_parser::Obj< Vertex >& obj)
+template< glhelp::VertexType Vertex >
+Mesh3D< PositionSource >::Mesh3D(PositionSource position_source, std::shared_ptr< ShaderProgram > shader, const glhelp::Obj< Vertex >& obj)
     : PositionSource(position_source), shader(std::move(shader)), mode(GL_TRIANGLES), vertex_count(obj.vertices.size()), indices_count(obj.indices.size())
 {
   glGenVertexArrays(1, &vao);
@@ -84,13 +83,13 @@ Mesh3D< PositionSource >::Mesh3D(PositionSource position_source, std::shared_ptr
   layout_param_count++;
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
 
-  if constexpr (obj_parser::VertexWithNormal< Vertex >) {
+  if constexpr (glhelp::VertexWithNormal< Vertex >) {
     glEnableVertexAttribArray(1);
     layout_param_count++;
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
   }
 
-  if constexpr (obj_parser::VertexWithTexture< Vertex >) {
+  if constexpr (glhelp::VertexWithTexture< Vertex >) {
     glEnableVertexAttribArray(2);
     layout_param_count++;
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));

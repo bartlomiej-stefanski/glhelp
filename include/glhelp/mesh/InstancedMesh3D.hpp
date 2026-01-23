@@ -9,8 +9,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/random.hpp>
 
-#include <obj_parser/Obj.hpp>
-
+#include <glhelp/Obj.hpp>
 #include <glhelp/mesh/Mesh3D.hpp>
 #include <glhelp/position/PositionProvider.hpp>
 
@@ -42,11 +41,11 @@ public:
       GLenum mode,
       const std::tuple< std::vector< InstanceData >... >& instance_data);
 
-  template< obj_parser::VertexType Vertex >
+  template< glhelp::VertexType Vertex >
   InstancedMesh3d(
       PositionSource position_source,
       std::shared_ptr< ShaderProgram > shader,
-      const obj_parser::Obj< Vertex >& sphere,
+      const glhelp::Obj< Vertex >& sphere,
       const std::tuple< std::vector< InstanceData >... >& instance_data);
 
   ~InstancedMesh3d() override;

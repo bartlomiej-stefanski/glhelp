@@ -67,8 +67,6 @@ if(Doxygen_FOUND)
   )
 endif()
 
-add_subdirectory(external/obj_parser)
-
 file(GLOB_RECURSE GLHELP_SOURCES "src/*.cpp")
 
 add_library(glhelp ${GLHELP_SOURCES})
@@ -85,7 +83,6 @@ target_link_libraries(glhelp
     glad_loader
     glfw
     glm::glm
-    obj_parser
 )
 
 option(GLHELP_BUILD_EXAMPLES "Build the glhelp examples" ON)

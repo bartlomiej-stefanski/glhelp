@@ -1,4 +1,4 @@
-#include <obj_parser/Vertex.hpp>
+#include <glhelp/Vertex.hpp>
 
 #include "FastNoiseLite.hpp"
 #include "Mountain.hpp"
@@ -53,9 +53,9 @@ auto get_mountain_normal(float x, float z) -> glm::vec3
   return normal;
 }
 
-auto get_mountain_vertices(unsigned n) -> std::vector< obj_parser::VertexNormals >
+auto get_mountain_vertices(unsigned n) -> std::vector< glhelp::VertexNormals >
 {
-  std::vector< obj_parser::VertexNormals > vertices;
+  std::vector< glhelp::VertexNormals > vertices;
   vertices.reserve(n * n);
 
   for (unsigned x = 0; x < n; x++) {

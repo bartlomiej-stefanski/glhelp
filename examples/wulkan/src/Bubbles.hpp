@@ -4,7 +4,7 @@
 
 #include <glm/glm.hpp>
 
-#include <obj_parser/Obj.hpp>
+#include <glhelp/Obj.hpp>
 
 #include <glhelp/mesh/InstancedMesh3D.hpp>
 #include <glhelp/position/Position.hpp>
@@ -50,7 +50,7 @@ public:
   Bubbles(
       std::shared_ptr< glhelp::ShaderProgram > shader,
       glhelp::SimplePosition position,
-      const obj_parser::Obj< obj_parser::VertexNormals >& sphere,
+      const glhelp::Obj< glhelp::VertexNormals >& sphere,
       std::vector< BubbleData > bubble_data);
 
   void update_bubbles(glm::vec3 player_position, float time, float frame_time, bool should_sort, HealthBar& health_bar);

@@ -28,7 +28,7 @@ static auto get_positions(unsigned layer) -> std::vector< glm::vec3 >
 
 MapTile::MapTile(
     std::shared_ptr< TerrainMap > terrain_map,
-    const obj_parser::Obj< obj_parser::SimpleVertex >& plane,
+    const glhelp::Obj< glhelp::SimpleVertex >& plane,
     std::shared_ptr< glhelp::ShaderProgram > shader_program,
     u8 layer)
     : glhelp::InstancedMesh3d< glhelp::CachingSimplePosition, glm::vec3, float >(

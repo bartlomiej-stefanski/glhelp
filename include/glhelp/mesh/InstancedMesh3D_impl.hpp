@@ -62,11 +62,11 @@ InstancedMesh3d< PositionSource, InstanceData... >::InstancedMesh3d(
 }
 
 template< PositionProvider PositionSource, InstancableType... InstanceData >
-template< obj_parser::VertexType Vertex >
+template< glhelp::VertexType Vertex >
 InstancedMesh3d< PositionSource, InstanceData... >::InstancedMesh3d(
     PositionSource position_source,
     std::shared_ptr< ShaderProgram > shader,
-    const obj_parser::Obj< Vertex >& obj_data,
+    const glhelp::Obj< Vertex >& obj_data,
     const std::tuple< std::vector< InstanceData >... >& instance_data)
     : Mesh3D< PositionSource >(position_source, std::move(shader), obj_data),
       instance_count(static_cast< unsigned >(std::get< 0 >(instance_data).size()))

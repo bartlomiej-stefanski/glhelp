@@ -80,7 +80,7 @@ static auto bubble_data_to_mat3(std::vector< BubbleData >& v) -> std::vector< Bu
 Bubbles::Bubbles(
     std::shared_ptr< glhelp::ShaderProgram > shader,
     glhelp::SimplePosition position,
-    const obj_parser::Obj< obj_parser::VertexNormals >& sphere,
+    const glhelp::Obj< glhelp::VertexNormals >& sphere,
     std::vector< BubbleData > bubble_data)
     : InstancedMesh3d< glhelp::SimplePosition, BubbleData_mat3 >(
           position,

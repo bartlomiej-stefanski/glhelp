@@ -3,21 +3,19 @@
 #include <exception>
 #include <functional>
 #include <istream>
-#include <ostream>
-#include <unordered_set>
 #include <optional>
+#include <ostream>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 #include <glm/glm.hpp>
 
-#include <obj_parser/Vertex.hpp>
+#include <glhelp/Vertex.hpp>
 
-namespace obj_parser
-{
+namespace glhelp {
 
-struct ObjParseException : std::exception
-{
+struct ObjParseException : std::exception {
   ObjParseException(const std::string& cause, unsigned line_number);
 
   template< typename T >
@@ -36,8 +34,7 @@ private:
 };
 
 /// Represents inner .obj parser state.
-struct ParseState
-{
+struct ParseState {
   unsigned current_line;
   std::vector< glm::vec3 > positions;
   std::vector< glm::vec3 > normals;
@@ -50,9 +47,7 @@ struct ParseState
 
     auto operator==(const VertexData& other) const noexcept -> bool
     {
-      return vertex == other.vertex
-        && texture == other.texture
-        && normal == other.normal;
+      return vertex == other.vertex && texture == other.texture && normal == other.normal;
     }
   };
 
@@ -67,13 +62,13 @@ struct ParseState
 
 /// Represents a Mesh Object.
 template< VertexType Vertex >
-struct Obj
-{
+struct Obj {
 public:
   Obj() = default;
   Obj(std::vector< Vertex > vertices, std::vector< unsigned > indices)
-    : indices(std::move(indices)), vertices(std::move(vertices))
-  {}
+      : indices(std::move(indices)), vertices(std::move(vertices))
+  {
+  }
 
   static auto parse_from_file(std::istream& in_stream) -> Obj;
   static auto parse_from_file(const std::string& file_name) -> Obj;
@@ -87,7 +82,7 @@ private:
   static void parse_line(std::stringstream& line, ParseState& parse_state);
 };
 
-}
+} // namespace glhelp
 
 // Include template implementation
-#include <obj_parser/Obj_impl.hpp>
+#include <glhelp/Obj_impl.hpp>
