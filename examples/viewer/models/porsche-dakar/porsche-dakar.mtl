@@ -1,0 +1,257 @@
+# Blender 5.0.0 MTL File: 'None'
+# www.blender.org
+
+newmtl p:Porsche_911DakarRewardRecycled_2023BadgeA_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd BadgeA_DiffuseAOSO.png
+map_d BadgeA_DiffuseAOSO.png
+map_Bump -bm 1.000000 Porsche_911Dakar_2023_BadgeA_Normal.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023Base_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 0.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl p:Porsche_911DakarRewardRecycled_2023Carbon1M_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd common_carbon05_black_diff.png
+map_Bump -bm 1.000000 common_carbon05_norm.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023Coloured_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Global_Texture_Coloured_Diffuse.png
+map_d Global_Texture_Coloured_Diffuse.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023EngineA_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_EngineA_DiffuseAOSO.png
+map_d Porsche_911Dakar_2023_EngineA_DiffuseAOSO.png
+map_Bump -bm 1.000000 Porsche_911Dakar_2023_EngineA_Normal.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023GrilleAlpha2A_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_Grille2A_DiffuseAOSO.png
+map_d Porsche_911Dakar_2023_Grille2A_DiffuseAOSO.png
+map_Bump -bm 1.000000 Porsche_911Dakar_2023_Grille2A_Normal.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023GrilleAlpha5A_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_Grille5A_DiffuseAOSO.png
+map_d Porsche_911Dakar_2023_Grille5A_DiffuseAOSO.png
+map_Bump -bm 1.000000 Porsche_911Dakar_2023_Grille5A_Normal.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023GrilleAlpha8A_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_Grille8A_DiffuseAOSO.png
+map_d Porsche_911Dakar_2023_Grille8A_DiffuseAOSO.png
+map_Bump -bm 1.000000 Porsche_911Dakar_2023_Grille8A_Normal.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023GrilleNoAlpha1A_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_Grille1A_DiffuseAOSO.png
+map_d Porsche_911Dakar_2023_Grille1A_DiffuseAOSO.png
+map_Bump -bm 1.000000 Porsche_911Dakar_2023_Grille1A_Normal.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023GrilleNoAlpha3A_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_Grille3A_DiffuseAOSO.png
+map_d Porsche_911Dakar_2023_Grille3A_DiffuseAOSO.png
+map_Bump -bm 1.000000 Porsche_911Dakar_2023_Grille3A_Normal.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023GrilleNoAlpha4A_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_Grille4A_DiffuseAOSO.png
+map_d Porsche_911Dakar_2023_Grille4A_DiffuseAOSO.png
+map_Bump -bm 1.000000 Porsche_911Dakar_2023_Grille4A_Normal.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023GrilleNoAlpha6A_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_Grille6A_DiffuseAOSO.png
+map_d Porsche_911Dakar_2023_Grille6A_DiffuseAOSO.png
+map_Bump -bm 1.000000 Porsche_911Dakar_2023_Grille6A_Normal.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023GrilleNoAlpha7A_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_Grille7A_DiffuseAOSO.png
+map_d Porsche_911Dakar_2023_Grille7A_DiffuseAOSO.png
+map_Bump -bm 1.000000 Porsche_911Dakar_2023_Grille7A_Normal.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023GrilleNoAlpha9A_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_Grille9A_DiffuseAOSO.png
+map_d Porsche_911Dakar_2023_Grille9A_DiffuseAOSO.png
+map_Bump -bm 1.000000 Porsche_911Dakar_2023_Grille9A_Normal.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023InteriorA_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_InteriorA_DiffuseAOSO.png
+map_d Porsche_911Dakar_2023_InteriorA_DiffuseAOSO.png
+map_Bump -bm 1.000000 Porsche_911Dakar_2023_InteriorA_Normal.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023InteriorTillingA_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_InteriorTillingA_DiffuseAOSO.png
+map_d Porsche_911Dakar_2023_InteriorTillingA_DiffuseAOSO.png
+map_Bump -bm 1.000000 Porsche_911Dakar_2023_InteriorTillingA_Normal.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023LightA_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_LightA_Diffuse.png
+map_d Porsche_911Dakar_2023_LightA_Diffuse.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023ManufacturerPlateA_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_ManufacturerPlateA_Diffuse.png
+map_d Porsche_911Dakar_2023_ManufacturerPlateA_Diffuse.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023Paint_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd 1_Diffuse.png
+map_d 1_Diffuse.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023Window_Material1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 0.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+
+newmtl p:Porsche_911DakarRewardRecycled_2023_CallipersCalliperA__b7dd36f1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_CalliperA_Zone_Diffuse.png
+map_d Porsche_911Dakar_2023_CalliperA_Zone_Diffuse.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023_CallipersCalliperBa_809d338
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd CalliperBadgeA_Diffuse.png
+map_d CalliperBadgeA_Diffuse.png
+
+newmtl p:Porsche_911DakarRewardRecycled_2023_Wheel1A_3D_3DWheel1_e3a60e1
+Ns 1000.000000
+Ka 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd Porsche_911Dakar_2023_Wheel1B_DiffuseAOSO.png
+map_d Porsche_911Dakar_2023_Wheel1B_DiffuseAOSO.png
+map_Bump -bm 1.000000 Porsche_911Dakar_2023_Wheel1A_Normal.png
+
+newmtl red_glass
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.500000 0.000000 0.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
