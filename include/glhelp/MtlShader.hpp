@@ -21,6 +21,9 @@ public:
   static auto create_from_path(std::stringstream& line, const fs::path& base_path) -> std::shared_ptr< MtlTexture >;
   static auto get_mock_texture(std::uint8_t r = 255, std::uint8_t g = 255, std::uint8_t b = 255) -> std::shared_ptr< MtlTexture >;
 
+  bool has_alpha{0};
+  int channels{1};
+
 private:
   inline static std::unordered_map< std::string, std::shared_ptr< MtlTexture > > memorized_textures{};
 };
@@ -43,6 +46,7 @@ struct MtlMaterial {
   std::shared_ptr< MtlTexture > texture_bump{MtlTexture::get_mock_texture()};
   std::shared_ptr< MtlTexture > texture_displacement{MtlTexture::get_mock_texture()};
   std::shared_ptr< MtlTexture > texture_transparent{MtlTexture::get_mock_texture()};
+  int transparency_layer{1};
 
   static auto from_file(const fs::path& mtl_path) -> std::unordered_map< std::string, MtlMaterial >;
 

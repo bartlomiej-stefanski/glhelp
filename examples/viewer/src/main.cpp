@@ -56,11 +56,11 @@ void run_program(const fs::path& model_path)
 
   auto sun{std::make_shared< glhelp::DirectionalLight >(glhelp::DirectionalLight{
       .direction = glm::normalize(glm::vec3{-1.0F, -1.0F, -1.0F}),
-      .color = glm::vec3{1.1F, 1.1F, 1.0F},
+      .color = glm::vec3{1.3F, 1.1F, 1.1F},
   })};
   auto top_light{std::make_shared< glhelp::DirectionalLight >(glhelp::DirectionalLight{
       .direction = glm::normalize(glm::vec3{1.0F, -1.0F, 1.0F}),
-      .color = glm::vec3{0.1F, 0.1F, 0.1F},
+      .color = glm::vec3{0.13F, 0.1F, 0.1F},
   })};
 
   glhelp::Scene main_scene;

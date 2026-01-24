@@ -33,6 +33,7 @@ uniform sampler2D mapDiffuse;
 uniform sampler2D mapSpecular;
 uniform sampler2D mapBump;
 uniform sampler2D mapTranslucency;
+uniform int uTranslucencyLayer;
 
 vec3 AMBIENT;
 vec3 DIFFUSE;
@@ -108,7 +109,7 @@ void main(void)
   AMBIENT = uAmbient * texture(mapAmbient, textPos).rgb;
   DIFFUSE = uDiffuse * diffuse_texture.rgb;
   SPECULAR = uSpecular * texture(mapSpecular, textPos).rgb;
-  TRANSLUCENCY = uTranslucency * texture(mapTranslucency, textPos).r;
+  TRANSLUCENCY = uTranslucency * texture(mapTranslucency, textPos)[uTranslucencyLayer - 1];
 
   float diffuse_intensity = 1.0;
   float ambient_intensity = 0.001;
@@ -128,5 +129,5 @@ void main(void)
 
   mat_color += AMBIENT * ambient_intensity;
   mat_color = pow(mat_color, vec3(1.0 / 2.2)); // SRGB to linear
-  color = vec4(mat_color, diffuse_texture[3] * TRANSLUCENCY);
+  color = vec4(mat_color, TRANSLUCENCY);
 }

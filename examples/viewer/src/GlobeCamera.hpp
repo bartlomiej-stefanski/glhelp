@@ -26,10 +26,10 @@ public:
 
   [[nodiscard]] auto get_radius() const noexcept -> float { return min_radius + min_radius * zoom; }
 
-  bool enabled{false};
+  bool enabled{true};
 
   float MaxZoom{0.01};
-  static constexpr float MinZoom{3.0F};
+  static constexpr float MinZoom{10.0F};
 
 private:
   float zoom;

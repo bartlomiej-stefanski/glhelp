@@ -6,7 +6,6 @@
 #include <glhelp/position/Position.hpp>
 
 #include "GlobeCamera.hpp"
-#include <iostream>
 
 auto lat_lon_to_point(float latDeg, float lonDeg, float radius) -> glm::vec3
 {
@@ -22,7 +21,7 @@ auto lat_lon_to_point(float latDeg, float lonDeg, float radius) -> glm::vec3
 }
 
 GlobePosition::GlobePosition(glm::vec2 position, float zoom, float min_radius, float movement_speed)
-    : movement_speed(movement_speed), min_radius(min_radius), zoom(zoom), lat(position.y), lon(position.x)
+    : movement_speed(movement_speed), min_radius(min_radius * 0.5), zoom(zoom), lat(position.y), lon(position.x)
 {
 }
 
@@ -37,15 +36,8 @@ void GlobePosition::init_mouse(glhelp::Window& window)
     }
 
     if (lmb_pressed) {
-      lon += (off_rot_cos * xoffset - off_rot_sin * yoffset) * zoom * movement_speed;
-      lat = glm::clamp(lat + (off_rot_sin * xoffset + off_rot_cos * yoffset) * zoom * movement_speed, -89.0F, 89.0F);
-      std::cerr << "Mouse-event: Position\n";
-    }
-
-    if (rmb_pressed) {
-      offset_rotation.x = glm::clamp(offset_rotation.x + yoffset * mouse_rotation_speed, glm::radians(-1.0f), glm::radians(89.0F));
-      offset_rotation.z -= xoffset * mouse_rotation_speed;
-      std::cerr << "Mouse-event: Rotation\n";
+      lon += (off_rot_cos * xoffset - off_rot_sin * yoffset) * movement_speed;
+      lat = glm::clamp(lat + (off_rot_sin * xoffset + off_rot_cos * yoffset) * movement_speed, -89.0F, 89.0F);
     }
   });
 
@@ -54,8 +46,7 @@ void GlobePosition::init_mouse(glhelp::Window& window)
       return;
     }
 
-    zoom = glm::clamp(std::max(MaxZoom, zoom - yoffset * zoom), MaxZoom, MinZoom / 3.0F);
-    std::cerr << zoom << '\n';
+    zoom = glm::clamp(std::max(MaxZoom, zoom - yoffset * zoom * 0.25F), MaxZoom, MinZoom / 3.0F);
   });
 
   mouse_button_event = window.mouse_button_event.connect([this](int button, int action) {
@@ -101,7 +92,7 @@ void GlobePosition::poll_keyboard_events(glhelp::Window& window, const float fra
   }
 
   lon += (off_rot_cos * x_speed - off_rot_sin * y_speed) * zoom;
-  lat = glm::clamp(lat + (off_rot_sin * x_speed + off_rot_cos * y_speed) * zoom, -89.0F, 89.0F);
+  lat = glm::clamp(lat + (off_rot_sin * x_speed + off_rot_cos * y_speed) * zoom, -30.0F, 89.0F);
 }
 
 auto GlobePosition::get_position() const -> glm::vec3

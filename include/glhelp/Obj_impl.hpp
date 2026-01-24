@@ -1,8 +1,6 @@
 #pragma once
 
 // 'classic' header-guard to avoid recursive definition
-#include <chrono>
-#include <glm/geometric.hpp>
 #ifndef REC_OBJ_GUARD
 #define REC_OBJ_GUARD
 
@@ -325,6 +323,8 @@ void MeshObject< PositionSource >::MaterialGroupData::set_uniforms(ShaderProgram
 
   material.texture_transparent->load_to_texture_unit(3);
   shader.set_uniform< Texture< GL_TEXTURE_2D > >("mapTranslucency", *(material.texture_transparent));
+  shader.set_uniform("uTranslucencyLayer", material.transparency_layer);
+  // std::cerr << material.transparency_layer << '\n';
 }
 
 } // namespace glhelp

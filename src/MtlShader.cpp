@@ -21,12 +21,15 @@ static void comment_parse(std::stringstream& line [[maybe_unused]]) {}
 
 MtlTexture::MtlTexture(const std::string& path_str)
 {
-  int width, height, nrComponents;
-  unsigned char* data = stbi_load(path_str.c_str(), &width, &height, &nrComponents, 4);
+  int width, height;
+  unsigned char* data = stbi_load(path_str.c_str(), &width, &height, &channels, 4);
 
   if (data == nullptr) {
     throw std::runtime_error(std::format("Failed to read images {}!", path_str));
   }
+
+  // Heuristic...
+  has_alpha = path_str.contains(".png");
 
   std::cerr << std::format("Reading a real texture {}\n", path_str);
 
@@ -178,9 +181,11 @@ auto MtlMaterial::from_file(const fs::path& mtl_path) -> std::unordered_map< std
        }},
       {"map_Tr", [&](std::stringstream& line) {
          current_material().texture_transparent = MtlTexture::create_from_path(line, base_path);
+         current_material().transparency_layer = current_material().texture_transparent->has_alpha ? 4 : 1;
       }},
       {"map_d", [&](std::stringstream& line) {
          current_material().texture_transparent = MtlTexture::create_from_path(line, base_path);
+         current_material().transparency_layer = current_material().texture_transparent->has_alpha ? 4 : 1;
       }},
       // Read Bump Map.
       {"map_bump", [&](std::stringstream& line) {
