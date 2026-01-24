@@ -1,6 +1,8 @@
 #pragma once
 
 // 'classic' header-guard to avoid recursive definition
+#include <chrono>
+#include <glm/geometric.hpp>
 #ifndef REC_OBJ_GUARD
 #define REC_OBJ_GUARD
 
@@ -40,6 +42,15 @@ void ParseState::parse_line(std::stringstream& line)
   case VERTEX: {
     glm::vec3 position{};
     line >> position.x >> position.y >> position.z;
+
+    min_pos.x = glm::min(min_pos.x, position.x);
+    min_pos.y = glm::min(min_pos.y, position.y);
+    min_pos.z = glm::min(min_pos.z, position.z);
+
+    max_pos.x = glm::max(max_pos.x, position.x);
+    max_pos.y = glm::max(max_pos.y, position.y);
+    max_pos.z = glm::max(max_pos.z, position.z);
+
     positions.emplace_back(position);
     break;
   }
@@ -184,12 +195,13 @@ auto Obj< Vertex >::parse_from_file(std::istream& in_stream) -> Obj< Vertex >
 
   obj.obj_name = std::move(parse_state.obj_name);
   obj.mtl_files = std::move(parse_state.mtl_files);
+  obj.radius = glm::length(parse_state.min_pos) + glm::length(parse_state.max_pos);
   return obj;
 }
 
 template< PositionProvider PositionSource >
 MeshObject< PositionSource >::MeshObject(Obj< VertexTextured >&& obj, const PositionSource& initial_position, std::shared_ptr< ShaderProgram > shader)
-  : PositionSource(initial_position), indices(std::move(obj.indices)), vertices(std::move(obj.vertices)), shader(std::move(shader))
+  : PositionSource(initial_position), radius(obj.radius), indices(std::move(obj.indices)), vertices(std::move(obj.vertices)), shader(std::move(shader))
 {
   if (!obj.obj_dir.has_value()) {
     throw std::runtime_error("Cannot create a MeshObject without 'path' present in Obj!");
@@ -310,6 +322,9 @@ void MeshObject< PositionSource >::MaterialGroupData::set_uniforms(ShaderProgram
 
   material.texture_specular->load_to_texture_unit(2);
   shader.set_uniform< Texture< GL_TEXTURE_2D > >("mapSpecular", *(material.texture_specular));
+
+  material.texture_transparent->load_to_texture_unit(3);
+  shader.set_uniform< Texture< GL_TEXTURE_2D > >("mapTranslucency", *(material.texture_transparent));
 }
 
 } // namespace glhelp

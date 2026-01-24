@@ -6,7 +6,7 @@
 #include <glhelp/position/Position.hpp>
 
 #include "GlobeCamera.hpp"
-#include "Setup.hpp"
+#include <iostream>
 
 auto lat_lon_to_point(float latDeg, float lonDeg, float radius) -> glm::vec3
 {
@@ -39,11 +39,13 @@ void GlobePosition::init_mouse(glhelp::Window& window)
     if (lmb_pressed) {
       lon += (off_rot_cos * xoffset - off_rot_sin * yoffset) * zoom * movement_speed;
       lat = glm::clamp(lat + (off_rot_sin * xoffset + off_rot_cos * yoffset) * zoom * movement_speed, -89.0F, 89.0F);
+      std::cerr << "Mouse-event: Position\n";
     }
 
     if (rmb_pressed) {
       offset_rotation.x = glm::clamp(offset_rotation.x + yoffset * mouse_rotation_speed, glm::radians(-1.0f), glm::radians(89.0F));
       offset_rotation.z -= xoffset * mouse_rotation_speed;
+      std::cerr << "Mouse-event: Rotation\n";
     }
   });
 
@@ -52,7 +54,8 @@ void GlobePosition::init_mouse(glhelp::Window& window)
       return;
     }
 
-    zoom = glm::clamp(std::max(MaxZoom, zoom - yoffset * 0.1F * zoom), MaxZoom, MinZoom / 3.0F);
+    zoom = glm::clamp(std::max(MaxZoom, zoom - yoffset * zoom), MaxZoom, MinZoom / 3.0F);
+    std::cerr << zoom << '\n';
   });
 
   mouse_button_event = window.mouse_button_event.connect([this](int button, int action) {
@@ -119,13 +122,6 @@ auto GlobePosition::get_scale() const -> glm::vec3
 }
 
 GlobeCamera::GlobeCamera(std::shared_ptr< glhelp::Window > window, GlobePosition&& globe_position)
-    : glhelp::Camera< GlobePosition >(std::move(window), globe_position, 90.0F, 10.0F, 6500.0F * 3000.0F)
+    : glhelp::Camera< GlobePosition >(std::move(window), globe_position, 90.0F, 0.1F, 1000.0F)
 {
-}
-
-void GlobeCamera::update_clipping()
-{
-  const auto r{get_radius()};
-  near_clip = glm::max((r - Radius - MaxHeigth) / 10.0F, 10.0F);
-  far_clip = glm::min(r, MinZoom * Radius);
 }

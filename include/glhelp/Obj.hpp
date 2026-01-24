@@ -79,6 +79,7 @@ struct ParseState {
   std::vector< glm::vec3 > normals;
   std::vector< glm::vec2 > tex_coords;
 
+  glm::vec3 min_pos{0.0F}, max_pos{0.0F};
 
   // Maps material name to a set of vertices.
   std::unordered_map< std::string, std::vector< VertexData > > vertices;
@@ -124,6 +125,8 @@ public:
 
   std::optional< fs::path > obj_dir;
 
+  float radius;
+
 private:
   static auto create_vertex(ParseState& parse_state, const ParseState::VertexData& vertex_data) -> Vertex;
 };
@@ -139,6 +142,8 @@ public:
   [[nodiscard]] auto get_shader() const -> std::shared_ptr< ShaderProgram > override;
   [[nodiscard]] auto get_id() const noexcept -> std::size_t override;
   [[nodiscard]] auto get_wireframe_override() const noexcept -> bool override { return false; }
+
+  const float radius;
 
 private:
   unsigned vao{}, vbo{}, ebo;

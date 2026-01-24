@@ -176,6 +176,12 @@ auto MtlMaterial::from_file(const fs::path& mtl_path) -> std::unordered_map< std
          MtlMaterial& mat{current_material()};
          line >> mat.translucency;
        }},
+      {"map_Tr", [&](std::stringstream& line) {
+         current_material().texture_transparent = MtlTexture::create_from_path(line, base_path);
+      }},
+      {"map_d", [&](std::stringstream& line) {
+         current_material().texture_transparent = MtlTexture::create_from_path(line, base_path);
+      }},
       // Read Bump Map.
       {"map_bump", [&](std::stringstream& line) {
          current_material().texture_bump = MtlTexture::create_from_path(line, base_path);

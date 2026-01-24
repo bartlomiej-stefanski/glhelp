@@ -1,5 +1,3 @@
-#include "glhelp/position/CachingSimplePosition.hpp"
-#include "glhelp/position/FPSPlayerController.hpp"
 #include <exception>
 #include <filesystem>
 #include <iostream>
@@ -27,6 +25,8 @@
 #include <glhelp/utils/Event.hpp>
 #include <glhelp/utils/GLFWContext.hpp>
 
+#include "GlobeCamera.hpp"
+
 #ifndef SHADER_DIR_PATH
 #error "Shader directory undefined. Please define SHADER_DIR_PATH macro."
 #endif
@@ -47,15 +47,12 @@ void run_program(const fs::path& model_path)
       glhelp::create_shader_from_file(GL_VERTEX_SHADER, SHADER_DIR_PATH "mtl_vertex.glsl"),
       glhelp::create_shader_from_file(GL_FRAGMENT_SHADER, SHADER_DIR_PATH "mtl_fragment.glsl")})};
 
-  const glm::vec3 start_point{0.0F};
-
   glhelp::CachingSimplePosition obj_position(glm::vec3{0.0F}, 0.0F, 0.0F, 0.0F);
   auto mesh(std::make_shared< glhelp::MeshObject< glhelp::CachingSimplePosition > >(glhelp::Obj< glhelp::VertexTextured >::parse_from_file(model_path), obj_position, mtl_shader));
 
-  auto camera{std::make_shared< FPSCamera >(
-      window,
-      glhelp::FPSPlayerController(glhelp::FPSSimplePosition(start_point, glm::pi< float >(), 0, 0), 1, 1),
-      90.0F, 0.001F, 100.0F)};
+  std::cerr << std::format("Mesh radius: {}\n", mesh->radius);
+  auto globe_camera{std::make_shared< GlobeCamera >(window, GlobePosition(glm::vec2{0.0F}, 0.5F, mesh->radius))};
+  globe_camera->init_mouse(*window);
 
   auto sun{std::make_shared< glhelp::DirectionalLight >(glhelp::DirectionalLight{
       .direction = glm::normalize(glm::vec3{-1.0F, -1.0F, -1.0F}),
@@ -72,13 +69,11 @@ void run_program(const fs::path& model_path)
   main_scene.add_light(sun);
   main_scene.add_light(top_light);
 
-  auto scroll_event{window->scroll_event.connect([&](float, float yoffset) {
-    camera->set_fov(glm::clamp(camera->get_fov() + yoffset, 55.0F, 120.0F));
-  })};
-
   window->run_synchronously([&]([[maybe_unused]] glhelp::Window& window, double time, double frame_time) mutable -> bool {
-    camera->poll_keys(window, frame_time);
-    main_scene.draw_objects(*camera, time);
+    globe_camera->poll_keyboard_events(window, frame_time);
+    // auto globe_pos{globe_camera->get_position()};
+    // std::cerr << std::format("{}, {}, {}\n", globe_pos.x, globe_pos.y, globe_pos.z);
+    main_scene.draw_objects(*globe_camera, time);
     return true;
   });
 }

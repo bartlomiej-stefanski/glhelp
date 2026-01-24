@@ -42,6 +42,7 @@ struct MtlMaterial {
   std::shared_ptr< MtlTexture > texture_shininnes{MtlTexture::get_mock_texture()};
   std::shared_ptr< MtlTexture > texture_bump{MtlTexture::get_mock_texture()};
   std::shared_ptr< MtlTexture > texture_displacement{MtlTexture::get_mock_texture()};
+  std::shared_ptr< MtlTexture > texture_transparent{MtlTexture::get_mock_texture()};
 
   static auto from_file(const fs::path& mtl_path) -> std::unordered_map< std::string, MtlMaterial >;
 
