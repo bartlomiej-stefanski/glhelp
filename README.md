@@ -26,3 +26,9 @@ cmake --list-presets
 cmake --preset=develop
 cmake --build build
 ```
+
+## Licesnes For Demo-Models
+
+- "City" (https://skfb.ly/o6zrK) by SpatialNeglect is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+- "2023 Porsche 911 Dakar Rallye Design Package" (https://skfb.ly/ps6PD) by Ddiaz Design is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+- "Old Tree" (https://skfb.ly/6TvHn) by gelmi.com.br is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
