@@ -17,7 +17,7 @@ add_compile_options(-Wall -Wextra)
 if(OPTIMIZE)
   add_compile_options(-O3)
 else()
-  add_compile_options(-O1 -g)
+  add_compile_options(-O1 -g3)
   add_compile_definitions(DEBUG_GLHELP)
 endif()
 
