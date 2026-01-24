@@ -1,0 +1,35 @@
+# Blender 5.0.0 MTL File: 'None'
+# www.blender.org
+
+newmtl leaf_old_tree
+Ns 320.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.080000 0.080000 0.080000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd old_leaf_C.jpeg
+map_d old_leaf_M.jpeg
+map_Bump -bm 1.000000 old_leaf_N.jpeg
+
+newmtl old_treetop
+Ns 320.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.080000 0.080000 0.080000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd old_treetop_C.jpeg
+map_d old_treetop_M.jpeg
+map_Bump -bm 1.000000 old_treetop_N.jpeg
+
+newmtl oldtrunk
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.080000 0.080000 0.080000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd old_trunk_C.jpeg
+map_Bump -bm 1.000000 old_trunk_N.jpeg
