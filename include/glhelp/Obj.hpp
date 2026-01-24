@@ -79,8 +79,6 @@ struct ParseState {
   std::vector< glm::vec3 > normals;
   std::vector< glm::vec2 > tex_coords;
 
-  static constexpr std::string NO_MATERIAL{"NO_MATERIAL!"};
-  std::string current_material{NO_MATERIAL};
 
   // Maps material name to a set of vertices.
   std::unordered_map< std::string, std::vector< VertexData > > vertices;
@@ -89,6 +87,9 @@ struct ParseState {
 
   unsigned current_line;
   std::unordered_set< std::string > warnings;
+
+  static constexpr std::string NO_MATERIAL{"NO_MATERIAL!"};
+  std::string current_material{NO_MATERIAL};
 
   template< VertexType Vertex >
   void parse_line(std::stringstream& line);
@@ -124,12 +125,13 @@ public:
   std::optional< fs::path > obj_dir;
 
 private:
-  static auto create_vertex(const ParseState& parse_state, const ParseState::VertexData& vertex_data) -> Vertex;
+  static auto create_vertex(ParseState& parse_state, const ParseState::VertexData& vertex_data) -> Vertex;
 };
 
-class MeshObject : Renderable {
+template< PositionProvider PositionSource >
+class MeshObject : public Renderable, public PositionSource {
 public:
-  MeshObject(Obj< VertexTextured >&& obj);
+  MeshObject(Obj< VertexTextured >&& obj, const PositionSource& initial_position, std::shared_ptr< ShaderProgram > shader);
   ~MeshObject() = default;
 
   void draw() override;
@@ -141,16 +143,23 @@ public:
 private:
   unsigned vao{}, vbo{}, ebo;
 
-  GLenum mode;
+  std::vector< unsigned > indices;
+  std::vector< VertexTextured > vertices;
+
+  GLenum mode{GL_TRIANGLES};
 
   struct MaterialGroupData {
     std::size_t indices_start;
     std::size_t indices_count;
-    std::optional< Material > material;
+    MtlMaterial material;
+
+    void set_uniforms(ShaderProgram& shader) const;
   };
 
   unsigned layout_param_count{0};
   std::vector< MaterialGroupData > material_groups;
+
+  std::shared_ptr< ShaderProgram > shader;
 };
 
 } // namespace glhelp

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <array>
 #include <filesystem>
+#include <memory>
 #include <unordered_map>
 
 #include <glad/gl.h>
@@ -9,10 +9,25 @@
 #include <glm/glm.hpp>
 
 #include <glhelp/Basic.hpp>
+#include <glhelp/Texture.hpp>
 
 namespace glhelp {
 
-struct Material {
+class MtlTexture : public Texture< GL_TEXTURE_2D > {
+  MtlTexture() = default;
+  MtlTexture(const std::string& path_str);
+
+public:
+  static auto create_from_path(std::stringstream& line, const fs::path& base_path) -> std::shared_ptr< MtlTexture >;
+  static auto get_mock_texture(std::uint8_t r = 255, std::uint8_t g = 255, std::uint8_t b = 255) -> std::shared_ptr< MtlTexture >;
+
+private:
+  inline static std::unordered_map< std::string, std::shared_ptr< MtlTexture > > memorized_textures{};
+};
+
+struct MtlMaterial {
+  MtlMaterial() = default;
+
   glm::vec3 ambient{1.0F};
   glm::vec3 diffuse{1.0F};
   glm::vec3 specular{1.0F};
@@ -21,19 +36,14 @@ struct Material {
 
   float translucency{1.0F};
 
-  union Textures {
-    std::array< GLuint, 6 > direct;
-    struct {
-      GLuint ambient{0};
-      GLuint diffuse{0};
-      GLuint specular{0};
-      GLuint shininnes{0};
-      GLuint bump{0};
-      GLuint displacement{0};
-    };
-  } textures;
+  std::shared_ptr< MtlTexture > texture_ambient{MtlTexture::get_mock_texture()};
+  std::shared_ptr< MtlTexture > texture_diffuse{MtlTexture::get_mock_texture()};
+  std::shared_ptr< MtlTexture > texture_specular{MtlTexture::get_mock_texture()};
+  std::shared_ptr< MtlTexture > texture_shininnes{MtlTexture::get_mock_texture()};
+  std::shared_ptr< MtlTexture > texture_bump{MtlTexture::get_mock_texture()};
+  std::shared_ptr< MtlTexture > texture_displacement{MtlTexture::get_mock_texture()};
 
-  static auto from_file(const fs::path& mtl_path) -> std::unordered_map< std::string, Material >;
+  static auto from_file(const fs::path& mtl_path) -> std::unordered_map< std::string, MtlMaterial >;
 
 private:
   std::optional< GLuint > blank_texture;

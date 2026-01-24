@@ -11,7 +11,9 @@
 #include <string>
 #include <unordered_map>
 
+#include <glhelp/MtlShader.hpp>
 #include <glhelp/Obj.hpp>
+#include <glhelp/Shader.hpp>
 #include <glhelp/Vertex.hpp>
 
 template<>
@@ -65,10 +67,9 @@ void ParseState::parse_line(std::stringstream& line)
   }
   case FACE: {
     auto faces{parse_faces(line)};
-    auto& vertex_buffer{vertices[current_material]};
     for (const auto& face : faces) {
       for (const auto& vertex : face) {
-        vertex_buffer.emplace_back(vertex);
+        vertices[current_material].emplace_back(vertex);
       }
     }
     break;
@@ -99,7 +100,7 @@ void ParseState::parse_line(std::stringstream& line)
 }
 
 template< VertexType Vertex >
-auto Obj< Vertex >::create_vertex(const ParseState& parse_state, const ParseState::VertexData& vertex_data) -> Vertex
+auto Obj< Vertex >::create_vertex(ParseState& parse_state, const ParseState::VertexData& vertex_data) -> Vertex
 {
   Vertex v{};
   v.position = parse_state.positions[vertex_data.vertex - 1];
@@ -112,10 +113,13 @@ auto Obj< Vertex >::create_vertex(const ParseState& parse_state, const ParseStat
   }
 
   if constexpr (VertexWithTexture< Vertex >) {
+    parse_state.warnings.insert("While parsing for type VertexWithTexture type encountered vertices without Texture data! using default...");
     if (!vertex_data.texture.has_value()) {
-      throw std::invalid_argument("VertexTextured vertex type requires texture coordinate data.");
+      v.tex_coords = glm::vec2{0.0F};
     }
-    v.tex_coords = parse_state.tex_coords[vertex_data.texture.value() - 1];
+    else {
+      v.tex_coords = parse_state.tex_coords[vertex_data.texture.value() - 1];
+    }
   }
 
   return v;
@@ -163,7 +167,7 @@ auto Obj< Vertex >::parse_from_file(std::istream& in_stream) -> Obj< Vertex >
   for (const auto& [material, vertices] : parse_state.vertices) {
     obj.material_groups.emplace_back(MaterialGroupData{
         .material_name = material,
-        .indices_start = obj.vertices.size(),
+        .indices_start = obj.indices.size(),
         .indices_count = vertices.size()});
 
     for (const auto& vertex : vertices) {
@@ -181,6 +185,131 @@ auto Obj< Vertex >::parse_from_file(std::istream& in_stream) -> Obj< Vertex >
   obj.obj_name = std::move(parse_state.obj_name);
   obj.mtl_files = std::move(parse_state.mtl_files);
   return obj;
+}
+
+template< PositionProvider PositionSource >
+MeshObject< PositionSource >::MeshObject(Obj< VertexTextured >&& obj, const PositionSource& initial_position, std::shared_ptr< ShaderProgram > shader)
+  : PositionSource(initial_position), indices(std::move(obj.indices)), vertices(std::move(obj.vertices)), shader(std::move(shader))
+{
+  if (!obj.obj_dir.has_value()) {
+    throw std::runtime_error("Cannot create a MeshObject without 'path' present in Obj!");
+  }
+
+  glGenVertexArrays(1, &vao);
+  glGenBuffers(1, &vbo);
+  glGenBuffers(1, &ebo);
+
+  glBindVertexArray(vao);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(VertexTextured), vertices.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+
+  // Enable Position Attribute.
+  glEnableVertexAttribArray(0);
+  layout_param_count++;
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexTextured), reinterpret_cast< void* >(offsetof(VertexTextured, position)));
+
+  // Enable Normal Attribute.
+  glEnableVertexAttribArray(1);
+  layout_param_count++;
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexTextured), reinterpret_cast< void* >(offsetof(VertexTextured, normal)));
+
+  // Enable Textured Coordinate Attribute.
+  glEnableVertexAttribArray(2);
+  layout_param_count++;
+  glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexTextured), reinterpret_cast< void* >(offsetof(VertexTextured, tex_coords)));
+
+  glBindVertexArray(0);
+
+  const fs::path base_path{obj.obj_dir.value()};
+  std::unordered_map< std::string, MtlMaterial > materials;
+  for (const auto& mtl_file: obj.mtl_files) {
+    fs::path mtl_path{base_path / mtl_file};
+    std::cerr << "Reading materials from file: " << mtl_path.string() << "\n";
+    auto file_materials{MtlMaterial::from_file(mtl_path)};
+    for (auto& [name, mat]: file_materials) {
+      if (materials.contains(name)) {
+        throw std::runtime_error("Conflicting material names found!");
+      }
+
+      std::cerr << "Found material: " << name << "\n";
+      materials.emplace(name, std::move(mat));
+    }
+  }
+
+  for (const auto& material: obj.material_groups) {
+    if (material.material_name == ParseState::NO_MATERIAL || !materials.contains(material.material_name)) {
+      std::cerr << "Using a 'default' material\n";
+      material_groups.emplace_back(MaterialGroupData{
+        .indices_start = material.indices_start,
+        .indices_count = material.indices_count,
+        .material = MtlMaterial{}
+      });
+    }
+    else {
+      material_groups.emplace_back(MaterialGroupData{
+        .indices_start = material.indices_start,
+        .indices_count = material.indices_count,
+        .material = materials.at(material.material_name)
+      });
+    }
+  }
+}
+
+template< PositionProvider PositionSource >
+void MeshObject< PositionSource >::draw()
+{
+  glBindVertexArray(vao);
+
+  const auto model_matrix{get_model_matrix(*this)};
+  shader->set_uniform("uModelTransform", model_matrix);
+
+  const auto normal_transform{glm::mat3{glm::transpose(glm::inverse(model_matrix))}};
+  shader->set_uniform("uNormalTransform", normal_transform);
+
+  for (const auto& material : material_groups) {
+    material.set_uniforms(*shader);
+    glDrawElements(
+      GL_TRIANGLES,
+      material.indices_count,
+      GL_UNSIGNED_INT,
+      reinterpret_cast< void* >(material.indices_start * sizeof(GLuint)));
+  }
+
+  glBindVertexArray(0);
+}
+
+template< PositionProvider PositionSource >
+auto MeshObject< PositionSource >::get_shader() const -> std::shared_ptr< ShaderProgram >
+{
+  return shader;
+}
+
+template< PositionProvider PositionSource >
+auto MeshObject< PositionSource >::get_id() const noexcept -> std::size_t
+{
+  return vao;
+}
+
+template< PositionProvider PositionSource >
+void MeshObject< PositionSource >::MaterialGroupData::set_uniforms(ShaderProgram& shader [[maybe_unused]]) const
+{
+  shader.set_uniform("uAmbient", material.ambient);
+  shader.set_uniform("uDiffuse", material.diffuse);
+  shader.set_uniform("uSpecular", material.specular);
+  shader.set_uniform("uShininnes", material.shininnes);
+  shader.set_uniform("uTranslucency", material.translucency);
+
+  material.texture_ambient->load_to_texture_unit(0);
+  shader.set_uniform< Texture< GL_TEXTURE_2D > >("mapAmbient", *(material.texture_ambient));
+
+  material.texture_diffuse->load_to_texture_unit(1);
+  shader.set_uniform< Texture< GL_TEXTURE_2D > >("mapDiffuse", *(material.texture_diffuse));
+
+  material.texture_specular->load_to_texture_unit(2);
+  shader.set_uniform< Texture< GL_TEXTURE_2D > >("mapSpecular", *(material.texture_specular));
 }
 
 } // namespace glhelp
